@@ -1,0 +1,3 @@
+COMPONENT=SmartBallAppC
+include $(MAKERULES)
+
