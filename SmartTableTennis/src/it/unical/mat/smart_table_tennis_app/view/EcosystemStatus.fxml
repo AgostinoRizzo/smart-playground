@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1431.0" prefWidth="1973.0" scaleX="0.7" scaleY="0.7" translateX="-300.0" translateY="-200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_table_tennis_app.controller.EcosystemStatusController">
+   <center>
+      <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="1973.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="425.0" prefWidth="1052.0">
+               <children>
+                  <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="401.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="1042.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="355.0" prefWidth="1022.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                           <children>
+                              <HBox prefHeight="71.0" prefWidth="499.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="441.0" prefWidth="1078.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Game Platform">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label fx:id="gamePlatformDescription" text="Description">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="gamePlatformDataBox" prefHeight="286.0" prefWidth="1022.0">
+                                 <children>
+                                    <AreaChart fx:id="gamePlatformTemperatureSensorsChart" title="Temperature">
+                                       <xAxis>
+                                          <CategoryAxis side="BOTTOM" fx:id="xAxisGamePlatformTemperatureSensorsChart" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis side="LEFT" />
+                                       </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="gamePlatformHumiditySensorsChart" title="Humidity">
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" fx:id="xAxisGamePlatformHumiditySensorsChart" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="gamePlatformBrightnessSensorChart" title="Brightness">
+                                       <xAxis>
+                                          <CategoryAxis side="BOTTOM" fx:id="xAxisGamePlatformBrightnessSensorsChart" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis side="LEFT" />
+                                       </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+                  <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="415.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="846.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="390.0" prefWidth="810.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="57.0" prefWidth="333.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Racket">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Main wiimote">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="321.0" prefWidth="810.0">
+                                 <children>
+                                    <AreaChart fx:id="mainRacketAccelerometerSensorsChart" animated="false" prefHeight="301.0" prefWidth="810.0" title="Accelerometer">
+                                       <xAxis>
+                                          <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketAccelerometerSensorsChart" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="100.0" upperBound="1000.0" />
+                                       </yAxis>
+                                    </AreaChart>
+                                 </children></HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" right="10.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="425.0" prefWidth="1052.0">
+               <children>
+                  <ScrollPane prefHeight="401.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="1042.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="376.0" prefWidth="1022.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" prefWidth="396.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="397.0" prefWidth="578.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Ball">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Description">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="ballDataBox" prefHeight="245.0" prefWidth="779.0">
+                                 <children>
+                                    <AreaChart fx:id="smartBallTemperatureSensorsChart" title="Temperature">
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" fx:id="xAxisSmartBallTemperatureSensorsChart" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="smartBallHumiditySensorsChart" title="Humidity">
+                                       <xAxis>
+                                          <CategoryAxis side="BOTTOM" fx:id="xAxisSmartBallHumiditySensorsChart" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis side="LEFT" />
+                                       </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="smartBallBrightnessSensorChart" title="Brightness">
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" fx:id="xAxisSmartBallBrightnessSensorsChart" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+                  <ScrollPane prefHeight="401.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="846.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="339.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="332.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Racket">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Second wiimote">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="254.0" prefWidth="341.0" />
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefHeight="425.0" prefWidth="1052.0">
+               <children>
+                  <ScrollPane prefHeight="415.0" prefViewportHeight="199.0" prefViewportWidth="318.0" prefWidth="361.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="293.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="261.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="77.0" prefWidth="238.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Virtual Ball">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Description">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="189.0" prefWidth="286.0" />
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+                  <ScrollPane prefHeight="415.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="414.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="335.0" prefWidth="341.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="341.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Motion Controller">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Description">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox fx:id="motionControllerDataBox" prefHeight="254.0" prefWidth="341.0">
+                                 <children>
+                                    <PieChart fx:id="motionControllerPlayerDirectionChart" prefHeight="222.0" prefWidth="325.0" title="PLayer Orientation" titleSide="BOTTOM">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </PieChart>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+                  <ScrollPane prefHeight="415.0" prefViewportHeight="334.0" prefViewportWidth="685.0" prefWidth="1106.0" styleClass="statusBox" stylesheets="@application.css">
+                     <content>
+                        <VBox prefHeight="393.0" prefWidth="1072.0">
+                           <children>
+                              <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="77.0" prefWidth="341.0">
+                                 <children>
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../../../../../res/drawable/earth.png" />
+                                       </image>
+                                    </ImageView>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Smart Pole">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label text="Description">
+                                             <VBox.margin>
+                                                <Insets left="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox fx:id="smartPoleDataBox" prefHeight="291.0" prefWidth="966.0">
+                                 <children>
+                                    <PieChart fx:id="smartPoleWindDirectionChart" title="Wind Direction" titleSide="BOTTOM">
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </PieChart>
+                                    <AreaChart fx:id="smartPoleTemperatureSensorsChart" title="Temperature">
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" fx:id="xAxisSmartPoleTemperatureSensorsChart" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="smartPoleHumiditySensorsChart" title="Humidity">
+                                       <xAxis>
+                                          <CategoryAxis side="BOTTOM" fx:id="xAxisSmartPoleHumiditySensorsChart" />
+                                       </xAxis>
+                                       <yAxis>
+                                          <NumberAxis side="LEFT" />
+                                       </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                    <AreaChart fx:id="smartPoleBrightnessSensorChart" title="Brightness">
+                                      <xAxis>
+                                        <CategoryAxis side="BOTTOM" fx:id="xAxisSmartPoleBrightnessSensorsChart" />
+                                      </xAxis>
+                                      <yAxis>
+                                        <NumberAxis side="LEFT" />
+                                      </yAxis>
+                                       <HBox.margin>
+                                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                       </HBox.margin>
+                                    </AreaChart>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </content>
+                     <HBox.margin>
+                        <Insets bottom="10.0" right="10.0" />
+                     </HBox.margin>
+                  </ScrollPane>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

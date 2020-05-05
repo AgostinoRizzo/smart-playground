@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="303.0" prefWidth="480.0" style="-fx-background-color: EBE9EC;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <bottom>
+            <ImageView pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
+               <image>
+                  <Image url="@../../../../../../res/drawable/user_check.png" />
+               </image>
+            </ImageView>
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,13 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.default-color0.chart-area-symbol { -fx-background-color: CHART_COLOR_3, white; }
+.default-color1.chart-area-symbol { -fx-background-color: CHART_COLOR_2, white; }
+.default-color2.chart-area-symbol { -fx-background-color: CHART_COLOR_3, white; }
+
+.default-color0.chart-series-area-line { -fx-stroke: CHART_COLOR_3; }
+.default-color1.chart-series-area-line { -fx-stroke: CHART_COLOR_2; }
+.default-color2.chart-series-area-line { -fx-stroke: CHART_COLOR_3; }
+
+.default-color0.chart-series-area-fill { -fx-fill: CHART_COLOR_3_TRANS_20; }
+.default-color1.chart-series-area-fill { -fx-fill: CHART_COLOR_2_TRANS_20; }
+.default-color2.chart-series-area-fill { -fx-fill: CHART_COLOR_3_TRANS_20; }
