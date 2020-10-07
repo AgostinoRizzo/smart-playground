@@ -75,7 +75,6 @@ class NetworkCommunicator(Thread):
                 self.pendingData.append(str(data))
                 self.cond.notify()
     
-    @Override
     def run(self):
         # create a TCP/IP socket.
         if not self.createSocket():
