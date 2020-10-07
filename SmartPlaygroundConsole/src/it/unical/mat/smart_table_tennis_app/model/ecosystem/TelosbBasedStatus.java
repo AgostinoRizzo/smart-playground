@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class TelosbBasedStatus
 {
+	public static final int CAPACITY = 10;
+	
 	private final List< Integer > temperatureValues = new ArrayList<>();
 	private final List< Integer > humidityValues    = new ArrayList<>();
 	private final List< Integer > brightnessValues  = new ArrayList<>();
@@ -19,16 +21,19 @@ public class TelosbBasedStatus
 	public void updateNewTemperatureValues( final List< Integer > newValues )
 	{
 		temperatureValues.addAll(newValues);
+		EcosystemStatus.shrinkValuesList(temperatureValues, CAPACITY);
 	}
 	
 	public void updateNewHumidityValues( final List< Integer > newValues )
 	{
 		humidityValues.addAll(newValues);
+		EcosystemStatus.shrinkValuesList(humidityValues, CAPACITY);
 	}
 	
 	public void updateNewBrightnessValues( final List< Integer > newValues )
 	{
 		brightnessValues.addAll(newValues);
+		EcosystemStatus.shrinkValuesList(brightnessValues, CAPACITY);
 	}
 	
 	public List<Integer> getTemperatureValues()

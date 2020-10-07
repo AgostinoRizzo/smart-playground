@@ -10,10 +10,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <ScrollPane prefHeight="2315.0" prefWidth="1969.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_table_tennis_app.controller.EcosystemStatusController">
    <content>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2287.0" prefWidth="1945.0" style="-fx-background-color: gray;">
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2287.0" prefWidth="1945.0" style="-fx-background-color: #ffff;">
          <center>
             <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefWidth="1973.0" BorderPane.alignment="CENTER">
                <children>
@@ -221,7 +220,7 @@
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                 </AreaChart>
-                                                <AreaChart fx:id="gatherSmartBallHumiditySensorsChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" title="Humidity">
+                                                <AreaChart fx:id="gatherSmartBallHumiditySensorsChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -285,7 +284,7 @@
                                                             <Insets left="30.0" />
                                                          </VBox.margin>
                                                       </Label>
-                                                      <Label fx:id="brightnessLabel" text="30°C">
+                                                      <Label fx:id="brightnessLabel" text="30Lux">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>
@@ -321,7 +320,7 @@
                                                       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                 </AreaChart>
-                                                <AreaChart fx:id="gatherSmartBallBrightnessSensorChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" title="Humidity">
+                                                <AreaChart fx:id="gatherSmartBallBrightnessSensorChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -488,80 +487,92 @@
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT" prefHeight="150.0">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketXAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketXAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketYAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketYAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketYAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketYAccelerometerSensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketZAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketZAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketZAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketZAccelerometerSensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                        </children>
@@ -620,89 +631,104 @@
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/temp_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallTemperatureSensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Temperature">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallTemperatureSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" />
+                                                         </yAxis>
+                                                         <StackPane.margin>
+                                                            <Insets />
+                                                         </StackPane.margin>
+                                                         <padding>
+                                                            <Insets top="15.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/temp_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainSmartBallTemperatureSensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Temperature">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallTemperatureSensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis side="LEFT" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </HBox.margin>
-                                                   <VBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </VBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/humi_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallHumiditySensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Humidity">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallHumiditySensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" />
+                                                         </yAxis>
+                                                         <padding>
+                                                            <Insets top="15.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/humi_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainSmartBallHumiditySensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Humidity">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallHumiditySensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis side="LEFT" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </HBox.margin>
-                                                   <VBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </VBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox>
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/bright_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallBrightnessSensorChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Brightness">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallBrightnessSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" />
+                                                         </yAxis>
+                                                         <padding>
+                                                            <Insets top="15.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/bright_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainSmartBallBrightnessSensorChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" title="Brightness">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallBrightnessSensorsChart" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis side="LEFT" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </HBox.margin>
-                                                   <VBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </VBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                        </children>

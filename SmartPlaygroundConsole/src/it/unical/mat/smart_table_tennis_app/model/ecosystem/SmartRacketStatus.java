@@ -26,9 +26,9 @@ public class SmartRacketStatus
 		accYValues.addAll(yValues);
 		accZValues.addAll(zValues);
 		
-		shrinkValuesList(accXValues, CAPACITY);
-		shrinkValuesList(accYValues, CAPACITY);
-		shrinkValuesList(accZValues, CAPACITY);
+		EcosystemStatus.shrinkValuesList(accXValues, CAPACITY);
+		EcosystemStatus.shrinkValuesList(accYValues, CAPACITY);
+		EcosystemStatus.shrinkValuesList(accZValues, CAPACITY);
 		
 	}
 	
@@ -45,11 +45,4 @@ public class SmartRacketStatus
 		return accZValues;
 	}
 	
-	private static void shrinkValuesList( final List< Integer > values , final int capacity )
-	{
-		if ( capacity <= 0 )
-			return;
-		while( values.size() > capacity )
-			values.remove(0);
-	}
 }

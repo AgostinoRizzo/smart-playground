@@ -122,6 +122,14 @@ public class EcosystemStatus
 		return avgValues;
 	}
 	
+	protected static void shrinkValuesList( final List< Integer > values , final int capacity )
+	{
+		if ( capacity <= 0 )
+			return;
+		while( values.size() > capacity )
+			values.remove(0);
+	}
+	
 	private Integer computeValuesAverage( final List< List< Integer > > valuesLists, final int t )
 	{
 		int v=0;

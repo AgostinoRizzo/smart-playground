@@ -380,13 +380,13 @@ public class EcosystemStatusController implements ViewController
 		final XYChart.Series<String, Double> seriesBrightnessAverage  = new XYChart.Series<>();
 		
 		seriesTemperature.setName("Sensor (°C)");
-		seriesGatherTemperature.setName(sensorName + "Sensor (°C)");
+		seriesGatherTemperature.setName(sensorName + " Sensor (°C)");
 		
 		seriesHumidity.setName("Sensor");
-		seriesGatherHumidity.setName(sensorName);
+		seriesGatherHumidity.setName(sensorName + " Sensor (°C)");
 		
 		seriesBrightness.setName("Sensor");
-		seriesGatherBrightness.setName(sensorName);
+		seriesGatherBrightness.setName(sensorName + " Sensor (°C)");
 		
 		final List< Integer > temperatureValues = status.getTemperatureValues();
 		final List< Integer > humidityValues = status.getHumidityValues();
@@ -436,9 +436,9 @@ public class EcosystemStatusController implements ViewController
 		seriesAccY.getData().clear();
 		seriesAccZ.getData().clear();
 				
-		seriesAccX.setName("x");
-		seriesAccY.setName("y");
-		seriesAccZ.setName("z");
+		seriesAccX.setName("x-axis accelerometer");
+		seriesAccY.setName("y-axis accelerometer");
+		seriesAccZ.setName("z-axis accelerometer");
 		
 		final List< Integer > accXValues = status.getAccXValues();
 		final List< Integer > accYValues = status.getAccYValues();

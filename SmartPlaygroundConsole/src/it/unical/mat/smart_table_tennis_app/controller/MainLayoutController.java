@@ -10,6 +10,7 @@ import it.unical.mat.smart_table_tennis_app.view.ViewConfigs;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.transform.Scale;
@@ -79,7 +80,7 @@ public class MainLayoutController implements ViewController
 				
 		try
 		{
-			final BorderPane ecosystemStatusView = (BorderPane) loader.load();
+			final ScrollPane ecosystemStatusView = (ScrollPane) loader.load();
 			
 			/*
 			final Scale scale = new Scale();

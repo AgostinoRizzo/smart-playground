@@ -12,6 +12,9 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.MotionControllerStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartBallStatus;
@@ -20,6 +23,7 @@ import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartPoleStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.WindDirection;
+import it.unical.mat.smart_table_tennis_app.util.JSONUtil;
 
 /**
  * @author Agostino
@@ -54,7 +58,7 @@ public class EcosystemEventProvider extends Thread
 			try
 			{
 				event = in.readLine();
-				handleEvent(event);
+				handleEvent( JSONUtil.fromStringToJsonObject(event) );
 			} 
 			catch (IOException e)
 			{
@@ -81,9 +85,11 @@ public class EcosystemEventProvider extends Thread
 			out.writeChars( EcosystemEventConfigs.CLOSE_CONNECTION_CODE );
 			out.flush();
 			
-			interrupt();
-			
+			out.close();
+			in.close();
 			eventSocket.close();
+			
+			interrupt();
 		} 
 		catch (IOException e)
 		{
@@ -91,35 +97,24 @@ public class EcosystemEventProvider extends Thread
 		}
 	}
 	
-	private void handleEvent( final String event ) throws IOException
+	private void handleEvent( final JsonObject event ) throws IOException
 	{
-		if      ( event.equals( EcosystemEventConfigs.ACK_EVENT ) )                   callback.onAckEvent();
-		else if ( event.equals( EcosystemEventConfigs.ECOSYSTEM_STATUS ) )            handleEcosystemStatus();
-		else if ( event.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_STATUS ) )  handleSmartGamePlatformStatus();
-		else if ( event.equals( EcosystemEventConfigs.SMARTBALL_STATUS ) )            handleSmartBallStatus();
-		else if ( event.equals( EcosystemEventConfigs.SMARTPOLE_STATUS ) )            handleSmartPoleStatus();
-		if      ( event.equals( EcosystemEventConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN);
+		final String dataType = event.get("dataType").getAsString();
+		
+		if      ( dataType.equals( EcosystemEventConfigs.ACK_EVENT ) )                   callback.onAckEvent();
+		//else if ( dataType.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_STATUS ) )  handleSmartGamePlatformStatus(event.get("sample").getAsJsonArray());
+		else if ( dataType.equals( EcosystemEventConfigs.SMARTBALL_STATUS ) )            handleSmartBallStatus(event.get("sample").getAsJsonArray());
+		else if ( dataType.equals( EcosystemEventConfigs.SMARTPOLE_STATUS ) )            handleSmartPoleStatus(event.get("sample").getAsJsonArray());
+		if      ( dataType.equals( EcosystemEventConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, 
+																												 event.get("accs_values").getAsJsonArray());
 	}
-	
-	private void handleEcosystemStatus() throws IOException
-	{
-		for( int i=0; i<EcosystemEventConfigs.SMART_OBJECTS_STATUS_COUNT; ++i )
-		{
-			final String smart_obj = in.readLine();
-			
-			if      ( smart_obj.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_ID ) )     handleSmartGamePlatformStatus();
-			else if ( smart_obj.equals( EcosystemEventConfigs.SMART_BALL_ID ) )              handleSmartBallStatus();
-			else if ( smart_obj.equals( EcosystemEventConfigs.SMART_MOTION_CONTROLLER_ID ) ) handleMotionControllerStatus();
-			else if ( smart_obj.equals( EcosystemEventConfigs.SMART_POLE_ID ) )              handleSmartPoleStatus();
-		}
-	}
-	
-	private void handleSmartGamePlatformStatus() throws NumberFormatException, IOException
+	/*
+	private void handleSmartGamePlatformStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
 		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = readNextIntegerValues();
-		final List< Integer > humidityValues    = readNextIntegerValues();
-		final List< Integer > brightnessValues  = readNextIntegerValues(); 
+		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
+		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
+		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
 		
 		// update model
 		final SmartGamePlatformStatus gamePlatformStatus = EcosystemStatus.getInstance().getSmartGamePlatformStatus();
@@ -129,13 +124,13 @@ public class EcosystemEventProvider extends Thread
 		
 		callback.onSmartGamePlatformStatus();
 		
-	}
-	private void handleSmartBallStatus() throws NumberFormatException, IOException
+	}*/
+	private void handleSmartBallStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
 		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = readNextIntegerValues();
-		final List< Integer > humidityValues    = readNextIntegerValues();
-		final List< Integer > brightnessValues  = readNextIntegerValues(); 
+		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
+		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
+		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
 		
 		// update model
 		final SmartBallStatus smartBallStatus = EcosystemStatus.getInstance().getSmartBallStatus();
@@ -144,22 +139,22 @@ public class EcosystemEventProvider extends Thread
 		smartBallStatus.updateNewBrightnessValues(brightnessValues);
 		
 		callback.onSmartBallStatus();
-	}
+	}/*
 	private void handleMotionControllerStatus() throws NumberFormatException, IOException
 	{
-		final int direction = Integer.parseInt( in.readLine() );
+		//final int direction = Integer.parseInt( in.readLine() );
 		
 		// TODO: update model
-	}
-	private void handleSmartPoleStatus() throws NumberFormatException, IOException
+	}*/
+	private void handleSmartPoleStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
 		// read wind direction value
-		final int wind_direction = readNextIntegerValues().get(0);
+		//final int wind_direction = readNextIntegerValues().get(0);
 		
 		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = readNextIntegerValues();
-		final List< Integer > humidityValues    = readNextIntegerValues();
-		final List< Integer > brightnessValues  = readNextIntegerValues(); 
+		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
+		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
+		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
 	
 		// update model
 		final SmartPoleStatus smartPoleStatus = EcosystemStatus.getInstance().getSmartPoleStatus();
@@ -169,29 +164,18 @@ public class EcosystemEventProvider extends Thread
 		
 		callback.onSmartPoleStatus();
 	}
-	private void handleSmartRacketStatus( final SmartRacketType smartRacket ) throws NumberFormatException, IOException
+	private void handleSmartRacketStatus( final SmartRacketType smartRacket, final JsonArray accsValues ) throws NumberFormatException, IOException
 	{
 		// read xyz accelerometer values.
-		final List< Integer > accXValues = readNextIntegerValues();
-		final List< Integer > accYValues = readNextIntegerValues();
-		final List< Integer > accZValues = readNextIntegerValues(); 
+		final List< Integer > accXValues = JSONUtil.fromJsonArrayToIntegerList(accsValues.get(0).getAsJsonArray());
+		final List< Integer > accYValues = JSONUtil.fromJsonArrayToIntegerList(accsValues.get(1).getAsJsonArray());
+		final List< Integer > accZValues = JSONUtil.fromJsonArrayToIntegerList(accsValues.get(2).getAsJsonArray());
 		
 		// update model
 		final SmartRacketStatus smartRacketStatus = EcosystemStatus.getInstance().getSmartRacketStatus(smartRacket);
 		smartRacketStatus.updateNewAccelerometerValues(accXValues, accYValues, accZValues);
 		
 		callback.onSmartRacketStatus(smartRacket);
-	}
-	
-	private List< Integer > readNextIntegerValues() throws NumberFormatException, IOException
-	{
-		final List< Integer > values = new ArrayList<>();
-		int n_values = Integer.parseInt( in.readLine() );
-		
-		for( int i=0; i<n_values; ++i )
-			values.add( Integer.parseInt( in.readLine() ) );
-		
-		return values;
 	}
 	
 	// TODO: test function
