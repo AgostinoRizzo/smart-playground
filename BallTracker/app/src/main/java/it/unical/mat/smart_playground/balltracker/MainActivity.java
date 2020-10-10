@@ -108,7 +108,6 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
     {
-        cameraFrameAnalyzer.analyzeFrame(inputFrame);
-        return inputFrame.rgba();
+        return cameraFrameAnalyzer.analyzeFrame(inputFrame);
     }
 }

@@ -1,6 +1,7 @@
 package it.unical.mat.smart_playground.balltracker.tracking;
 
 import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.core.Mat;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,12 +14,12 @@ public abstract class SyncCameraFrameAnalyzer implements CameraFrameAnalyzer
     private final Lock lock = new ReentrantLock();
 
     @Override
-    public void analyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
+    public Mat analyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
     {
         lock.lock();
-        try { syncAnalyzeFrame(inputFrame); }
+        try { return syncAnalyzeFrame(inputFrame); }
         finally { lock.unlock(); }
     }
 
-    protected abstract void syncAnalyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame);
+    protected abstract Mat syncAnalyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame);
 }
