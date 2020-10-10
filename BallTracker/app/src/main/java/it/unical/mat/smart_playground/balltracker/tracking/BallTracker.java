@@ -79,8 +79,10 @@ public class BallTracker
             return;
         final Vector2<Integer> markerCenter = marker.getCenter();
         final Vector2<Float> newBallLocation =
-                new Vector2<>(getStandardBallCoord(platformFrameSize.getX(), markerCenter.getX()),
-                                getStandardBallCoord(platformFrameSize.getY(), markerCenter.getY()));
+                new Vector2<>(getStandardBallCoord(platformFrameSize.getX() - platformPaddings[PADDING_LEFT_INDEX] - platformPaddings[PADDING_RIGHT_INDEX],
+                                                    markerCenter.getX() - platformPaddings[PADDING_LEFT_INDEX]),
+                                getStandardBallCoord(platformFrameSize.getY() - platformPaddings[PADDING_TOP_INDEX] - platformPaddings[PADDING_BOTTOM_INDEX],
+                                                    markerCenter.getY() - platformPaddings[PADDING_TOP_INDEX]));
 
         if ( getBallLocationDeltaPercentage(newBallLocation) >= MIN_BALL_LOCATION_DELTA_PERCENTAGE )
         {
