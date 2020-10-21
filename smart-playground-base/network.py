@@ -28,6 +28,7 @@ class DiscoveryServer(threading.Thread):
             raise Exception('Cannot create multiple instances of a Singleton class')
 
         threading.Thread.__init__(self)
+        self.setDaemon(True)
 
         # create a UDP socket.
         try:

@@ -7,6 +7,7 @@ from smart_objects import SmartRacket
 from smart_objects import SmartObjectsMediator
 import network
 import logging
+import util_logging
 import playground
 
 
@@ -23,6 +24,11 @@ def main():
     if '-h' in sys.argv:
         print("Usage:", sys.argv[0], "serial@/dev/ttyUSB0:115200")
         sys.exit() 
+    
+    """
+    initialization
+    """
+    util_logging.Logger.default().info('Initialization...')
     
     """ 
     smart ball - serial communication setup with tinyos base station
@@ -55,14 +61,22 @@ def main():
     """
     playground.initialize()
     
-    objs_mediator.run()
+    """
+    core running statement
+    """
+    util_logging.Logger.default().info('Core running...')
+    try:
+        objs_mediator.run()
+    except KeyboardInterrupt:
+        pass
+    
+    """
+    finalization
+    """
+    util_logging.Logger.default().info('Finalization...')
     objs_mediator.finalize()
-    
-    wait_for_exit_command()
-    
-    # on finalization
     playground.finalize()
-
+    
 
 if __name__ == '__main__':
     main()
