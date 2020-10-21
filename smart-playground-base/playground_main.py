@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
 import sys
 
@@ -7,10 +7,16 @@ from smart_objects import SmartRacket
 from smart_objects import SmartObjectsMediator
 import network
 import logging
+import playground
 
 
 EXIT_CMDS = ['quit', 'exit']
 logging.basicConfig(level=logging.DEBUG)
+
+def wait_for_exit_command():
+    cmd = input()
+    while not cmd.strip() in EXIT_CMDS:
+        cmd = input()
 
 def main():
     
@@ -44,8 +50,18 @@ def main():
     """
     network.EcosystemEventProvider.get_instance()
     
+    """
+    playground status
+    """
+    playground.initialize()
+    
     objs_mediator.run()
     objs_mediator.finalize()
+    
+    wait_for_exit_command()
+    
+    # on finalization
+    playground.finalize()
 
 
 if __name__ == '__main__':
