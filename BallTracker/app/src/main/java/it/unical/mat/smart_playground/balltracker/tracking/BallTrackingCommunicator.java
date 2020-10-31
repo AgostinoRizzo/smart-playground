@@ -7,5 +7,7 @@ import it.unical.mat.smart_playground.balltracker.util.Vector2;
  */
 public interface BallTrackingCommunicator
 {
-    public void sendBallTrackingLocation( final Vector2<Float> ballLocation );
+    public void sendBallTrackingLocation( final BallStatus status );
+    public void sendBallTrackingOrientation( final BallStatus status );
+    public void sendBallTrackingStatus( final BallStatus status );
 }

@@ -5,7 +5,7 @@ package it.unical.mat.smart_playground.balltracker.util;
  */
 public class Vector2<T>
 {
-    private T x, y;
+    protected T x, y;
 
     public Vector2( final T x, final T y )
     {

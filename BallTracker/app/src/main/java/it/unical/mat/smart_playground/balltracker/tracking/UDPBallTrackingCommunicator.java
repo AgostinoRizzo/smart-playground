@@ -20,12 +20,11 @@ import it.unical.mat.smart_playground.balltracker.util.Vector2;
 public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 {
     private static final short SOCKET_PORT = 3000;
-    private static final short DATA_BUFFER_SIZE = 12;
     private static UDPBallTrackingCommunicator instance = null;
 
     private List<InetAddress> destinationAddrs = null;
     private DatagramSocket udpSocket = null;
-    private final ByteBuffer buffer;
+    private ByteBuffer buffer = null;
     private int sequenceNumber = 0;
 
     public static UDPBallTrackingCommunicator getInstance()
@@ -37,27 +36,46 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 
     private UDPBallTrackingCommunicator()
     {
-        buffer = ByteBuffer.allocate(DATA_BUFFER_SIZE);
         createUDPSocket();
     }
 
     @Override
-    public void sendBallTrackingLocation(Vector2<Float> ballLocation)
+    public void sendBallTrackingLocation( final BallStatus status )
     {
         if ( createUDPSocket() )
         {
-            buffer.clear();
+            buffer = ByteBuffer.allocate(12);
             buffer.putInt(sequenceNumber);
-            buffer.putFloat(ballLocation.getX());
-            buffer.putFloat(ballLocation.getY());
+            addLocationToDataBuffer(status);
 
+            sendBufferData();
+        }
+    }
 
-            for ( final InetAddress destAddr : destinationAddrs )
-            {
-                final DatagramPacket dataPacket = new DatagramPacket(buffer.array(), DATA_BUFFER_SIZE, destAddr, SOCKET_PORT);
-                try {  udpSocket.send(dataPacket); ++sequenceNumber; }
-                catch (IOException e) {}
-            }
+    @Override
+    public void sendBallTrackingOrientation( final BallStatus status )
+    {
+        if ( createUDPSocket() )
+        {
+            buffer = ByteBuffer.allocate(6);
+            buffer.putInt(sequenceNumber);
+            addOrientationToDataBuffer(status);
+
+            sendBufferData();
+        }
+    }
+
+    @Override
+    public void sendBallTrackingStatus( final BallStatus status )
+    {
+        if ( createUDPSocket() )
+        {
+            buffer = ByteBuffer.allocate(14);
+            buffer.putInt(sequenceNumber);
+            addLocationToDataBuffer(status);
+            addOrientationToDataBuffer(status);
+
+            sendBufferData();
         }
     }
 
@@ -76,6 +94,35 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             return true;
         }
         catch (SocketException e) { udpSocket = null; return false; }
+    }
+
+    private void addLocationToDataBuffer( final BallStatus status )
+    {
+        final Vector2<Float> ballLocation = status.getLocation();
+
+        buffer.putFloat(ballLocation.getX());
+        buffer.putFloat(ballLocation.getY());
+    }
+
+    private void addOrientationToDataBuffer( final BallStatus status )
+    {
+        final short orientation = status.getOrientation();
+        buffer.putShort(orientation);
+    }
+
+    private void sendBufferData()
+    {
+        if ( destinationAddrs.isEmpty() || buffer == null || !buffer.hasArray() )
+            return;
+
+        byte[] bufferData = buffer.array();
+
+        for ( final InetAddress destAddr : destinationAddrs )
+        {
+            final DatagramPacket dataPacket = new DatagramPacket(bufferData, bufferData.length, destAddr, SOCKET_PORT);
+            try {  udpSocket.send(dataPacket); ++sequenceNumber; }
+            catch (IOException e) {}
+        }
     }
 
     private static List<InetAddress> getDestinationAddrs() throws SocketException

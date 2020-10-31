@@ -9,13 +9,15 @@ import org.opencv.imgproc.Imgproc;
 import java.util.List;
 
 import it.unical.mat.smart_playground.balltracker.util.Vector2;
+import it.unical.mat.smart_playground.balltracker.util.Vector2Int;
+import it.unical.mat.smart_playground.balltracker.view.OpenCVTrackingView;
 
 /**
  * Created by utente on 05/10/2020.
  */
 public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
 {
-    private static final int BALL_MARKER_ID                  = 0;
+    public  static final int BALL_MARKER_ID                  = 0;
     private static final int TOP_LEFT_PLATFORM_CORNER_ID     = 1;
     private static final int TOP_RIGHT_PLATFORM_CORNER_ID    = 2;
     private static final int BOTTOM_LEFT_PLATFORM_CORNER_ID  = 3;
@@ -43,37 +45,17 @@ public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
 
         BallTracker.getInstance().updatePlatformFrameSize(grayInputFrame.cols(), grayInputFrame.rows());
         final List<Marker> detectMarkers = MarkerDetector.getInstance().detectMarkers(grayInputFrame);
-        Vector2<Integer> markerCenter;
-
-        for ( final Marker marker : detectMarkers )
-        {
-            analyzeMarker(marker);
-
-            markerCenter = marker.getCenter();
-            Imgproc.circle(rgbaInputFrame, new Point(markerCenter.getX(), markerCenter.getY()), 10, new Scalar(0, 0, 255), 10);
-        }
 
         final BallTracker ballTracker = BallTracker.getInstance();
-        final Vector2<Integer> platformSize = ballTracker.getPlatformFrameSize();
-        if ( platformSize != null )
-        {
-            final int[] platformPaddings = ballTracker.getPlatformPaddings();
-            final Scalar paddingColor = new Scalar(0, 255, 0);
-            final int maxLeft = platformSize.getX() - 1;
-            final int maxTop = platformSize.getY() - 1;
+        final OpenCVTrackingView trackingView = OpenCVTrackingView.getInstance();
 
-            Imgproc.line(rgbaInputFrame, new Point(0, platformPaddings[BallTracker.PADDING_TOP_INDEX]), new Point(maxLeft, platformPaddings[BallTracker.PADDING_TOP_INDEX]), paddingColor);
-            Imgproc.line(rgbaInputFrame, new Point(maxLeft - platformPaddings[BallTracker.PADDING_RIGHT_INDEX], 0), new Point(maxLeft - platformPaddings[BallTracker.PADDING_RIGHT_INDEX], maxTop), paddingColor);
-            Imgproc.line(rgbaInputFrame, new Point(0, maxTop - platformPaddings[BallTracker.PADDING_BOTTOM_INDEX]), new Point(maxLeft, maxTop - platformPaddings[BallTracker.PADDING_BOTTOM_INDEX]), paddingColor);
-            Imgproc.line(rgbaInputFrame, new Point(platformPaddings[BallTracker.PADDING_LEFT_INDEX], 0), new Point(platformPaddings[BallTracker.PADDING_LEFT_INDEX], maxTop), paddingColor);
+        trackingView.setFrame(rgbaInputFrame);  // for testing
 
-            /*
-            Imgproc.rectangle(rgbaInputFrame, new Point(0, 0), new Point(platformSize.getX()-1, platformPaddings[BallTracker.PADDING_TOP_INDEX]), paddingColor);
-            Imgproc.rectangle(rgbaInputFrame, new Point(platformSize.getX()-1-platformPaddings[BallTracker.PADDING_RIGHT_INDEX], 0), new Point(platformSize.getX()-1, platformSize.getY()-1), paddingColor);
-            Imgproc.rectangle(rgbaInputFrame, new Point(0, platformSize.getY()-1-platformPaddings[BallTracker.PADDING_BOTTOM_INDEX]), new Point(platformSize.getX()-1, platformSize.getY()-1), paddingColor);
-            Imgproc.rectangle(rgbaInputFrame, new Point(0, 0), new Point(0, platformPaddings[BallTracker.PADDING_LEFT_INDEX]), paddingColor);
-            */
-        }
+        for ( final Marker marker : detectMarkers )
+            analyzeMarker(marker);
+
+        //trackingView.setFrame(rgbaInputFrame);
+        trackingView.drawTracking( detectMarkers, BallTracker.getInstance() );
 
         return rgbaInputFrame;
     }
