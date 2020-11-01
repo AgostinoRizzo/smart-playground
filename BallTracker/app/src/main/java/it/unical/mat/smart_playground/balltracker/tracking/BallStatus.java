@@ -9,6 +9,7 @@ public class BallStatus
 {
     private final Vector2<Float> location = new Vector2<>(0.0f, 0.0f);
     private short orientation = 0;  // 0-359 degrees
+    private boolean known = true;
 
     public Vector2<Float> getLocation()
     {
@@ -23,5 +24,10 @@ public class BallStatus
     public void setOrientation( final short orientation )
     {
         this.orientation = orientation;
+    }
+
+    public void setUnknown()
+    {
+        known = false;
     }
 }

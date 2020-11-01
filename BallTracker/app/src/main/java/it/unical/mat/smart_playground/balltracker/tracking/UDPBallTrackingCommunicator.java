@@ -90,6 +90,18 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         }
     }
 
+    @Override
+    public void sendUnknownBallTrackingStatus()
+    {
+        if ( createUDPSocket() )
+        {
+            buffer = ByteBuffer.allocate(4);
+            buffer.putInt(sequenceNumber);
+
+            sendBufferData();
+        }
+    }
+
     private boolean createUDPSocket()
     {
         if ( destinationAddrs != null && !destinationAddrs.isEmpty() && udpSocket != null )

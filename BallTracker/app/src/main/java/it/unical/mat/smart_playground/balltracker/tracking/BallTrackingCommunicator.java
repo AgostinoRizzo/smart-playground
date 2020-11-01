@@ -10,4 +10,5 @@ public interface BallTrackingCommunicator
     public void sendBallTrackingLocation( final BallStatus status );
     public void sendBallTrackingOrientation( final BallStatus status );
     public void sendBallTrackingStatus( final BallStatus status );
+    public void sendUnknownBallTrackingStatus();
 }

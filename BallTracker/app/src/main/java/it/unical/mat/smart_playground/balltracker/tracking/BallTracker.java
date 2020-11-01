@@ -24,8 +24,6 @@ public class BallTracker
     private static final short HEIGHT = 1;
 
     private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
-    private static final KeepAliveCommStat LOCATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallLocationCommStat();
-    private static final KeepAliveCommStat ORIENTATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallOrientationCommStat();
 
     private static BallTracker instance = null;
 
@@ -92,9 +90,9 @@ public class BallTracker
 
         // update and send new ball status.
         final boolean onLocationUpdate = getBallLocationDeltaPercentage(newBallLocation) >= MIN_BALL_LOCATION_DELTA_PERCENTAGE ||
-                                            LOCATION_KEEP_ALIVE.onKeepAlive();
+                                            TRACKING_COMM_STATS.getBallLocationCommStat().onKeepAlive();
         final boolean onOrientationUpdate = (newBallOrientation >= 0 && Math.abs(newBallOrientation - ballStatus.getOrientation()) >= MIN_BALL_ORIENTATION_DELTA) ||
-                                            ORIENTATION_KEEP_ALIVE.onKeepAlive();
+                                            TRACKING_COMM_STATS.getBallOrientationCommStat().onKeepAlive();
 
         if ( onLocationUpdate && onOrientationUpdate )
         {
@@ -112,6 +110,8 @@ public class BallTracker
             ballStatus.setOrientation(newBallOrientation);
             ballTrackingCommunicator.sendBallTrackingOrientation(ballStatus);
         }
+
+        TRACKING_COMM_STATS.getUnknownBallStatusFlag().onClear();
     }
 
     public void onTopLeftPlatforCornerMarkerDetected( final Marker marker )
@@ -129,6 +129,18 @@ public class BallTracker
     public void onBottomRightPlatforCornerMarkerDetected( final Marker marker )
     {
         updatePlatformCornerLocation(BOTTOM_RIGHT_CORNER_INDEX, marker);
+    }
+
+    public void onNoBallMarkerDetected()
+    {
+        final DelayedStatusFlag unknownBallStatusFlag = TRACKING_COMM_STATS.getUnknownBallStatusFlag();
+
+        unknownBallStatusFlag.onSet();
+        if ( unknownBallStatusFlag.tryGet() )
+        {
+            ballTrackingCommunicator.sendUnknownBallTrackingStatus();
+            unknownBallStatusFlag.onClear();
+        }
     }
 
     private float getBallLocationDeltaPercentage( final Vector2<Float> newBallLocation )

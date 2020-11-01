@@ -25,6 +25,8 @@ public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
 
     private static BallTrackerAnalyzer instance = null;
 
+    private boolean ballMarkerDetected;
+
     public static BallTrackerAnalyzer getInstance()
     {
         if ( instance == null )
@@ -49,12 +51,14 @@ public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
         final BallTracker ballTracker = BallTracker.getInstance();
         final OpenCVTrackingView trackingView = OpenCVTrackingView.getInstance();
 
-        trackingView.setFrame(rgbaInputFrame);  // for testing
-
+        ballMarkerDetected = false;
         for ( final Marker marker : detectMarkers )
             analyzeMarker(marker);
 
-        //trackingView.setFrame(rgbaInputFrame);
+        if ( !ballMarkerDetected )
+            ballTracker.onNoBallMarkerDetected();
+
+        trackingView.setFrame(rgbaInputFrame);
         trackingView.drawTracking( detectMarkers, BallTracker.getInstance() );
 
         return rgbaInputFrame;
@@ -65,7 +69,7 @@ public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
         final BallTracker ballTracker = BallTracker.getInstance();
         switch ( marker.getId() )
         {
-            case BALL_MARKER_ID: ballTracker.onBallMarkerDetected(marker); break;
+            case BALL_MARKER_ID: ballTracker.onBallMarkerDetected(marker); ballMarkerDetected = true; break;
             case TOP_LEFT_PLATFORM_CORNER_ID: ballTracker.onTopLeftPlatforCornerMarkerDetected(marker); break;
             case TOP_RIGHT_PLATFORM_CORNER_ID: ballTracker.onTopRightPlatforCornerMarkerDetected(marker); break;
             case BOTTOM_LEFT_PLATFORM_CORNER_ID: ballTracker.onBottomLeftPlatforCornerMarkerDetected(marker); break;
