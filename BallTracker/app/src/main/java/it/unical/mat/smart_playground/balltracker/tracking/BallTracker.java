@@ -23,6 +23,10 @@ public class BallTracker
     private static final short WIDTH = 0;
     private static final short HEIGHT = 1;
 
+    private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
+    private static final KeepAliveCommStat LOCATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallLocationCommStat();
+    private static final KeepAliveCommStat ORIENTATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallOrientationCommStat();
+
     private static BallTracker instance = null;
 
     private Vector2<Integer> platformFrameSize = null;
@@ -87,8 +91,10 @@ public class BallTracker
         catch (NoOrientationDetectedException e) {}
 
         // update and send new ball status.
-        final boolean onLocationUpdate = getBallLocationDeltaPercentage(newBallLocation) >= MIN_BALL_LOCATION_DELTA_PERCENTAGE;
-        final boolean onOrientationUpdate = newBallOrientation >= 0 && Math.abs(newBallOrientation - ballStatus.getOrientation()) >= MIN_BALL_ORIENTATION_DELTA;
+        final boolean onLocationUpdate = getBallLocationDeltaPercentage(newBallLocation) >= MIN_BALL_LOCATION_DELTA_PERCENTAGE ||
+                                            LOCATION_KEEP_ALIVE.onKeepAlive();
+        final boolean onOrientationUpdate = (newBallOrientation >= 0 && Math.abs(newBallOrientation - ballStatus.getOrientation()) >= MIN_BALL_ORIENTATION_DELTA) ||
+                                            ORIENTATION_KEEP_ALIVE.onKeepAlive();
 
         if ( onLocationUpdate && onOrientationUpdate )
         {

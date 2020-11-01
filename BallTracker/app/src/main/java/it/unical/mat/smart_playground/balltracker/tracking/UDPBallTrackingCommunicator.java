@@ -27,6 +27,10 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
     private ByteBuffer buffer = null;
     private int sequenceNumber = 0;
 
+    private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
+    private static final KeepAliveCommStat LOCATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallLocationCommStat();
+    private static final KeepAliveCommStat ORIENTATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallOrientationCommStat();
+
     public static UDPBallTrackingCommunicator getInstance()
     {
         if ( instance == null )
@@ -48,7 +52,9 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             buffer.putInt(sequenceNumber);
             addLocationToDataBuffer(status);
 
-            sendBufferData();
+            if ( sendBufferData() )
+                LOCATION_KEEP_ALIVE.onComm();
+
         }
     }
 
@@ -61,7 +67,8 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             buffer.putInt(sequenceNumber);
             addOrientationToDataBuffer(status);
 
-            sendBufferData();
+            if ( sendBufferData() )
+                ORIENTATION_KEEP_ALIVE.onComm();
         }
     }
 
@@ -75,7 +82,11 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             addLocationToDataBuffer(status);
             addOrientationToDataBuffer(status);
 
-            sendBufferData();
+            if ( sendBufferData() )
+            {
+                LOCATION_KEEP_ALIVE.onComm();
+                ORIENTATION_KEEP_ALIVE.onComm();
+            }
         }
     }
 
@@ -110,10 +121,10 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         buffer.putShort(orientation);
     }
 
-    private void sendBufferData()
+    private boolean sendBufferData()
     {
         if ( destinationAddrs.isEmpty() || buffer == null || !buffer.hasArray() )
-            return;
+            return false;
 
         byte[] bufferData = buffer.array();
 
@@ -123,6 +134,8 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             try {  udpSocket.send(dataPacket); ++sequenceNumber; }
             catch (IOException e) {}
         }
+
+        return true;
     }
 
     private static List<InetAddress> getDestinationAddrs() throws SocketException
