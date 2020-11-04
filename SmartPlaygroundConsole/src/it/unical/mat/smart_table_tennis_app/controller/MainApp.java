@@ -83,6 +83,23 @@ public class MainApp extends Application implements NetDiscoveryCallback, Ecosys
 
 		//EcosystemEventProvider.testOnEcosystemStatus(this);
 		//rootLayoutController.showNewAction( Action.USER_ACK );
+		
+		// TODO: remove to re-activate initialization (check git repository).
+		onNetServiceDiscovery( null );
+		new Thread()
+		{
+			public void run() {
+				try
+				{
+					sleep(3000);
+					onAckEvent();
+				} catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			};
+		}.start();
 	}
 	
 	public Node getCurrentContent()
@@ -93,7 +110,8 @@ public class MainApp extends Application implements NetDiscoveryCallback, Ecosys
 	@Override
 	public void onNetServiceDiscovery( final NetService service )
 	{
-		if ( service == null )
+		// TODO: uncomment (check git repository).
+		/*if ( service == null )
 		{
 			rootLayoutController.getStatusPopup().clearContent();
 			/*if ( ViewController.showYesNoAlert
@@ -104,21 +122,23 @@ public class MainApp extends Application implements NetDiscoveryCallback, Ecosys
 			
 			}
 			else*/
-				closeAppWithAlert( AlertType.ERROR, 
+				/*closeAppWithAlert( AlertType.ERROR, 
 								   "Ecosystem discovery error", 
 								   null, 
 								   "No ecosystem found over the network" );
 		}
-		else
+		else*/
 		{
-			final byte[] service_code = service.getCode();
-			if ( service_code.length == 1 && 
-					service_code[0] == ControllerConfigs.ECOSYSTEM_SERVICE_CODE )
+			// TODO: uncomment everything to re-activate initialization.
+			
+			//final byte[] service_code = service.getCode();
+			//if ( service_code.length == 1 && 
+			//		service_code[0] == ControllerConfigs.ECOSYSTEM_SERVICE_CODE )
 			{
-				final InetAddress baseStationAddress = service.getServerAddress();
-				try
+				//final InetAddress baseStationAddress = service.getServerAddress();
+				//try
 				{
-					ecosystemEventProvider = new EcosystemEventProvider( baseStationAddress, this );
+					//ecosystemEventProvider = new EcosystemEventProvider( baseStationAddress, this );
 				
 				
 					Platform.runLater( new Runnable()
@@ -126,19 +146,19 @@ public class MainApp extends Application implements NetDiscoveryCallback, Ecosys
 						@Override
 						public void run()
 						{
-							rootLayoutController.getStatusPopup().showNewContent
-								( new StatusPopupContent( "Ecosystem base station found at: " + baseStationAddress.getHostAddress() ) );						
+							//rootLayoutController.getStatusPopup().showNewContent
+							//	( new StatusPopupContent( "Ecosystem base station found at: " + baseStationAddress.getHostAddress() ) );						
 							rootLayoutController.getActionPopup().showNewContent( new ActionPopupContent(ActionType.USER_ACK) );
 						}
 					});
-				} catch (IOException e)
+				} /*catch (IOException e)
 				{
 					closeAppWithAlert( AlertType.ERROR, 
 									   "Ecosystem connection error", 
 									   "Ecosystem unreachable over " + baseStationAddress, 
 									   e.getMessage() );
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 	}

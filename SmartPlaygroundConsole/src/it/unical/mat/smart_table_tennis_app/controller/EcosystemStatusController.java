@@ -7,32 +7,35 @@ import java.util.List;
 
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.MotionControllerStatus;
+import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartPoleStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.TelosbBasedStatus;
 import it.unical.mat.smart_table_tennis_app.model.ecosystem.WindDirection;
+import it.unical.mat.smart_table_tennis_app.net.BallTrackingCallback;
+import it.unical.mat.smart_table_tennis_app.net.BallTrackingReceiver;
 import it.unical.mat.smart_table_tennis_app.view.Strings;
+import it.unical.mat.smart_table_tennis_app.view.field.PlaygroundField;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.transform.Scale;
 
 /**
  * @author Agostino
  *
  */
-public class EcosystemStatusController implements ViewController
+public class EcosystemStatusController implements ViewController, BallTrackingCallback
 {
 	private final double CHARTS_MAX_WIDTH  = 430.0;
-	private final double CHARTS_MAX_HEIGHT = 230.0;	
+	private final double CHARTS_MAX_HEIGHT = 230.0;
 	
 	// smart game platform sensors charts.
 	
@@ -162,9 +165,15 @@ public class EcosystemStatusController implements ViewController
 	@FXML
 	private Label windDirectionLabel;
 	
+	@FXML
+	private Canvas playgroundFieldCanvas;
+	@FXML
+	private ImageView playgroundFieldBallImage;
 	
 	private MainApp mainApp=null;
 	private Node content=null;
+	
+	private PlaygroundField mainPlaygroundField;
 	
 	
 	@Override
@@ -172,6 +181,8 @@ public class EcosystemStatusController implements ViewController
 	{
 		this.mainApp = app;
 		this.content = content;
+		
+		mainPlaygroundField = new PlaygroundField(playgroundFieldCanvas, playgroundFieldBallImage);
 		
 		initCharts();
 		
@@ -188,6 +199,8 @@ public class EcosystemStatusController implements ViewController
 		smartPoleDataBox.getChildren().add(smartPoleTemperatureSensorsChart);
 		smartPoleDataBox.getChildren().add(smartPoleBrightnessSensorChart);
 		*/
+		
+		BallTrackingReceiver.getInstance().setCallback(this);
 	}
 
 	@Override
@@ -280,6 +293,12 @@ public class EcosystemStatusController implements ViewController
 		//scale.setY(scale_factor);	\
 		content.setScaleX(scale_factor);
 		content.setScaleY(scale_factor);
+	}
+	
+	@Override
+	public void onBallStatusChanged(SmartBallStatus newBallStatus)
+	{
+		mainPlaygroundField.onBallStatusChanged(newBallStatus);
 	}
 	
 	private static void updateTelosbBasedStatus( final TelosbBasedStatus           status,
