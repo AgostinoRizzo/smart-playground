@@ -100,6 +100,10 @@ public class RootLayoutController implements ViewController
 		return null;//ecosystemStatusPopup;
 	}
 	
+	@Override
+	public void updateAnimation(long now)
+	{}
+	
 	/*public EcosystemStatusController getEcosystemStatusController()
 	{
 		return ecosystemStatusController;

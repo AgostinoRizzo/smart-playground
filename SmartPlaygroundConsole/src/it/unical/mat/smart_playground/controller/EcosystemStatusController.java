@@ -13,9 +13,12 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.ecosystem.TelosbBasedStatus;
 import it.unical.mat.smart_playground.model.ecosystem.WindDirection;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.network.BallTrackingCommProvider;
 import it.unical.mat.smart_playground.view.Strings;
-import it.unical.mat.smart_playground.view.field.PlaygroundField;
+import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
+import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
+import it.unical.mat.smart_playground.view.playground.PlaygroundField;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
@@ -169,6 +172,27 @@ public class EcosystemStatusController implements ViewController
 	@FXML
 	private ImageView playgroundFieldBallImage;
 	
+	@FXML
+	private ImageView windFlagImage0;
+	@FXML
+	private ImageView windFlagImage1;
+	@FXML
+	private ImageView windFlagImage2;
+	@FXML
+	private ImageView windFlagImage3;
+	
+	@FXML
+	private ImageView windOrientationImage;
+	@FXML
+	private ImageView windOrientationMainImage;
+	@FXML
+	private ImageView windSpeedFanImageView;
+	@FXML
+	private ImageView windSpeedFanMainImageView;
+	
+	@FXML
+	private ImageView ballOrientationImage;
+	
 	private MainApplication mainApp=null;
 	private Node content=null;
 	
@@ -181,7 +205,22 @@ public class EcosystemStatusController implements ViewController
 		this.mainApp = app;
 		this.content = content;
 		
-		mainPlaygroundField = new PlaygroundField(playgroundFieldCanvas, playgroundFieldBallImage);
+		mainPlaygroundField = new PlaygroundField(playgroundFieldCanvas, playgroundFieldBallImage, ballOrientationImage);
+		mainPlaygroundField.addWindOrientationImageView(windOrientationImage);
+		mainPlaygroundField.addWindOrientationImageView(windOrientationMainImage);
+		
+		PlaygroundStatus.getInstance().addObserver(mainPlaygroundField);
+		
+		final WindFlagAnimator windFlagAnimator = WindFlagAnimator.getInstance();
+		windFlagAnimator.addImageView(windFlagImage0);
+		windFlagAnimator.addImageView(windFlagImage1);
+		windFlagAnimator.addImageView(windFlagImage2);
+		windFlagAnimator.addImageView(windFlagImage3);
+		
+		final WindSpeedAnimator windSpeedAnimator = WindSpeedAnimator.getInstance();
+		windSpeedAnimator.addImageView(windSpeedFanImageView);
+		windSpeedAnimator.addImageView(windSpeedFanMainImageView);
+		
 		
 		initCharts();
 		
@@ -203,8 +242,20 @@ public class EcosystemStatusController implements ViewController
 	@Override
 	public void fin()
 	{
-		// TODO Auto-generated method stub
+		mainPlaygroundField.removeWindOrientationImageView(windOrientationImage);
+		mainPlaygroundField.removeWindOrientationImageView(windOrientationMainImage);
 		
+		PlaygroundStatus.getInstance().removeObserver(mainPlaygroundField);
+		
+		final WindFlagAnimator windFlagAnimator = WindFlagAnimator.getInstance();
+		windFlagAnimator.removeImageView(windFlagImage0);
+		windFlagAnimator.removeImageView(windFlagImage1);
+		windFlagAnimator.removeImageView(windFlagImage2);
+		windFlagAnimator.removeImageView(windFlagImage3);
+		
+		final WindSpeedAnimator windSpeedAnimator = WindSpeedAnimator.getInstance();
+		windSpeedAnimator.removeImageView(windSpeedFanImageView);
+		windSpeedAnimator.removeImageView(windSpeedFanMainImageView);
 	}
 
 	@Override
@@ -290,6 +341,12 @@ public class EcosystemStatusController implements ViewController
 		//scale.setY(scale_factor);	\
 		content.setScaleX(scale_factor);
 		content.setScaleY(scale_factor);
+	}
+	
+	@Override
+	public void updateAnimation(long now)
+	{
+		
 	}
 	
 	private static void updateTelosbBasedStatus( final TelosbBasedStatus           status,

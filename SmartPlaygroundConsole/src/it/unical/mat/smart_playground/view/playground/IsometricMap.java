@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.unical.mat.smart_playground.view.field;
+package it.unical.mat.smart_playground.view.playground;
 
 /**
  * @author Agostino

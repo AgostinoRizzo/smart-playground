@@ -38,5 +38,9 @@ public class MainMenuController implements ViewController
 	{
 		return content;
 	}
+	
+	@Override
+	public void updateAnimation(long now)
+	{}
 
 }

@@ -20,6 +20,7 @@ public interface ViewController
 	public void fin();
 	public MainApplication getMainApp();
 	public Node getContent();
+	public void updateAnimation( final long now );
 	
 	public static void showAlert( final AlertType type,
 								  final String title,

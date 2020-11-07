@@ -43,4 +43,8 @@ public class LoadingController implements ViewController
 	{
 		return content;
 	}
+	
+	@Override
+	public void updateAnimation(long now)
+	{}
 }

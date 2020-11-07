@@ -9,5 +9,5 @@ package it.unical.mat.smart_playground.model.playground;
  */
 public interface PlaygroundStatusObserver
 {
-	public void onPlaygroundStatusChanged();
+	public void onPlaygroundStatusChanged( final PlaygroundStatus status );
 }

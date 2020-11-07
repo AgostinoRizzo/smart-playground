@@ -66,6 +66,10 @@ public class MainLayoutController implements ViewController
 		return ecosystemStatusController;
 	}
 	
+	@Override
+	public void updateAnimation(long now)
+	{}
+	
 	private void initEcosystemStatusView()
 	{
 		// load ecosystem status view

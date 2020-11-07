@@ -1,10 +1,16 @@
 /**
  * 
  */
-package it.unical.mat.smart_playground.view.field;
+package it.unical.mat.smart_playground.view.playground;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
+import it.unical.mat.smart_playground.model.playground.WindStatus;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
@@ -13,28 +19,45 @@ import javafx.scene.image.ImageView;
  * @author Agostino
  *
  */
-public class PlaygroundField
+public class PlaygroundField implements PlaygroundStatusObserver
 {
 	private IsometricMap playgroundFieldMap = 
 			new IsometricMap(Configs.PLAYGROUND_FIELD_SIZE, Configs.PLAYGROUND_FIELD_ORIGIN);
 	
 	private Canvas playgroundFieldCanvas;
 	private final GraphicsContext playgroundFieldGC;
+	
 	private final ImageView ballImageView;
+	private final ImageView ballOrientationImageView;
+	
+	private final List<ImageView> windOrientationImageViews = new ArrayList<>();
 	
 	private SmartBallLocation lastBallLocation = null;
 	private int lastBallOrientation = -1;
 	
 	private int ballRotation = 0;
 	
-	public PlaygroundField( final Canvas playgroundFieldCanvas, final ImageView ballImageView )
+	public PlaygroundField( final Canvas playgroundFieldCanvas, final ImageView ballImageView, final ImageView ballOrientationImageView )
 	{
 		this.playgroundFieldCanvas = playgroundFieldCanvas;
 		this.ballImageView = ballImageView;
+		this.ballOrientationImageView = ballOrientationImageView;
 		
 		playgroundFieldGC = playgroundFieldCanvas.getGraphicsContext2D();
 	}
+	
+	public void addWindOrientationImageView( final ImageView toAdd )
+	{
+		windOrientationImageViews.add(toAdd);
+	}
+	
+	public void removeWindOrientationImageView( final ImageView toAdd )
+	{
+		windOrientationImageViews.remove(toAdd);
+	}
+	
 	private int currOrientation = 0;
+	
 	public void onBallStatusChanged( final SmartBallStatus newBallStatus )
 	{
 		if ( newBallStatus.isKnown() )
@@ -58,16 +81,34 @@ public class PlaygroundField
 			currOrientation = (currOrientation + 10) % 360;
 			drawBallOrientation();
 			
+			ballOrientationImageView.setRotate(currOrientation);
+			
 			if ( !ballImageView.isVisible() )
 				ballImageView.setVisible(true);
+			if ( !ballOrientationImageView.isVisible() )
+				ballOrientationImageView.setVisible(true);
 		}
 		else
 		{
 			clearFieldCanvas();
 			ballImageView.setVisible(false);
+			ballOrientationImageView.setVisible(false);
 			lastBallLocation = null;
 			lastBallOrientation = -1;
 		}
+	}
+	
+	public void onWindStatusChanged( final WindStatus newWindStatus )
+	{
+		for ( final ImageView imgView : windOrientationImageViews )
+			imgView.setRotate(newWindStatus.getDirection());
+	}
+	
+	@Override
+	public void onPlaygroundStatusChanged(PlaygroundStatus status)
+	{
+		onBallStatusChanged(status.getBallStatus());
+		onWindStatusChanged(status.getWindStatus());
 	}
 	
 	private void updateBallRotation()

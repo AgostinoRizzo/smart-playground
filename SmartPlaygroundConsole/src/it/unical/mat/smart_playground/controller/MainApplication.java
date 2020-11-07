@@ -4,12 +4,16 @@ import java.io.IOException;
 
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
+import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.network.NetDiscoveryCallback;
 import it.unical.mat.smart_playground.network.NetService;
 import it.unical.mat.smart_playground.network.PlaygroundBaseCommCallback;
 import it.unical.mat.smart_playground.view.ActionType;
 import it.unical.mat.smart_playground.view.Strings;
 import it.unical.mat.smart_playground.view.ViewConfigs;
+import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
+import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.popup.ActionPopup;
 import it.unical.mat.smart_playground.view.popup.ActionPopupContent;
 import it.unical.mat.smart_playground.view.popup.StatusPopupContent;
@@ -71,7 +75,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		APPLICATION_MANAGER.addNetworkDiscoveryCallback(this);
 		APPLICATION_MANAGER.addPlaygroundBaseCommCallbacks(this);
-		// TODO (uncomment): APPLICATION_MANAGER.initialize();
+		APPLICATION_MANAGER.initialize();
 
 		//EcosystemEventProvider.testOnEcosystemStatus(this);
 		//rootLayoutController.showNewAction( Action.USER_ACK );
@@ -104,7 +108,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		{
 			@Override
 			public void handle(long now)
-			{ mainLoopUpdate(now); }
+			{ mainLoopAnimationUpdate(now); }
 		}
 		.start();
 	}
@@ -227,9 +231,16 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		mainLayoutController.getEcosystemStatusController().onScale(scale_factor);
 	}
 	
-	private void mainLoopUpdate( final long now )
+	private void mainLoopAnimationUpdate( final long now )
 	{
-		
+		/*
+		final WindStatus newWindStatus = new WindStatus();
+		newWindStatus.setActive(true);
+		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
+		*/
+		WindFlagAnimator.getInstance().onUpdate(now);
+		WindSpeedAnimator.getInstance().onUpdate(now);
+		mainLayoutController.updateAnimation(now);
 	}
 	
 	private void fin()
