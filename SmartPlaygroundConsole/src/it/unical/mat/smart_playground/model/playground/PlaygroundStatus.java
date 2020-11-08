@@ -3,8 +3,11 @@
  */
 package it.unical.mat.smart_playground.model.playground;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 
@@ -19,7 +22,7 @@ public class PlaygroundStatus
 	private final SmartBallStatus ballStatus = new SmartBallStatus();
 	private final WindStatus windStatus = new WindStatus();
 	
-	private List<PlaygroundStatusObserver> observers = new ArrayList<>();
+	private Map<PlaygroundStatusTopic, List<PlaygroundStatusObserver>> observersMap = new HashMap<>();
 	
 	public static PlaygroundStatus getInstance()
 	{
@@ -32,26 +35,34 @@ public class PlaygroundStatus
 	{}
 	
 	public void addObserver( final PlaygroundStatusObserver toAdd )
-	{
-		observers.add(toAdd);
-	}
+	{ addObserver(toAdd, PlaygroundStatusTopic.ALL); }
 	
 	public void removeObserver( final PlaygroundStatusObserver toRemove )
+	{ removeObserver(toRemove, PlaygroundStatusTopic.ALL); }
+	
+	public void addObserver( final PlaygroundStatusObserver toAdd, final PlaygroundStatusTopic topic )
 	{
-		observers.remove(toRemove);
+		if ( !observersMap.containsKey(topic) )
+			observersMap.put(topic, new LinkedList<>());
+		observersMap.get(topic).add(toAdd);
+	}
+	
+	public void removeObserver( final PlaygroundStatusObserver toRemove, final PlaygroundStatusTopic topic )
+	{
+		observersMap.get(topic).remove(toRemove);
 	}
 	
 	public void updateBallStatus( final SmartBallStatus newBallStatus )
 	{
 		ballStatus.getLocation().set(newBallStatus.getLocation());
 		ballStatus.setOrientation(newBallStatus.getOrientation());
-		notifyStatusChange();
+		notifyStatusChange(PlaygroundStatusTopic.BALL_STATUS);
 	}
 	
 	public void updateWindStatus( final WindStatus newWindStatus )
 	{
 		windStatus.set(newWindStatus);
-		notifyStatusChange();
+		notifyStatusChange(PlaygroundStatusTopic.WIND_STATUS);
 	}
 	
 	public SmartBallStatus getBallStatus()
@@ -64,9 +75,16 @@ public class PlaygroundStatus
 		return windStatus;
 	}
 	
-	private void notifyStatusChange()
+	private void notifyStatusChange( final PlaygroundStatusTopic topic )
 	{
-		for ( final PlaygroundStatusObserver o : observers )
-			o.onPlaygroundStatusChanged(this);
+		PlaygroundStatusTopic key;
+		for ( final Entry<PlaygroundStatusTopic, List<PlaygroundStatusObserver>> entry 
+				: observersMap.entrySet() )
+		{
+			key = entry.getKey();
+			if ( key == PlaygroundStatusTopic.ALL || key == topic )
+				for ( final PlaygroundStatusObserver o : entry.getValue() )
+					o.onPlaygroundStatusChanged(this, topic);
+		}
 	}
 }

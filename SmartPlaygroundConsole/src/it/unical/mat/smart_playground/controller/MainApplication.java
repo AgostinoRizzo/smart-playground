@@ -73,9 +73,10 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		currentController = loadingLayoutController;
 		
+		APPLICATION_MANAGER.initialize();
 		APPLICATION_MANAGER.addNetworkDiscoveryCallback(this);
 		APPLICATION_MANAGER.addPlaygroundBaseCommCallbacks(this);
-		APPLICATION_MANAGER.initialize();
+		// TODO (uncomment): APPLICATION_MANAGER.initialize();
 
 		//EcosystemEventProvider.testOnEcosystemStatus(this);
 		//rootLayoutController.showNewAction( Action.USER_ACK );
@@ -233,11 +234,11 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	
 	private void mainLoopAnimationUpdate( final long now )
 	{
-		/*
+		
 		final WindStatus newWindStatus = new WindStatus();
 		newWindStatus.setActive(true);
 		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
-		*/
+		
 		WindFlagAnimator.getInstance().onUpdate(now);
 		WindSpeedAnimator.getInstance().onUpdate(now);
 		mainLayoutController.updateAnimation(now);

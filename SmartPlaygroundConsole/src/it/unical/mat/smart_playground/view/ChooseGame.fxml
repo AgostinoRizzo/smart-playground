@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="645.0" prefWidth="968.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.choosegame.ChooseGameController">
+   <children>
+      <fx:include fx:id="playground" source="Playground.fxml" />
+      <VBox prefHeight="806.0" prefWidth="373.0" styleClass="playground-sidebox" stylesheets="@application.css" AnchorPane.leftAnchor="1096.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Label text="Let's Play">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label text="Choose a game">
+               <font>
+                  <Font size="18.0" />
+               </font></Label>
+            <HBox onMouseClicked="#handleChooseTennisGame" prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
+               <children>
+                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../res/drawable/tennis_game_icon.png" />
+                     </image></ImageView>
+                  <VBox prefHeight="100.0" prefWidth="232.0" styleClass="game-item-text" stylesheets="@application.css">
+                     <children>
+                        <Label text="Smart Tennis">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font></Label>
+                        <Label text="Subtitle" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <HBox onMouseClicked="#handleChooseGolfGame" prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
+               <children>
+                  <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../res/drawable/golf_game_icon.png" />
+                     </image>
+                  </ImageView>
+                  <VBox prefHeight="100.0" prefWidth="232.0" styleClass="game-item-text" stylesheets="@application.css">
+                     <children>
+                        <Label text="Smart Golf">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Subtitle" />
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </VBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

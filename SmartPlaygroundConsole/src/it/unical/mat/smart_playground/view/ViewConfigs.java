@@ -16,5 +16,7 @@ public class ViewConfigs
 	public static final String MAIN_MENU_FXML_FILENAME = "MainMenu.fxml";	
 	public static final String WELCOME_FXML_FILENAME = "Welcome.fxml";
 	
+	public static final String CHOOSE_GAME_LAYOUT_FXML_FILENAME = "ChooseGame.fxml";
+	
 	
 }

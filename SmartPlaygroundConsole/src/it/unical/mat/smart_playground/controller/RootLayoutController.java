@@ -3,6 +3,7 @@
  */
 package it.unical.mat.smart_playground.controller;
 
+import it.unical.mat.smart_playground.controller.choosegame.ChooseGameWindow;
 import it.unical.mat.smart_playground.view.popup.ActionPopup;
 import it.unical.mat.smart_playground.view.popup.EcosystemStatusPopup;
 import it.unical.mat.smart_playground.view.popup.StatusPopup;
@@ -26,6 +27,7 @@ public class RootLayoutController implements ViewController
 	private Button ecosystemButton;
 	@FXML
 	private Button actionButton;
+	
 	@FXML
 	private Slider zoomSlider;
 	@FXML
@@ -42,6 +44,7 @@ public class RootLayoutController implements ViewController
 	private ActionPopup actionPopup=null;
 	//private EcosystemStatusPopup ecosystemStatusPopup=null;
 	
+	private ChooseGameWindow chooseGameWindow = null;
 	
 	@Override
 	public void init( final MainApplication app, final Node content )
@@ -180,5 +183,12 @@ public class RootLayoutController implements ViewController
 	{
 		if ( mainApp != null )
 			mainApp.onEcosystemStatusZoom(scale_factor);
+	}
+	
+	@FXML
+	private void handlePlayGame()
+	{
+		chooseGameWindow = new ChooseGameWindow();
+		chooseGameWindow.show();
 	}
 }

@@ -9,7 +9,7 @@ package it.unical.mat.smart_playground.view;
  */
 public class Strings
 {
-	public static final String APP_TITLE = "Smart Table Tennis App";
+	public static final String APP_TITLE = "Smart Playground Console";
 	public static final String ECOSYSTEM_DISCOVERING_NOTIFICATION = "Ecosystem discovering over network...";
 	public static final String NO_CONTENT = "<No Content>";
 	public static final String STATUS_POPUP_TITLE = "Status";
@@ -19,4 +19,6 @@ public class Strings
 	public static final String TEMPERATURE_UNIT = "°C";
 	public static final String HUMIDITY_UNIT = "%";
 	public static final String BRIGHTNESS_UNIT = "°C";
+	
+	public static final String CHOOSE_GAME_WINDOW_TITLE = "Choose a Game";
 }

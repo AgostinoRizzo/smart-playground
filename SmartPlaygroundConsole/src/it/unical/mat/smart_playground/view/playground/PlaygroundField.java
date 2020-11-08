@@ -10,6 +10,7 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -56,9 +57,22 @@ public class PlaygroundField implements PlaygroundStatusObserver
 		windOrientationImageViews.remove(toAdd);
 	}
 	
-	private int currOrientation = 0;
+	@Override
+	public void onPlaygroundStatusChanged(PlaygroundStatus status, PlaygroundStatusTopic topic)
+	{
+		switch ( topic )
+		{
+		case BALL_STATUS : onBallStatusChanged(status.getBallStatus()); break;
+		case WIND_STATUS : onWindStatusChanged(status.getWindStatus()); break;
+		case ALL :
+			onBallStatusChanged(status.getBallStatus());
+			onWindStatusChanged(status.getWindStatus()); break;
+		}		
+	}
 	
-	public void onBallStatusChanged( final SmartBallStatus newBallStatus )
+	private int currOrientation = 0;  // TODO: remove
+	
+	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
 	{
 		if ( newBallStatus.isKnown() )
 		{			
@@ -98,17 +112,10 @@ public class PlaygroundField implements PlaygroundStatusObserver
 		}
 	}
 	
-	public void onWindStatusChanged( final WindStatus newWindStatus )
+	private void onWindStatusChanged( final WindStatus newWindStatus )
 	{
 		for ( final ImageView imgView : windOrientationImageViews )
 			imgView.setRotate(newWindStatus.getDirection());
-	}
-	
-	@Override
-	public void onPlaygroundStatusChanged(PlaygroundStatus status)
-	{
-		onBallStatusChanged(status.getBallStatus());
-		onWindStatusChanged(status.getWindStatus());
 	}
 	
 	private void updateBallRotation()
