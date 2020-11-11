@@ -12,6 +12,7 @@ import it.unical.mat.smart_playground.network.PlaygroundBaseCommCallback;
 import it.unical.mat.smart_playground.view.ActionType;
 import it.unical.mat.smart_playground.view.Strings;
 import it.unical.mat.smart_playground.view.ViewConfigs;
+import it.unical.mat.smart_playground.view.animation.MinimapWindLinesAnimator;
 import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.popup.ActionPopup;
@@ -235,16 +236,18 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	private long lastUpdate = 0;
 	private void mainLoopAnimationUpdate( final long now )
 	{
-		if ( (now - lastUpdate) < 1000000000 )
+		if ( (now - lastUpdate) < 100000000 )
 			return;
 		lastUpdate = now;
 		
 		final WindStatus newWindStatus = new WindStatus();
 		newWindStatus.setActive(true);
+		newWindStatus.setDirection((short) 45);
 		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
 		
 		WindFlagAnimator.getInstance().onUpdate(now);
 		//WindSpeedAnimator.getInstance().onUpdate(now);
+		MinimapWindLinesAnimator.getInstance().onUpdate(now);
 		mainLayoutController.updateAnimation(now);
 	}
 	

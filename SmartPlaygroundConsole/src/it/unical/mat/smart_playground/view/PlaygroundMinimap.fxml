@@ -32,6 +32,7 @@
                               </ImageView>
                            </children>
                         </AnchorPane>
+                        <Canvas fx:id="windLinesCanvas" height="412.0" width="256.0" />
                      </children>
                   </AnchorPane>
                </children>

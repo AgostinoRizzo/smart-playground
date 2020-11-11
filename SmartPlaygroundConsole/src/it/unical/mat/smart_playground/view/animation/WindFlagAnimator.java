@@ -22,9 +22,9 @@ public class WindFlagAnimator
 	
 	private final AnimationStatus animationStatus = new AnimationStatus(ANIMATION_FRAMES_COUNT);
 	private final List<ImageView> flagImages = new ArrayList<>();
-	private final WindStatus windStatus = PlaygroundStatus.getInstance().getWindStatus();
 	
-	private final ImageFactory imageFactory = ImageFactory.getInstance();
+	private static final WindStatus WIND_STATUS = PlaygroundStatus.getInstance().getWindStatus();
+	private static final ImageFactory IMAGE_FACTORY = ImageFactory.getInstance();
 	
 	public static WindFlagAnimator getInstance()
 	{
@@ -48,7 +48,7 @@ public class WindFlagAnimator
 	
 	public void onUpdate( final long now )
 	{
-		final boolean isActive = windStatus.isActive();
+		final boolean isActive = WIND_STATUS.isActive();
 		
 		if ( isActive && animationStatus.update(now) )
 			updateFlagImages(animationStatus.getCurrentIndex());
@@ -63,7 +63,7 @@ public class WindFlagAnimator
 	{
 		for ( final ImageView imgView : flagImages )
 			imgView.setImage( ( frameIndex >= 0 ) 
-							  ? imageFactory.getRedFlagFrameImage(frameIndex) 
-							  : imageFactory.getRedFlagImage() );
+							  ? IMAGE_FACTORY.getRedFlagFrameImage(frameIndex) 
+							  : IMAGE_FACTORY.getRedFlagImage() );
 	}
 }

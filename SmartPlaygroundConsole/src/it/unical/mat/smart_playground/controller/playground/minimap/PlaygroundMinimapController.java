@@ -13,6 +13,7 @@ import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.GeometryUtil;
 import it.unical.mat.smart_playground.util.Vector2Int;
+import it.unical.mat.smart_playground.view.animation.MinimapWindLinesAnimator;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.Configs;
 import javafx.fxml.FXML;
@@ -38,11 +39,13 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@FXML private ImageView windSpeedFanImage;
 	
 	@FXML private Canvas fieldCanvas;
+	@FXML private Canvas windLinesCanvas;
 	
 	private GraphicsContext fieldCanvasGC;
 	
 	private static final WindSpeedAnimator WIND_SPEED_ANIMATOR = WindSpeedAnimator.getInstance();
 	private static final PlaygroundStatus  PLAYGROUND_STATUS   = PlaygroundStatus.getInstance();
+	private static final MinimapWindLinesAnimator MINIMAP_WIND_LINES_ANIMATOR = MinimapWindLinesAnimator.getInstance();
 	
 	
 	@Override
@@ -53,6 +56,8 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		
 		WIND_SPEED_ANIMATOR.addImageView(windSpeedFanImage);
 		PLAYGROUND_STATUS.addObserver(this);
+		
+		MINIMAP_WIND_LINES_ANIMATOR.setMinimapController(this);
 	}
 
 	@Override
@@ -60,6 +65,8 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{
 		WIND_SPEED_ANIMATOR.removeImageView(windSpeedFanImage);
 		PLAYGROUND_STATUS.removeObserver(this);
+		
+		MINIMAP_WIND_LINES_ANIMATOR.removeMinimapController();
 	}
 
 	@Override
@@ -75,6 +82,11 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		}
 	}
 	
+	public Canvas getWindLinesCanvas()
+	{
+		return windLinesCanvas;
+	}
+	
 	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
 	{
 		if ( newBallStatus.isKnown() )
@@ -86,7 +98,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 			ballImage.setLayoutX( ballX - HALF_BALL_SIZE );
 			ballImage.setLayoutY( ballY - HALF_BALL_SIZE );
 			
-			final Vector2Int directionVector = GeometryUtil.computeDirectionVector(45/*newBallStatus.getOrientation()*/, 90);
+			final Vector2Int directionVector = GeometryUtil.computeDirectionVector(newBallStatus.getOrientation(), 90);
 			
 			clearFieldCanvas();
 			drawBallTrajectory(ballX, ballY, directionVector);
