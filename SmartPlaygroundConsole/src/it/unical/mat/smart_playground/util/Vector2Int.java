@@ -1,7 +1,7 @@
 /**
  * 
  */
-package it.unical.mat.smart_playground.view.playground;
+package it.unical.mat.smart_playground.util;
 
 /**
  * @author Agostino
@@ -50,8 +50,25 @@ public class Vector2Int
 		return new Vector2Int(x / scaleFactor, y / scaleFactor);
 	}
 	
+	public Vector2Int scale( final double scaleFactor )
+	{
+		return new Vector2Int((int)(x / scaleFactor), (int)(y / scaleFactor));
+	}
+	
 	public Vector2Int getPerpendicular()
 	{
 		return new Vector2Int(-y, x);
+	}
+	
+	public double length()
+	{
+		return Math.sqrt( (x*x) + (y*y) );
+	}
+	
+	public double[] normalize()
+	{
+		final double length = length();
+		final double[] normalized = { x / length, y / length };
+		return normalized;
 	}
 }

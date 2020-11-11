@@ -8,12 +8,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="645.0" prefWidth="968.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.choosegame.ChooseGameController">
+<AnchorPane prefHeight="777.0" prefWidth="1469.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.playing.PlaySmartTennisController">
    <children>
       <fx:include fx:id="playground" source="Playground.fxml" />
-      <VBox prefHeight="352.0" prefWidth="363.0" styleClass="playground-sidebox" stylesheets="@application.css" AnchorPane.bottomAnchor="444.0" AnchorPane.leftAnchor="1096.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <VBox layoutX="987.0" prefHeight="330.0" prefWidth="472.0" styleClass="playground-sidebox" stylesheets="@application.css" AnchorPane.leftAnchor="987.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-            <Label text="Let's Play">
+            <Label text="Smart Tennis">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>
@@ -22,7 +22,7 @@
                <font>
                   <Font size="18.0" />
                </font></Label>
-            <HBox onMouseClicked="#handleChooseTennisGame" prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
                <children>
                   <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -45,7 +45,7 @@
                   <Insets top="20.0" />
                </VBox.margin>
             </HBox>
-            <HBox onMouseClicked="#handleChooseGolfGame" prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
+            <HBox prefHeight="100.0" prefWidth="200.0" styleClass="game-item" stylesheets="@application.css">
                <children>
                   <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -72,5 +72,10 @@
             </HBox>
          </children>
       </VBox>
+      <AnchorPane layoutX="987.0" layoutY="349.0" prefHeight="436.0" prefWidth="472.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="987.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <fx:include fx:id="minimap" source="PlaygroundMinimap.fxml" />
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

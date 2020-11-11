@@ -12,6 +12,8 @@ import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
+import it.unical.mat.smart_playground.util.GeometryUtil;
+import it.unical.mat.smart_playground.util.Vector2Int;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
@@ -127,13 +129,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	{
 		clearFieldCanvas();
 		
-		int canonicalBallOrientation = (lastBallOrientation == 0) ? 0 : 360 - lastBallOrientation;
-		canonicalBallOrientation = (canonicalBallOrientation + 90) % 360;
-		
-		final double radiansOrientation = Math.toRadians(canonicalBallOrientation);
-		final Vector2Int directionVector = new Vector2Int(  (int)(Math.cos(radiansOrientation) * 50.0), 
-														   -(int)(Math.sin(radiansOrientation) * 50.0) );
-		
+		final Vector2Int directionVector = GeometryUtil.computeDirectionVector(lastBallOrientation);
 		final Vector2Int startPointSceenCoords = playgroundFieldMap.getScreenCoords(lastBallLocation.getLeft(), 
 																					lastBallLocation.getTop());
 		final Vector2Int arrowPointSceenCoords = playgroundFieldMap.getScreenCoordsFromPivot(startPointSceenCoords, 

@@ -44,7 +44,7 @@ public class RootLayoutController implements ViewController
 	private ActionPopup actionPopup=null;
 	//private EcosystemStatusPopup ecosystemStatusPopup=null;
 	
-	private ChooseGameWindow chooseGameWindow = null;
+	private ChooseGameWindow chooseGameWindow = new ChooseGameWindow();
 	
 	@Override
 	public void init( final MainApplication app, final Node content )
@@ -188,7 +188,6 @@ public class RootLayoutController implements ViewController
 	@FXML
 	private void handlePlayGame()
 	{
-		chooseGameWindow = new ChooseGameWindow();
 		chooseGameWindow.show();
 	}
 }

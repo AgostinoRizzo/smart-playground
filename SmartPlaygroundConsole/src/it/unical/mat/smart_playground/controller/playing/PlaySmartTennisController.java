@@ -1,11 +1,12 @@
 /**
  * 
  */
-package it.unical.mat.smart_playground.controller.choosegame;
+package it.unical.mat.smart_playground.controller.playing;
 
 import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
 import it.unical.mat.smart_playground.controller.playground.PlaygroundController;
+import it.unical.mat.smart_playground.controller.playground.minimap.PlaygroundMinimapController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 
@@ -13,43 +14,26 @@ import javafx.scene.Parent;
  * @author Agostino
  *
  */
-public class ChooseGameController implements LayoutController
+public class PlaySmartTennisController implements LayoutController
 {
 	@FXML private Parent playground;
 	@FXML private PlaygroundController playgroundController;
 	
-	private ChooseGameWindow parentWindow = null;
+	@FXML private Parent minimap;
+	@FXML private PlaygroundMinimapController minimapController;
 	
 	@Override
 	public void onInitialize(Window win)
 	{
-		parentWindow = (ChooseGameWindow) win;
 		playgroundController.onInitialize(win);
+		minimapController.onInitialize(win);
 	}
+
 	@Override
 	public void onFinalize()
 	{
 		playgroundController.onFinalize();
+		minimapController.onFinalize();
 	}
 	
-	@FXML 
-	private void handleChooseTennisGame()
-	{
-		if ( parentWindow != null )
-		{
-			parentWindow.setChoosenGame(ChoosenGame.SMART_TENNIS);
-			parentWindow.close();
-		}
-	}
-	
-	@FXML 
-	private void handleChooseGolfGame()
-	{
-		if ( parentWindow != null )
-		{
-			parentWindow.setChoosenGame(ChoosenGame.SMART_GOLF);
-			parentWindow.close();
-		}
-	}
-
 }

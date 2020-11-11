@@ -3,6 +3,7 @@
  */
 package it.unical.mat.smart_playground.view.playground;
 
+import it.unical.mat.smart_playground.util.Vector2Int;
 import javafx.scene.paint.Color;
 
 /**
@@ -17,5 +18,6 @@ public class Configs
 	public static final int PLAYGROUND_BALL_IMAGE_VIEW_SIZE = 30;
 	public static final int HALF_PLAYGROUND_BALL_IMAGE_VIEW_SIZE = PLAYGROUND_BALL_IMAGE_VIEW_SIZE / 2;
 	
-	public static final Color PLAYGROUND_BALL_ORIENTATION_ARROW_COLOR = Color.YELLOW;
+	public static final Color PLAYGROUND_BALL_ORIENTATION_ARROW_COLOR         = Color.YELLOW;
+	public static final Color PLAYGROUND_MINIMAP_BALL_ORIENTATION_ARROW_COLOR = Color.RED;
 }

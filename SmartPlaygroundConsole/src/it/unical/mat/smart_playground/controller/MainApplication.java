@@ -232,15 +232,19 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		mainLayoutController.getEcosystemStatusController().onScale(scale_factor);
 	}
 	
+	private long lastUpdate = 0;
 	private void mainLoopAnimationUpdate( final long now )
 	{
+		if ( (now - lastUpdate) < 1000000000 )
+			return;
+		lastUpdate = now;
 		
 		final WindStatus newWindStatus = new WindStatus();
 		newWindStatus.setActive(true);
 		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
 		
 		WindFlagAnimator.getInstance().onUpdate(now);
-		WindSpeedAnimator.getInstance().onUpdate(now);
+		//WindSpeedAnimator.getInstance().onUpdate(now);
 		mainLayoutController.updateAnimation(now);
 	}
 	

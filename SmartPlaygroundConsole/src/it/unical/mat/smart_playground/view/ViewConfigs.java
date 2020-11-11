@@ -17,6 +17,7 @@ public class ViewConfigs
 	public static final String WELCOME_FXML_FILENAME = "Welcome.fxml";
 	
 	public static final String CHOOSE_GAME_LAYOUT_FXML_FILENAME = "ChooseGame.fxml";
+	public static final String PLAY_SMART_TENNIS_LAYOUT_FXML_FILENAME = "PlaySmartTennis.fxml";
 	
 	
 }

@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import javafx.animation.Animation;
+import javafx.animation.Animation.Status;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.scene.image.ImageView;
@@ -49,12 +50,22 @@ public class WindSpeedAnimator
 	
 	public void onUpdate( final long now )
 	{
+		RotateTransition rt;
+		
 		if ( PLAYGROUND_STATUS.getWindStatus().isActive() )
 			for ( final Entry<ImageView, RotateTransition> entry : windFanImages.entrySet() )
-				entry.getValue().play();
+			{
+				rt = entry.getValue();
+				if ( rt.getStatus() == Status.STOPPED )
+					rt.play();
+			}
 		else
 			for ( final Entry<ImageView, RotateTransition> entry : windFanImages.entrySet() )
-				entry.getValue().stop();
+			{
+				rt = entry.getValue();
+				if ( rt.getStatus() == Status.RUNNING )
+					rt.stop();
+			}
 	}
 	
 	private RotateTransition createRotateTransition( final ImageView imgView )

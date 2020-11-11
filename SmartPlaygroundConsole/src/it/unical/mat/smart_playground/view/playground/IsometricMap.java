@@ -3,6 +3,8 @@
  */
 package it.unical.mat.smart_playground.view.playground;
 
+import it.unical.mat.smart_playground.util.Vector2Int;
+
 /**
  * @author Agostino
  *
