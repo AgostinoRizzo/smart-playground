@@ -39,7 +39,7 @@
             </AnchorPane>
             <VBox prefHeight="412.0" prefWidth="134.0">
                <children>
-                  <VBox prefHeight="121.0" prefWidth="168.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
+                  <VBox prefHeight="87.0" prefWidth="150.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 5px;">
                      <children>
                         <HBox prefHeight="90.0" prefWidth="140.0">
                            <children>
@@ -77,10 +77,10 @@
                         </Label>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="5.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox prefHeight="121.0" prefWidth="163.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
+                  <VBox prefHeight="62.0" prefWidth="150.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 5px;">
                      <children>
                         <HBox prefHeight="90.0" prefWidth="140.0">
                            <children>
@@ -113,12 +113,12 @@
                         </Label>
                      </children>
                      <VBox.margin>
-                        <Insets bottom="10.0" />
+                        <Insets bottom="5.0" />
                      </VBox.margin>
                   </VBox>
-                  <VBox prefHeight="121.0" prefWidth="168.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
+                  <VBox prefHeight="70.0" prefWidth="150.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 5px;">
                      <children>
-                        <HBox prefHeight="90.0" prefWidth="140.0">
+                        <HBox prefHeight="74.0" prefWidth="140.0">
                            <children>
                               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -153,7 +153,20 @@
                            </font>
                         </Label>
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
                   </VBox>
+                  <MenuButton mnemonicParsing="false" prefHeight="31.0" prefWidth="163.0" text="Features">
+                    <items>
+                        <CheckMenuItem fx:id="windLinesCheckbox" mnemonicParsing="false" onAction="#handleWindLinesFlagChanged" text="Wind lines" />
+                        <CheckMenuItem fx:id="ballOrientationCheckbox" mnemonicParsing="false" onAction="#handleBallOrientationFlagChanged" text="Ball orientation" />
+                        <CheckMenuItem fx:id="ballTrajectoryCheckbox" mnemonicParsing="false" onAction="#handleBallTrajectoryFlagChanged" text="Ball trajectory" />
+                    </items>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </MenuButton>
                </children>
                <padding>
                   <Insets left="20.0" />

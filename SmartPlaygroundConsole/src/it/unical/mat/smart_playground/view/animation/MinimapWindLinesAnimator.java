@@ -28,6 +28,8 @@ public class MinimapWindLinesAnimator
 	private final List<WindLine> windLines = new ArrayList<>();
 	private PlaygroundMinimapController minimapController = null;
 	
+	private boolean canvasCleared = true;
+	
 	private static final WindStatus WIND_STATUS = PlaygroundStatus.getInstance().getWindStatus();
 	
 	public static MinimapWindLinesAnimator getInstance()
@@ -54,8 +56,12 @@ public class MinimapWindLinesAnimator
 	
 	public void onUpdate( final long now )
 	{
-		if ( !animationStatus.update(now) || !WIND_STATUS.isActive() || windLines.isEmpty() )
+		if ( !animationStatus.update(now) || !WIND_STATUS.isActive() || windLines.isEmpty() ||
+				(minimapController != null && !minimapController.getFeatureFlags().isWindLines()) )
+		{
+			clearWindLinesCanvas();
 			return;
+		}
 		onRefresh();
 	}
 	
@@ -78,6 +84,8 @@ public class MinimapWindLinesAnimator
 				wline.drawLine();
 			}
 		}
+		
+		canvasCleared = false;
 	}
 	
 	private void updateNewWindLines()
@@ -97,8 +105,12 @@ public class MinimapWindLinesAnimator
 	
 	private void clearWindLinesCanvas()
 	{
-		final Canvas windLinesCanvas = minimapController.getWindLinesCanvas();
-		windLinesCanvas.getGraphicsContext2D()
-			.clearRect(0, 0, windLinesCanvas.getWidth(), windLinesCanvas.getHeight());
+		if ( !canvasCleared && minimapController != null )
+		{
+			final Canvas windLinesCanvas = minimapController.getWindLinesCanvas();
+			windLinesCanvas.getGraphicsContext2D()
+				.clearRect(0, 0, windLinesCanvas.getWidth(), windLinesCanvas.getHeight());
+			canvasCleared = true;
+		}
 	}
 }

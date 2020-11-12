@@ -19,6 +19,7 @@ import it.unical.mat.smart_playground.view.playground.Configs;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
@@ -41,7 +42,13 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@FXML private Canvas fieldCanvas;
 	@FXML private Canvas windLinesCanvas;
 	
+	@FXML private CheckMenuItem windLinesCheckbox;
+	@FXML private CheckMenuItem ballOrientationCheckbox;
+	@FXML private CheckMenuItem ballTrajectoryCheckbox;
+	
 	private GraphicsContext fieldCanvasGC;
+	
+	private final FeatureFlags featureFlags = new FeatureFlags();
 	
 	private static final WindSpeedAnimator WIND_SPEED_ANIMATOR = WindSpeedAnimator.getInstance();
 	private static final PlaygroundStatus  PLAYGROUND_STATUS   = PlaygroundStatus.getInstance();
@@ -87,6 +94,11 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		return windLinesCanvas;
 	}
 	
+	public FeatureFlags getFeatureFlags()
+	{
+		return featureFlags;
+	}
+	
 	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
 	{
 		if ( newBallStatus.isKnown() )
@@ -115,7 +127,10 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{ windOrientationImage.setRotate(newWindStatus.getDirection()); }
 	
 	private void drawBallOrientation( final int ballX, final int ballY, final Vector2Int directionVector )
-	{		
+	{
+		if ( !featureFlags.isBallOrientation() )
+			return;
+		
 		final Vector2Int startPoint = new Vector2Int(ballX, ballY);
 		final Vector2Int arrowTailVector = directionVector.getPerpendicular();
 		
@@ -132,6 +147,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	private void drawBallTrajectory( final int ballX, final int ballY, final Vector2Int directionVector )
 	{
+		if ( !featureFlags.isBallTrajectory() )
+			return;
+		
 		final int[] projectionPoint = GeometryUtil.computeProjectionPoint(ballX, ballY, directionVector, 
 																		  TOP_LEFT_FIELD_CORNER, FIELD_SIZES);
 		fieldCanvasGC.setLineWidth(3);
@@ -144,6 +162,21 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	private void clearFieldCanvas()
 	{ fieldCanvasGC.clearRect(0, 0, fieldCanvas.getWidth(), fieldCanvas.getHeight()); }
+	
+	@FXML private void handleWindLinesFlagChanged()
+	{
+		featureFlags.setWindLines(windLinesCheckbox.isSelected());
+	}
+	
+	@FXML private void handleBallOrientationFlagChanged()
+	{
+		featureFlags.setBallOrientation(ballOrientationCheckbox.isSelected());
+	}
+	
+	@FXML private void handleBallTrajectoryFlagChanged()
+	{
+		featureFlags.setBallTrajectory(ballTrajectoryCheckbox.isSelected());
+	}
 	
 	private static int getBallImageCoord( final float coordPerc, final int coordIndex )
 	{

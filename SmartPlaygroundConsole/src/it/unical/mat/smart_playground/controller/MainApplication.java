@@ -242,7 +242,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		final WindStatus newWindStatus = new WindStatus();
 		newWindStatus.setActive(true);
-		newWindStatus.setDirection((short) 45);
+		//newWindStatus.setDirection((short) 45);
 		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
 		
 		WindFlagAnimator.getInstance().onUpdate(now);
