@@ -15,161 +15,16 @@
             <Image url="@../../../../../../res/drawable/playground.png" />
          </image>
       </ImageView>
-      <HBox prefHeight="148.0" prefWidth="892.0" spacing="10.0">
+      <HBox prefHeight="90.0" prefWidth="1073.0" spacing="10.0">
          <children>
-            <VBox prefHeight="121.0" prefWidth="168.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
-               <children>
-                  <HBox prefHeight="90.0" prefWidth="140.0">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../res/drawable/wind_icon.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                           <children>
-                              <ImageView fitHeight="80.0" fitWidth="80.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../../../res/drawable/compass.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fx:id="windOrientationImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../../../../res/drawable/compass_arrow.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                        </AnchorPane>
-                     </children>
-                  </HBox>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Direction" textAlignment="RIGHT">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </VBox>
+            <fx:include fx:id="windDirectionTile" source="widget/wind_direction_tile.fxml" />
             <fx:include fx:id="windSpeedTile" source="widget/wind_speed_tile.fxml" />
-            <VBox prefHeight="121.0" prefWidth="144.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
-               <children>
-                  <HBox prefHeight="90.0" prefWidth="140.0">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../res/drawable/temp_icon.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                           <HBox.margin>
-                              <Insets left="20.0" top="20.0" />
-                           </HBox.margin>
-                           <children>
-                              <Label text="30°C">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </HBox>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Temperature" textAlignment="RIGHT">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </VBox>
-            <VBox prefHeight="121.0" prefWidth="144.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
-               <children>
-                  <HBox prefHeight="90.0" prefWidth="140.0">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../res/drawable/humi_icon.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                           <children>
-                              <Label text="30%">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" top="20.0" />
-                           </HBox.margin>
-                        </AnchorPane>
-                     </children>
-                  </HBox>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Temperature" textAlignment="RIGHT">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </VBox>
-            <VBox prefHeight="121.0" prefWidth="144.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
-               <children>
-                  <HBox prefHeight="90.0" prefWidth="140.0">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../res/drawable/bright_icon.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                           <children>
-                              <Label text="30Lux">
-                                 <font>
-                                    <Font name="System Bold" size="24.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" top="20.0" />
-                           </HBox.margin>
-                        </AnchorPane>
-                     </children>
-                  </HBox>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Temperature" textAlignment="RIGHT">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </VBox>
+            <fx:include fx:id="temperatureTile" source="widget/temperature_tile.fxml" />
+            <fx:include fx:id="brightnessTile" source="widget/brightness_tile.fxml" />
+            <fx:include fx:id="humidityTile" source="widget/humidity_tile.fxml" />
          </children>
          <padding>
-            <Insets top="10.0" />
+            <Insets left="10.0" top="10.0" />
          </padding>
       </HBox>
       <ImageView fx:id="windFlagImage6" fitHeight="150.0" fitWidth="200.0" layoutX="43.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">

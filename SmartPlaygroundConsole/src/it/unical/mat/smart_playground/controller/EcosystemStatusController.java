@@ -21,6 +21,8 @@ import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimationManager;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.PlaygroundField;
+import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
+import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -185,18 +187,18 @@ public class EcosystemStatusController implements ViewController
 	@FXML
 	private ImageView windFlagImage3;
 	
-	@FXML
-	private ImageView windOrientationImage;
-	@FXML
-	private ImageView windOrientationMainImage;
+	@FXML private Parent mainWindDirectionTile;
+	@FXML private WindDirectionTileController mainWindDirectionTileController;
+	@FXML private Parent secondWindDirectionTile;
+	@FXML private WindDirectionTileController secondWindDirectionTileController;
 	
 	@FXML private Parent mainWindSpeedTile;
 	@FXML private WindSpeedTileController mainWindSpeedTileController;
 	@FXML private Parent secondWindSpeedTile;
 	@FXML private WindSpeedTileController secondWindSpeedTileController;
 	
-	@FXML
-	private ImageView ballOrientationImage;
+	@FXML private Parent ballOrientationTile;
+	@FXML private BallOrientationTileController ballOrientationTileController;
 	
 	@FXML private Canvas windFanCanvas;
 	
@@ -212,9 +214,7 @@ public class EcosystemStatusController implements ViewController
 		this.mainApp = app;
 		this.content = content;
 		
-		mainPlaygroundField = new PlaygroundField(playgroundFieldCanvas, playgroundFieldBallImage, ballOrientationImage);
-		mainPlaygroundField.addWindOrientationImageView(windOrientationImage);
-		mainPlaygroundField.addWindOrientationImageView(windOrientationMainImage);
+		mainPlaygroundField = new PlaygroundField(playgroundFieldCanvas, playgroundFieldBallImage);
 		
 		PlaygroundStatus.getInstance().addObserver(mainPlaygroundField);
 		
@@ -224,8 +224,13 @@ public class EcosystemStatusController implements ViewController
 		windFlagAnimator.addAnimation(windFlagImage2);
 		windFlagAnimator.addAnimation(windFlagImage3);
 		
+		mainWindDirectionTileController.onInitialize(null);
+		secondWindDirectionTileController.onInitialize(null);
+		
 		mainWindSpeedTileController.onInitialize(null);
 		secondWindSpeedTileController.onInitialize(null);
+		
+		ballOrientationTileController.onInitialize(null);
 		
 		initCharts();
 		
@@ -246,10 +251,7 @@ public class EcosystemStatusController implements ViewController
 
 	@Override
 	public void fin()
-	{
-		mainPlaygroundField.removeWindOrientationImageView(windOrientationImage);
-		mainPlaygroundField.removeWindOrientationImageView(windOrientationMainImage);
-		
+	{		
 		PlaygroundStatus.getInstance().removeObserver(mainPlaygroundField);
 		
 		final WindFlagAnimationManager windFlagAnimator = WindFlagAnimationManager.getInstance();
@@ -258,8 +260,13 @@ public class EcosystemStatusController implements ViewController
 		windFlagAnimator.removeAnimation(windFlagImage2);
 		windFlagAnimator.removeAnimation(windFlagImage3);
 		
+		mainWindDirectionTileController.onFinalize();
+		secondWindDirectionTileController.onFinalize();
+		
 		mainWindSpeedTileController.onFinalize();
 		secondWindSpeedTileController.onFinalize();		
+		
+		ballOrientationTileController.onFinalize();
 	}
 
 	@Override

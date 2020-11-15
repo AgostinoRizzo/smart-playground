@@ -2,36 +2,39 @@
 
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="173.0" styleClass="tile" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.widget.WindSpeedTileController">
+<VBox prefHeight="111.0" prefWidth="132.0" styleClass="tile" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.widget.TemperatureTileController">
    <children>
       <HBox prefHeight="90.0" prefWidth="140.0">
          <children>
             <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../../../../res/drawable/wind_icon.png" />
+                  <Image url="@../../../../../../../res/drawable/temp_icon.png" />
                </image>
                <HBox.margin>
                   <Insets top="20.0" />
                </HBox.margin>
             </ImageView>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+            <AnchorPane prefHeight="85.0" prefWidth="80.0">
                <children>
-                  <Canvas fx:id="windFanCanvas" height="90.0" width="90.0" />
+                  <Label fx:id="sensorLabel" text="30°C">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
                </children>
                <HBox.margin>
-                  <Insets left="20.0" />
+                  <Insets left="20.0" top="20.0" />
                </HBox.margin>
             </AnchorPane>
          </children>
       </HBox>
-      <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Speed" textAlignment="RIGHT">
+      <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Temperature" textAlignment="RIGHT">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>

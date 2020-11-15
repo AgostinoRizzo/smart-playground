@@ -31,7 +31,6 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	private final GraphicsContext playgroundFieldGC;
 	
 	private final ImageView ballImageView;
-	private final ImageView ballOrientationImageView;
 	
 	private final List<ImageView> windOrientationImageViews = new ArrayList<>();
 	
@@ -40,11 +39,10 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	
 	private int ballRotation = 0;
 	
-	public PlaygroundField( final Canvas playgroundFieldCanvas, final ImageView ballImageView, final ImageView ballOrientationImageView )
+	public PlaygroundField( final Canvas playgroundFieldCanvas, final ImageView ballImageView )
 	{
 		this.playgroundFieldCanvas = playgroundFieldCanvas;
 		this.ballImageView = ballImageView;
-		this.ballOrientationImageView = ballOrientationImageView;
 		
 		playgroundFieldGC = playgroundFieldCanvas.getGraphicsContext2D();
 	}
@@ -97,18 +95,13 @@ public class PlaygroundField implements PlaygroundStatusObserver
 			currOrientation = (currOrientation + 10) % 360;
 			drawBallOrientation();
 			
-			ballOrientationImageView.setRotate(currOrientation);
-			
 			if ( !ballImageView.isVisible() )
 				ballImageView.setVisible(true);
-			if ( !ballOrientationImageView.isVisible() )
-				ballOrientationImageView.setVisible(true);
 		}
 		else
 		{
 			clearFieldCanvas();
 			ballImageView.setVisible(false);
-			ballOrientationImageView.setVisible(false);
 			lastBallLocation = null;
 			lastBallOrientation = -1;
 		}

@@ -5,12 +5,11 @@ package it.unical.mat.smart_playground.controller.playground;
 
 import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
-import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
-import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
-import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
-import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
-import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
+import it.unical.mat.smart_playground.view.widget.BrightnessTileController;
+import it.unical.mat.smart_playground.view.widget.HumidityTileController;
+import it.unical.mat.smart_playground.view.widget.TemperatureTileController;
+import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -20,7 +19,7 @@ import javafx.scene.image.ImageView;
  * @author Agostino
  *
  */
-public class PlaygroundController implements LayoutController, PlaygroundStatusObserver
+public class PlaygroundController implements LayoutController
 {
 	@FXML private ImageView windFlagImage0;
 	@FXML private ImageView windFlagImage1;
@@ -31,13 +30,22 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 	@FXML private ImageView windFlagImage6;
 	@FXML private ImageView windFlagImage7;
 	
-	@FXML private ImageView windOrientationImage;
+	@FXML private Parent windDirectionTile;
+	@FXML private WindDirectionTileController windDirectionTileController;
 	
 	@FXML private Parent windSpeedTile;
 	@FXML private WindSpeedTileController windSpeedTileController;
 	
+	@FXML private Parent temperatureTile;
+	@FXML private TemperatureTileController temperatureTileController;
+	
+	@FXML private Parent brightnessTile;
+	@FXML private BrightnessTileController brightnessTileController;
+	
+	@FXML private Parent humidityTile;
+	@FXML private HumidityTileController humidityTileController;
+	
 	private static final WindFlagAnimationManager WIND_FLAG_ANIMATOR = WindFlagAnimationManager.getInstance();
-	private static final PlaygroundStatus  PLAYGROUND_STATUS   = PlaygroundStatus.getInstance();
 	
 	@Override
 	public void onInitialize(Window win)
@@ -51,9 +59,11 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage6);
 		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage7);
 		
+		windDirectionTileController.onInitialize(win);
 		windSpeedTileController.onInitialize(win);
-		
-		PLAYGROUND_STATUS.addObserver(this);
+		temperatureTileController.onInitialize(win);
+		brightnessTileController.onInitialize(win);
+		humidityTileController.onInitialize(win);
 	}
 	
 	@Override
@@ -68,31 +78,10 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage6);
 		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage7);
 		
+		windDirectionTileController.onFinalize();
 		windSpeedTileController.onFinalize();
-		
-		PLAYGROUND_STATUS.removeObserver(this);
-	}
-	
-	@Override
-	public void onPlaygroundStatusChanged(PlaygroundStatus status, PlaygroundStatusTopic topic)
-	{
-		switch ( topic )
-		{
-		case BALL_STATUS : onBallStatusChanged(status.getBallStatus()); break;
-		case WIND_STATUS : onWindStatusChanged(status.getWindStatus()); break;
-		case ALL :
-			onBallStatusChanged(status.getBallStatus());
-			onWindStatusChanged(status.getWindStatus()); break;
-		}	
-		
-	}
-	
-	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
-	{
-		// TODO: add management.
-	}
-	
-	private void onWindStatusChanged( final WindStatus newWindStatus )
-	{ windOrientationImage.setRotate(newWindStatus.getDirection()); }
-	
+		temperatureTileController.onFinalize();
+		brightnessTileController.onFinalize();
+		humidityTileController.onFinalize();
+	}	
 }

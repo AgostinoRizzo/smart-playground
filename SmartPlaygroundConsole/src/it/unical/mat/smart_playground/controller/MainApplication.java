@@ -236,7 +236,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	private long lastUpdate = 0;
 	private void mainLoopAnimationUpdate( final long now )
 	{
-		if ( (now - lastUpdate) < 10000 )
+		if ( (now - lastUpdate) < 100000000 )
 			return;
 		lastUpdate = now;
 		

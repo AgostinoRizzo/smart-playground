@@ -15,6 +15,8 @@ import it.unical.mat.smart_playground.util.GeometryUtil;
 import it.unical.mat.smart_playground.util.Vector2Int;
 import it.unical.mat.smart_playground.view.animation.MinimapWindLinesAnimator;
 import it.unical.mat.smart_playground.view.playground.Configs;
+import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
+import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -37,10 +39,15 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	private static final int   HALF_BALL_SIZE = BALL_SIZE / 2;
 	
 	@FXML private ImageView ballImage;
-	@FXML private ImageView windOrientationImage;
+	
+	@FXML private Parent windDirectionTile;
+	@FXML private WindDirectionTileController windDirectionTileController;
 	
 	@FXML private Parent windSpeedTile;
 	@FXML private WindSpeedTileController windSpeedTileController;
+	
+	@FXML private Parent ballOrientationTile;
+	@FXML private BallOrientationTileController ballOrientationTileController;
 	
 	@FXML private Canvas fieldCanvas;
 	@FXML private Canvas windLinesCanvas;
@@ -63,7 +70,10 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		fieldCanvasGC = fieldCanvas.getGraphicsContext2D();
 		ballImage.setVisible(false);
 		
+		windDirectionTileController.onInitialize(win);
 		windSpeedTileController.onInitialize(win);
+		ballOrientationTileController.onInitialize(win);
+		
 		PLAYGROUND_STATUS.addObserver(this);
 		
 		MINIMAP_WIND_LINES_ANIMATOR.setMinimapController(this);
@@ -72,7 +82,10 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@Override
 	public void onFinalize()
 	{
+		windDirectionTileController.onFinalize();
 		windSpeedTileController.onFinalize();
+		ballOrientationTileController.onFinalize();
+		
 		PLAYGROUND_STATUS.removeObserver(this);
 		
 		MINIMAP_WIND_LINES_ANIMATOR.removeMinimapController();
@@ -126,7 +139,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	}
 	
 	private void onWindStatusChanged( final WindStatus newWindStatus )
-	{ windOrientationImage.setRotate(newWindStatus.getDirection()); }
+	{
+		
+	}
 	
 	private void drawBallOrientation( final int ballX, final int ballY, final Vector2Int directionVector )
 	{
