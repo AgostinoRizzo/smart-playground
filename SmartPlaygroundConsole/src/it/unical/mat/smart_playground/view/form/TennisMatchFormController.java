@@ -16,15 +16,19 @@ public class TennisMatchFormController implements LayoutController
 {
 	private static final String[] MATCH_SETS_OPTIONS = {"Best of 1", "Best of 2", "Best of 3"};
 	private static final String[] SET_GAMES_OPTIONS  = {"Best of 1", "Best of 2", "Best of 3"};
+	private static final String[] ARTIFICIAL_PAYER_LEVEL_OPTIONS  = {"Easy", "Medium", "Hard", "Perfect"};
 	
 	@FXML private ChoiceBox<String> matchSetsOptions;
 	@FXML private ChoiceBox<String> setGamesOptions;
+	@FXML private ChoiceBox<String> artificialPlayerLevelOptions;
 	
 	@Override
 	public void onInitialize(Window win)
 	{
 		initChoiceBox(matchSetsOptions, MATCH_SETS_OPTIONS);
 		initChoiceBox(setGamesOptions, SET_GAMES_OPTIONS);
+		initChoiceBox(artificialPlayerLevelOptions, ARTIFICIAL_PAYER_LEVEL_OPTIONS);
+		artificialPlayerLevelOptions.getSelectionModel().selectLast();
 	}
 
 	@Override
