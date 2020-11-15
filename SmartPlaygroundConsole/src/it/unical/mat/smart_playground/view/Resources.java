@@ -23,4 +23,6 @@ public class Resources
 	
 	public static final String WIND_FAN_IMAGE_FILENAME              = "res/drawable/wind_fan.png";
 	public static final String WIND_FAN_SPRITE_IMAGE_FILENAME       = "res/drawable/animation/wind_fan_sprite.png";
+	
+	public static final String GOLF_HOLE_MINI_IMAGE_FILENAME        = "res/drawable/golf_hole_mini.png";
 }

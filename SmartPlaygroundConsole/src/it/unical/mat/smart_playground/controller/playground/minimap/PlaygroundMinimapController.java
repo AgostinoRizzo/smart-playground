@@ -5,6 +5,7 @@ package it.unical.mat.smart_playground.controller.playground.minimap;
 
 import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
+import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfController;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
@@ -13,6 +14,7 @@ import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.GeometryUtil;
 import it.unical.mat.smart_playground.util.Vector2Int;
+import it.unical.mat.smart_playground.view.ImageFactory;
 import it.unical.mat.smart_playground.view.animation.MinimapWindLinesAnimator;
 import it.unical.mat.smart_playground.view.playground.Configs;
 import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
@@ -24,6 +26,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
 /**
@@ -52,13 +56,17 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@FXML private Canvas fieldCanvas;
 	@FXML private Canvas windLinesCanvas;
 	
+	@FXML private Canvas fieldArea;
+	@FXML private Pane fieldAreaPane;
+	
 	@FXML private CheckMenuItem windLinesCheckbox;
 	@FXML private CheckMenuItem ballOrientationCheckbox;
 	@FXML private CheckMenuItem ballTrajectoryCheckbox;
 	
 	private GraphicsContext fieldCanvasGC;
-	
 	private final FeatureFlags featureFlags = new FeatureFlags();
+	
+	private PlaySmartGolfController parentController = null;
 	
 	private static final PlaygroundStatus PLAYGROUND_STATUS = PlaygroundStatus.getInstance();
 	private static final MinimapWindLinesAnimator MINIMAP_WIND_LINES_ANIMATOR = MinimapWindLinesAnimator.getInstance();
@@ -112,6 +120,11 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	public FeatureFlags getFeatureFlags()
 	{
 		return featureFlags;
+	}
+	
+	public void setParentController( final PlaySmartGolfController parentController )
+	{
+		this.parentController = parentController;
 	}
 	
 	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
@@ -193,6 +206,25 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@FXML private void handleBallTrajectoryFlagChanged()
 	{
 		featureFlags.setBallTrajectory(ballTrajectoryCheckbox.isSelected());
+	}
+	
+	@FXML private void handleFieldAreaClick( final MouseEvent event )
+	{
+		final double areaWidth = fieldAreaPane.getWidth(), areaHeight = fieldAreaPane.getHeight();
+		final double x = event.getX(), y = event.getY();
+		final double percX = x / areaWidth, percY = y / areaHeight;
+		
+		if ( percX >= .1 && percX <= .9 && percY >= .1 && percY < .5 )
+		{
+			final GraphicsContext gc = fieldArea.getGraphicsContext2D();
+			gc.clearRect(0, 0, fieldArea.getWidth(), fieldArea.getHeight());
+			
+			gc.drawImage(ImageFactory.getInstance().getGolfHoleMiniImage(), 
+					x - 30 + fieldAreaPane.getLayoutX(), y - 50 + fieldAreaPane.getLayoutY());
+			
+			if ( parentController != null )
+				parentController.onGolfHoleLocated(percX, percY);
+		}
 	}
 	
 	private static int getBallImageCoord( final float coordPerc, final int coordIndex )

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="777.0" prefWidth="1469.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.playing.PlaySmartGolfController">
+   <children>
+      <fx:include fx:id="playground" source="Playground.fxml" />
+      <AnchorPane prefHeight="333.0" prefWidth="472.0" AnchorPane.leftAnchor="987.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <children>
+            <fx:include fx:id="golfMatchForm" source="form/golf_match_form.fxml" />
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="987.0" layoutY="349.0" prefHeight="436.0" prefWidth="472.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="987.0" AnchorPane.rightAnchor="10.0">
+         <children>
+            <fx:include fx:id="minimap" source="PlaygroundMinimap.fxml" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

@@ -22,4 +22,5 @@ public class Strings
 	
 	public static final String CHOOSE_GAME_WINDOW_TITLE = "Choose a Game";
 	public static final String SMART_TENNIS_PLAYING_WINDOW_TITLE = "Smart Tennis";
+	public static final String SMART_GOLF_PLAYING_WINDOW_TITLE = "Smart Golf";
 }

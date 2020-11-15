@@ -23,6 +23,8 @@ public class ImageFactory
 	private Image windFanImage = null;
 	private Image windFanSpriteImage = null;
 	
+	private Image golfHoleMiniImage = null;
+	
 	public static ImageFactory getInstance()
 	{
 		if ( instance == null )
@@ -71,6 +73,13 @@ public class ImageFactory
 				( Resources.RED_FLAG_FRAME_IMAGE_FILENAME_PREFIX + frameIndex + 
 				  Resources.RED_FLAG_FRAME_IMAGE_FILENAME_SUFFIX );
 		return redFlagFrameImages[frameIndex];
+	}
+	
+	public Image getGolfHoleMiniImage()
+	{
+		if ( golfHoleMiniImage == null )
+			golfHoleMiniImage = createImage( Resources.GOLF_HOLE_MINI_IMAGE_FILENAME );
+		return golfHoleMiniImage;
 	}
 	
 	private Image createImage( final String filename )

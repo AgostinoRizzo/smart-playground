@@ -5,6 +5,7 @@ package it.unical.mat.smart_playground.controller.choosegame;
 
 import it.unical.mat.smart_playground.controller.OneShowWindow;
 import it.unical.mat.smart_playground.controller.Window;
+import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfWindow;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartTennisWindow;
 import it.unical.mat.smart_playground.view.Strings;
 import it.unical.mat.smart_playground.view.ViewConfigs;
@@ -54,6 +55,10 @@ public class ChooseGameWindow extends OneShowWindow
 		{
 		case SMART_TENNIS:
 			playingWindow = new PlaySmartTennisWindow(this);
+			playingWindow.show();
+			break;
+		case SMART_GOLF:
+			playingWindow = new PlaySmartGolfWindow(this);
 			playingWindow.show();
 			break;
 		default: break;

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -25,6 +26,11 @@
                                  </image>
                               </ImageView>
                               <Canvas fx:id="fieldCanvas" height="394.0" width="237.0" />
+                              <Canvas fx:id="fieldArea" height="394.0" width="237.0">
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                              </Canvas>
                               <ImageView fx:id="ballImage" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../../../../res/drawable/tennis_ball.png" />
@@ -33,6 +39,11 @@
                            </children>
                         </AnchorPane>
                         <Canvas fx:id="windLinesCanvas" height="412.0" width="256.0" />
+                        <Pane fx:id="fieldAreaPane" layoutX="30.0" layoutY="30.0" onMouseClicked="#handleFieldAreaClick" prefHeight="354.0" prefWidth="193.0">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Pane>
                      </children>
                   </AnchorPane>
                </children>
