@@ -5,7 +5,7 @@ package it.unical.mat.smart_playground.view;
 
 import java.io.File;
 
-import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
+import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
 import javafx.scene.image.Image;
 
 /**
@@ -17,7 +17,11 @@ public class ImageFactory
 	private static ImageFactory instance = null;
 	
 	private Image redFlagImage = null;
-	private Image[] redFlagFrameImages = new Image[WindFlagAnimator.ANIMATION_FRAMES_COUNT];
+	private Image redFlagSpriteImage = null;
+	private Image[] redFlagFrameImages = new Image[WindFlagAnimationManager.ANIMATION_FRAMES_COUNT];
+	
+	private Image windFanImage = null;
+	private Image windFanSpriteImage = null;
 	
 	public static ImageFactory getInstance()
 	{
@@ -37,6 +41,27 @@ public class ImageFactory
 		if ( redFlagImage == null )
 			redFlagImage = createImage( Resources.RED_FLAG_IMAGE_FILENAME );
 		return redFlagImage;
+	}
+	
+	public Image getRedFlagSpriteImage()
+	{
+		if ( redFlagSpriteImage == null )
+			redFlagSpriteImage = createImage( Resources.RED_FLAG_SPRITE_IMAGE_FILENAME );
+		return redFlagSpriteImage;
+	}
+	
+	public Image getWindFanImage()
+	{
+		if ( windFanImage == null )
+			windFanImage = createImage( Resources.WIND_FAN_IMAGE_FILENAME );
+		return windFanImage;
+	}
+	
+	public Image getWindFanSpriteImage()
+	{
+		if ( windFanSpriteImage == null )
+			windFanSpriteImage = createImage( Resources.WIND_FAN_SPRITE_IMAGE_FILENAME );
+		return windFanSpriteImage;
 	}
 	
 	public Image getRedFlagFrameImage( final int frameIndex )

@@ -111,7 +111,7 @@
                                                 </AreaChart>
                                              </children>
                                           </HBox>
-                                          <HBox prefHeight="71.0" prefWidth="499.0">
+                                          <HBox prefHeight="71.0" prefWidth="499.0" spacing="10.0">
                                              <children>
                                                 <VBox prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
                                                    <children>
@@ -154,42 +154,7 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </VBox>
-                                                <VBox prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
-                                                   <children>
-                                                      <HBox prefHeight="90.0" prefWidth="140.0">
-                                                         <children>
-                                                            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                               <image>
-                                                                  <Image url="@../../../../../../res/drawable/wind_icon.png" />
-                                                               </image>
-                                                               <HBox.margin>
-                                                                  <Insets top="20.0" />
-                                                               </HBox.margin>
-                                                            </ImageView>
-                                                            <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                                                               <children>
-                                                                  <ImageView fx:id="windSpeedFanMainImageView" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                                                     <image>
-                                                                        <Image url="@../../../../../../res/drawable/wind_fan.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </children>
-                                                               <HBox.margin>
-                                                                  <Insets left="20.0" />
-                                                               </HBox.margin>
-                                                            </AnchorPane>
-                                                         </children>
-                                                      </HBox>
-                                                      <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Speed" textAlignment="RIGHT">
-                                                         <font>
-                                                            <Font name="System Bold" size="15.0" />
-                                                         </font>
-                                                      </Label>
-                                                   </children>
-                                                   <HBox.margin>
-                                                      <Insets left="10.0" />
-                                                   </HBox.margin>
-                                                </VBox>
+                                                <fx:include fx:id="mainWindSpeedTile" source="widget/wind_speed_tile.fxml" />
                                                 <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../../../../../../res/drawable/radio_icon.png" />
@@ -494,113 +459,85 @@
                                                             <Insets top="50.0" />
                                                          </padding>
                                                       </AnchorPane>
-                                                      <VBox layoutX="546.0" layoutY="-46.0" prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
+                                                      <VBox layoutX="530.0" layoutY="-50.0" prefHeight="456.0" prefWidth="186.0" spacing="10.0">
                                                          <children>
-                                                            <HBox prefHeight="90.0" prefWidth="140.0">
+                                                            <VBox prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
                                                                <children>
-                                                                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../../../../../../res/drawable/wind_icon.png" />
-                                                                     </image>
-                                                                     <HBox.margin>
-                                                                        <Insets top="20.0" />
-                                                                     </HBox.margin>
-                                                                  </ImageView>
-                                                                  <AnchorPane prefHeight="85.0" prefWidth="80.0">
+                                                                  <HBox prefHeight="90.0" prefWidth="140.0">
                                                                      <children>
-                                                                        <ImageView fitHeight="80.0" fitWidth="80.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+                                                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
-                                                                              <Image url="@../../../../../../res/drawable/compass.png" />
+                                                                              <Image url="@../../../../../../res/drawable/wind_icon.png" />
                                                                            </image>
+                                                                           <HBox.margin>
+                                                                              <Insets top="20.0" />
+                                                                           </HBox.margin>
                                                                         </ImageView>
-                                                                        <ImageView fx:id="windOrientationImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                                                           <image>
-                                                                              <Image url="@../../../../../../res/drawable/compass_arrow.png" />
-                                                                           </image>
-                                                                        </ImageView>
+                                                                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
+                                                                           <children>
+                                                                              <ImageView fitHeight="80.0" fitWidth="80.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../../../../../../res/drawable/compass.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                              <ImageView fx:id="windOrientationImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../../../../../../res/drawable/compass_arrow.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                           </children>
+                                                                           <HBox.margin>
+                                                                              <Insets left="20.0" />
+                                                                           </HBox.margin>
+                                                                        </AnchorPane>
                                                                      </children>
-                                                                     <HBox.margin>
-                                                                        <Insets left="20.0" />
-                                                                     </HBox.margin>
-                                                                  </AnchorPane>
+                                                                  </HBox>
+                                                                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Direction" textAlignment="RIGHT">
+                                                                     <font>
+                                                                        <Font name="System Bold" size="15.0" />
+                                                                     </font>
+                                                                  </Label>
                                                                </children>
-                                                            </HBox>
-                                                            <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Direction" textAlignment="RIGHT">
-                                                               <font>
-                                                                  <Font name="System Bold" size="15.0" />
-                                                               </font>
-                                                            </Label>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox layoutX="546.0" layoutY="110.0" prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
-                                                         <children>
-                                                            <HBox prefHeight="90.0" prefWidth="140.0">
+                                                            </VBox>
+                                                            <fx:include fx:id="secondWindSpeedTile" source="widget/wind_speed_tile.fxml" />
+                                                            <VBox prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
                                                                <children>
-                                                                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../../../../../../res/drawable/wind_icon.png" />
-                                                                     </image>
-                                                                     <HBox.margin>
-                                                                        <Insets top="20.0" />
-                                                                     </HBox.margin>
-                                                                  </ImageView>
-                                                                  <AnchorPane prefHeight="85.0" prefWidth="80.0">
+                                                                  <HBox prefHeight="90.0" prefWidth="140.0">
                                                                      <children>
-                                                                        <ImageView fx:id="windSpeedFanImageView" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
-                                                                              <Image url="@../../../../../../res/drawable/wind_fan.png" />
+                                                                              <Image url="@../../../../../../res/drawable/ball_icon.png" />
                                                                            </image>
+                                                                           <HBox.margin>
+                                                                              <Insets top="20.0" />
+                                                                           </HBox.margin>
                                                                         </ImageView>
+                                                                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
+                                                                           <children>
+                                                                              <ImageView fitHeight="80.0" fitWidth="80.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../../../../../../res/drawable/compass.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                              <ImageView fx:id="ballOrientationImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../../../../../../res/drawable/compass_arrow.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                           </children>
+                                                                           <HBox.margin>
+                                                                              <Insets left="20.0" />
+                                                                           </HBox.margin>
+                                                                        </AnchorPane>
                                                                      </children>
-                                                                     <HBox.margin>
-                                                                        <Insets left="20.0" />
-                                                                     </HBox.margin>
-                                                                  </AnchorPane>
+                                                                  </HBox>
+                                                                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Ball Orientation" textAlignment="RIGHT">
+                                                                     <font>
+                                                                        <Font name="System Bold" size="15.0" />
+                                                                     </font>
+                                                                  </Label>
                                                                </children>
-                                                            </HBox>
-                                                            <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Speed" textAlignment="RIGHT">
-                                                               <font>
-                                                                  <Font name="System Bold" size="15.0" />
-                                                               </font>
-                                                            </Label>
-                                                         </children>
-                                                      </VBox>
-                                                      <VBox layoutX="546.0" layoutY="260.0" prefHeight="109.0" prefWidth="180.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 20px;">
-                                                         <children>
-                                                            <HBox prefHeight="90.0" prefWidth="140.0">
-                                                               <children>
-                                                                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../../../../../../res/drawable/ball_icon.png" />
-                                                                     </image>
-                                                                     <HBox.margin>
-                                                                        <Insets top="20.0" />
-                                                                     </HBox.margin>
-                                                                  </ImageView>
-                                                                  <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                                                                     <children>
-                                                                        <ImageView fitHeight="80.0" fitWidth="80.0" opacity="0.5" pickOnBounds="true" preserveRatio="true">
-                                                                           <image>
-                                                                              <Image url="@../../../../../../res/drawable/compass.png" />
-                                                                           </image>
-                                                                        </ImageView>
-                                                                        <ImageView fx:id="ballOrientationImage" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                                                           <image>
-                                                                              <Image url="@../../../../../../res/drawable/compass_arrow.png" />
-                                                                           </image>
-                                                                        </ImageView>
-                                                                     </children>
-                                                                     <HBox.margin>
-                                                                        <Insets left="20.0" />
-                                                                     </HBox.margin>
-                                                                  </AnchorPane>
-                                                               </children>
-                                                            </HBox>
-                                                            <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Ball Orientation" textAlignment="RIGHT">
-                                                               <font>
-                                                                  <Font name="System Bold" size="15.0" />
-                                                               </font>
-                                                            </Label>
+                                                            </VBox>
                                                          </children>
                                                       </VBox>
                                                    </children>

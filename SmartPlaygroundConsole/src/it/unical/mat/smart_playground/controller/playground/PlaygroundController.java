@@ -10,9 +10,10 @@ import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
-import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
-import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
+import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
+import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.image.ImageView;
 
 /**
@@ -31,25 +32,26 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 	@FXML private ImageView windFlagImage7;
 	
 	@FXML private ImageView windOrientationImage;
-	@FXML private ImageView windSpeedFanImage;
 	
-	private static final WindFlagAnimator  WIND_FLAG_ANIMATOR  = WindFlagAnimator.getInstance();
-	private static final WindSpeedAnimator WIND_SPEED_ANIMATOR = WindSpeedAnimator.getInstance();
+	@FXML private Parent windSpeedTile;
+	@FXML private WindSpeedTileController windSpeedTileController;
+	
+	private static final WindFlagAnimationManager WIND_FLAG_ANIMATOR = WindFlagAnimationManager.getInstance();
 	private static final PlaygroundStatus  PLAYGROUND_STATUS   = PlaygroundStatus.getInstance();
 	
 	@Override
 	public void onInitialize(Window win)
 	{
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage0);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage1);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage2);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage3);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage4);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage5);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage6);
-		WIND_FLAG_ANIMATOR.addImageView(windFlagImage7);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage0);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage1);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage2);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage3);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage4);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage5);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage6);
+		WIND_FLAG_ANIMATOR.addAnimation(windFlagImage7);
 		
-		WIND_SPEED_ANIMATOR.addImageView(windSpeedFanImage);
+		windSpeedTileController.onInitialize(win);
 		
 		PLAYGROUND_STATUS.addObserver(this);
 	}
@@ -57,16 +59,16 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 	@Override
 	public void onFinalize()
 	{
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage0);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage1);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage2);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage3);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage4);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage5);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage6);
-		WIND_FLAG_ANIMATOR.removeImageView(windFlagImage7);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage0);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage1);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage2);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage3);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage4);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage5);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage6);
+		WIND_FLAG_ANIMATOR.removeAnimation(windFlagImage7);
 		
-		WIND_SPEED_ANIMATOR.removeImageView(windSpeedFanImage);
+		windSpeedTileController.onFinalize();
 		
 		PLAYGROUND_STATUS.removeObserver(this);
 	}

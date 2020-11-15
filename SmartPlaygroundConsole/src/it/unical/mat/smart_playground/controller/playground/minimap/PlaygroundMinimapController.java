@@ -14,9 +14,10 @@ import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.GeometryUtil;
 import it.unical.mat.smart_playground.util.Vector2Int;
 import it.unical.mat.smart_playground.view.animation.MinimapWindLinesAnimator;
-import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.Configs;
+import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
@@ -37,7 +38,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	@FXML private ImageView ballImage;
 	@FXML private ImageView windOrientationImage;
-	@FXML private ImageView windSpeedFanImage;
+	
+	@FXML private Parent windSpeedTile;
+	@FXML private WindSpeedTileController windSpeedTileController;
 	
 	@FXML private Canvas fieldCanvas;
 	@FXML private Canvas windLinesCanvas;
@@ -50,8 +53,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	private final FeatureFlags featureFlags = new FeatureFlags();
 	
-	private static final WindSpeedAnimator WIND_SPEED_ANIMATOR = WindSpeedAnimator.getInstance();
-	private static final PlaygroundStatus  PLAYGROUND_STATUS   = PlaygroundStatus.getInstance();
+	private static final PlaygroundStatus PLAYGROUND_STATUS = PlaygroundStatus.getInstance();
 	private static final MinimapWindLinesAnimator MINIMAP_WIND_LINES_ANIMATOR = MinimapWindLinesAnimator.getInstance();
 	
 	
@@ -61,7 +63,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		fieldCanvasGC = fieldCanvas.getGraphicsContext2D();
 		ballImage.setVisible(false);
 		
-		WIND_SPEED_ANIMATOR.addImageView(windSpeedFanImage);
+		windSpeedTileController.onInitialize(win);
 		PLAYGROUND_STATUS.addObserver(this);
 		
 		MINIMAP_WIND_LINES_ANIMATOR.setMinimapController(this);
@@ -70,7 +72,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	@Override
 	public void onFinalize()
 	{
-		WIND_SPEED_ANIMATOR.removeImageView(windSpeedFanImage);
+		windSpeedTileController.onFinalize();
 		PLAYGROUND_STATUS.removeObserver(this);
 		
 		MINIMAP_WIND_LINES_ANIMATOR.removeMinimapController();

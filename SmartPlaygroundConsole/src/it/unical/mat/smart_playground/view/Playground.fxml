@@ -15,7 +15,7 @@
             <Image url="@../../../../../../res/drawable/playground.png" />
          </image>
       </ImageView>
-      <HBox prefHeight="94.0" prefWidth="542.0">
+      <HBox prefHeight="148.0" prefWidth="892.0" spacing="10.0">
          <children>
             <VBox prefHeight="121.0" prefWidth="168.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
                <children>
@@ -58,42 +58,7 @@
                   <Insets left="10.0" />
                </HBox.margin>
             </VBox>
-            <VBox prefHeight="121.0" prefWidth="163.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
-               <children>
-                  <HBox prefHeight="90.0" prefWidth="140.0">
-                     <children>
-                        <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../../../../res/drawable/wind_icon.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets top="20.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <AnchorPane prefHeight="85.0" prefWidth="80.0">
-                           <children>
-                              <ImageView fx:id="windSpeedFanImage" fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-                                 <image>
-                                    <Image url="@../../../../../../res/drawable/wind_fan.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                           <HBox.margin>
-                              <Insets left="20.0" />
-                           </HBox.margin>
-                        </AnchorPane>
-                     </children>
-                  </HBox>
-                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="153.0" text="Wind Speed" textAlignment="RIGHT">
-                     <font>
-                        <Font name="System Bold" size="15.0" />
-                     </font>
-                  </Label>
-               </children>
-               <HBox.margin>
-                  <Insets left="10.0" />
-               </HBox.margin>
-            </VBox>
+            <fx:include fx:id="windSpeedTile" source="widget/wind_speed_tile.fxml" />
             <VBox prefHeight="121.0" prefWidth="144.0" style="-fx-border-radius: 20px; -fx-background-radius: 20px; -fx-background-color: white; -fx-padding: 10px;">
                <children>
                   <HBox prefHeight="90.0" prefWidth="140.0">

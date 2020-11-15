@@ -5,6 +5,7 @@ package it.unical.mat.smart_playground.controller;
 
 import java.util.List;
 
+import it.unical.mat.smart_playground.controller.playground.PlaygroundController;
 import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.MotionControllerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
@@ -16,11 +17,14 @@ import it.unical.mat.smart_playground.model.ecosystem.WindDirection;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.network.BallTrackingCommProvider;
 import it.unical.mat.smart_playground.view.Strings;
-import it.unical.mat.smart_playground.view.animation.WindFlagAnimator;
+import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
+import it.unical.mat.smart_playground.view.animation.WindSpeedAnimationManager;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.PlaygroundField;
+import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
@@ -185,13 +189,16 @@ public class EcosystemStatusController implements ViewController
 	private ImageView windOrientationImage;
 	@FXML
 	private ImageView windOrientationMainImage;
-	@FXML
-	private ImageView windSpeedFanImageView;
-	@FXML
-	private ImageView windSpeedFanMainImageView;
+	
+	@FXML private Parent mainWindSpeedTile;
+	@FXML private WindSpeedTileController mainWindSpeedTileController;
+	@FXML private Parent secondWindSpeedTile;
+	@FXML private WindSpeedTileController secondWindSpeedTileController;
 	
 	@FXML
 	private ImageView ballOrientationImage;
+	
+	@FXML private Canvas windFanCanvas;
 	
 	private MainApplication mainApp=null;
 	private Node content=null;
@@ -211,16 +218,14 @@ public class EcosystemStatusController implements ViewController
 		
 		PlaygroundStatus.getInstance().addObserver(mainPlaygroundField);
 		
-		final WindFlagAnimator windFlagAnimator = WindFlagAnimator.getInstance();
-		windFlagAnimator.addImageView(windFlagImage0);
-		windFlagAnimator.addImageView(windFlagImage1);
-		windFlagAnimator.addImageView(windFlagImage2);
-		windFlagAnimator.addImageView(windFlagImage3);
+		final WindFlagAnimationManager windFlagAnimator = WindFlagAnimationManager.getInstance();
+		windFlagAnimator.addAnimation(windFlagImage0);
+		windFlagAnimator.addAnimation(windFlagImage1);
+		windFlagAnimator.addAnimation(windFlagImage2);
+		windFlagAnimator.addAnimation(windFlagImage3);
 		
-		final WindSpeedAnimator windSpeedAnimator = WindSpeedAnimator.getInstance();
-		windSpeedAnimator.addImageView(windSpeedFanImageView);
-		windSpeedAnimator.addImageView(windSpeedFanMainImageView);
-		
+		mainWindSpeedTileController.onInitialize(null);
+		secondWindSpeedTileController.onInitialize(null);
 		
 		initCharts();
 		
@@ -247,15 +252,14 @@ public class EcosystemStatusController implements ViewController
 		
 		PlaygroundStatus.getInstance().removeObserver(mainPlaygroundField);
 		
-		final WindFlagAnimator windFlagAnimator = WindFlagAnimator.getInstance();
-		windFlagAnimator.removeImageView(windFlagImage0);
-		windFlagAnimator.removeImageView(windFlagImage1);
-		windFlagAnimator.removeImageView(windFlagImage2);
-		windFlagAnimator.removeImageView(windFlagImage3);
+		final WindFlagAnimationManager windFlagAnimator = WindFlagAnimationManager.getInstance();
+		windFlagAnimator.removeAnimation(windFlagImage0);
+		windFlagAnimator.removeAnimation(windFlagImage1);
+		windFlagAnimator.removeAnimation(windFlagImage2);
+		windFlagAnimator.removeAnimation(windFlagImage3);
 		
-		final WindSpeedAnimator windSpeedAnimator = WindSpeedAnimator.getInstance();
-		windSpeedAnimator.removeImageView(windSpeedFanImageView);
-		windSpeedAnimator.removeImageView(windSpeedFanMainImageView);
+		mainWindSpeedTileController.onFinalize();
+		secondWindSpeedTileController.onFinalize();		
 	}
 
 	@Override
