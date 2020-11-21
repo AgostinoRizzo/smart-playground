@@ -34,6 +34,7 @@ public class PlaySmartGolfController extends PlaySmartGameController
 	
 	public void onGolfHoleLocated( final double percX, final double percY )
 	{
+		playgroundController.locateGolfHole((float) percX, (float) percY);
 		golfMatchFormController.onGolfHoleLocated(percX, percY);
 	}
 }

@@ -15,6 +15,12 @@ public class Configs
 	public static final Vector2Int PLAYGROUND_FIELD_SIZE   = new Vector2Int(302, 198);
 	public static final Vector2Int PLAYGROUND_FIELD_ORIGIN = new Vector2Int(40, 168);
 	
+	public static final Vector2Int PLAYGROUND_TENNIS_FIELD_SIZE   = new Vector2Int(272, 150);
+	public static final Vector2Int PLAYGROUND_TENNIS_FIELD_ORIGIN = new Vector2Int(118, 347);
+	
+	public static final Vector2Int PLAYGROUND_GOLF_FIELD_SIZE   = new Vector2Int(240, 132);
+	public static final Vector2Int PLAYGROUND_GOLF_FIELD_ORIGIN = new Vector2Int(332, 488);
+	
 	public static final int PLAYGROUND_BALL_IMAGE_VIEW_SIZE = 30;
 	public static final int HALF_PLAYGROUND_BALL_IMAGE_VIEW_SIZE = PLAYGROUND_BALL_IMAGE_VIEW_SIZE / 2;
 	

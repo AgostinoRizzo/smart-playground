@@ -3,15 +3,11 @@
  */
 package it.unical.mat.smart_playground.view.playground;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
-import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.GeometryUtil;
 import it.unical.mat.smart_playground.util.Vector2Int;
 import javafx.scene.canvas.Canvas;
@@ -24,15 +20,12 @@ import javafx.scene.image.ImageView;
  */
 public class PlaygroundField implements PlaygroundStatusObserver
 {
-	private IsometricMap playgroundFieldMap = 
-			new IsometricMap(Configs.PLAYGROUND_FIELD_SIZE, Configs.PLAYGROUND_FIELD_ORIGIN);
+	private final IsometricMap playgroundFieldMap;
 	
-	private Canvas playgroundFieldCanvas;
+	private final Canvas playgroundFieldCanvas;
 	private final GraphicsContext playgroundFieldGC;
 	
 	private final ImageView ballImageView;
-	
-	private final List<ImageView> windOrientationImageViews = new ArrayList<>();
 	
 	private SmartBallLocation lastBallLocation = null;
 	private int lastBallOrientation = -1;
@@ -43,18 +36,19 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	{
 		this.playgroundFieldCanvas = playgroundFieldCanvas;
 		this.ballImageView = ballImageView;
+		playgroundFieldMap = new IsometricMap(Configs.PLAYGROUND_FIELD_SIZE, Configs.PLAYGROUND_FIELD_ORIGIN);
 		
 		playgroundFieldGC = playgroundFieldCanvas.getGraphicsContext2D();
 	}
 	
-	public void addWindOrientationImageView( final ImageView toAdd )
+	public PlaygroundField( final Canvas playgroundFieldCanvas, final ImageView ballImageView,
+							final Vector2Int playgroundFieldSize, final Vector2Int playgroundFieldOrigin )
 	{
-		windOrientationImageViews.add(toAdd);
-	}
-	
-	public void removeWindOrientationImageView( final ImageView toAdd )
-	{
-		windOrientationImageViews.remove(toAdd);
+		this.playgroundFieldCanvas = playgroundFieldCanvas;
+		this.ballImageView = ballImageView;
+		playgroundFieldMap = new IsometricMap(playgroundFieldSize, playgroundFieldOrigin);
+		
+		playgroundFieldGC = playgroundFieldCanvas.getGraphicsContext2D();
 	}
 	
 	@Override
@@ -63,10 +57,10 @@ public class PlaygroundField implements PlaygroundStatusObserver
 		switch ( topic )
 		{
 		case BALL_STATUS : onBallStatusChanged(status.getBallStatus()); break;
-		case WIND_STATUS : onWindStatusChanged(status.getWindStatus()); break;
 		case ALL :
 			onBallStatusChanged(status.getBallStatus());
-			onWindStatusChanged(status.getWindStatus()); break;
+			break;
+		default: break;
 		}		
 	}
 	
@@ -105,12 +99,6 @@ public class PlaygroundField implements PlaygroundStatusObserver
 			lastBallLocation = null;
 			lastBallOrientation = -1;
 		}
-	}
-	
-	private void onWindStatusChanged( final WindStatus newWindStatus )
-	{
-		for ( final ImageView imgView : windOrientationImageViews )
-			imgView.setRotate(newWindStatus.getDirection());
 	}
 	
 	private void updateBallRotation()

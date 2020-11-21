@@ -23,7 +23,11 @@ public class ImageFactory
 	private Image windFanImage = null;
 	private Image windFanSpriteImage = null;
 	
+	private Image tennisBallImage = null;
+	private Image golfBallImage = null;
+	
 	private Image golfHoleMiniImage = null;
+	private Image golfFieldMinimapImage = null;
 	
 	public static ImageFactory getInstance()
 	{
@@ -75,11 +79,32 @@ public class ImageFactory
 		return redFlagFrameImages[frameIndex];
 	}
 	
+	public Image getTennisBallImage()
+	{
+		if ( tennisBallImage == null )
+			tennisBallImage = createImage( Resources.TENNIS_BALL_IMAGE_FILENAME );
+		return tennisBallImage;
+	}
+	
+	public Image getGolfBallImage()
+	{
+		if ( golfBallImage == null )
+			golfBallImage = createImage( Resources.GOLF_BALL_IMAGE_FILENAME );
+		return golfBallImage;
+	}
+	
 	public Image getGolfHoleMiniImage()
 	{
 		if ( golfHoleMiniImage == null )
 			golfHoleMiniImage = createImage( Resources.GOLF_HOLE_MINI_IMAGE_FILENAME );
 		return golfHoleMiniImage;
+	}
+	
+	public Image getGolfFieldMinimapImage()
+	{
+		if ( golfFieldMinimapImage == null )
+			golfFieldMinimapImage = createImage( Resources.GOLF_FIELD_MINIMAP_IMAGE_FILENAME );
+		return golfFieldMinimapImage;
 	}
 	
 	private Image createImage( final String filename )

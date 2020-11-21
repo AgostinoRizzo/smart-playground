@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.canvas.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
@@ -10,9 +11,60 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.playground.PlaygroundController">
    <children>
-      <ImageView fitHeight="806.0" fitWidth="1469.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="658.0" fitWidth="1200.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../../../../../../res/drawable/playground.png" />
+         </image>
+      </ImageView>
+      <Canvas fx:id="playgroundCanvas" height="658.0" width="1200.0" />
+      <ImageView fx:id="windFlagImage7" fitHeight="150.0" fitWidth="200.0" layoutX="64.0" layoutY="111.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage5" fitHeight="150.0" fitWidth="200.0" layoutX="90.0" layoutY="424.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage4" fitHeight="150.0" fitWidth="200.0" layoutX="645.0" layoutY="499.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage6" fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage0" fitHeight="150.0" fitWidth="200.0" layoutX="407.0" layoutY="63.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage1" fitHeight="150.0" fitWidth="200.0" layoutX="737.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage3" fitHeight="150.0" fitWidth="200.0" layoutX="880.0" layoutY="374.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="windFlagImage2" fitHeight="150.0" fitWidth="200.0" layoutX="880.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../../../res/drawable/red_flag.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="golfHoleImage" fitHeight="50.0" fitWidth="48.0" layoutX="621.0" layoutY="474.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../../../res/drawable/golf_hole_mini.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="playgroundFieldBallImage" fitHeight="30.0" fitWidth="30.0" layoutX="261.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true" visible="false">
+         <image>
+            <Image url="@../../../../../../res/drawable/soccer_ball.png" />
          </image>
       </ImageView>
       <HBox prefHeight="90.0" prefWidth="1073.0" spacing="10.0">
@@ -27,45 +79,5 @@
             <Insets left="10.0" top="10.0" />
          </padding>
       </HBox>
-      <ImageView fx:id="windFlagImage6" fitHeight="150.0" fitWidth="200.0" layoutX="43.0" layoutY="304.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage7" fitHeight="150.0" fitWidth="200.0" layoutX="93.0" layoutY="189.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage5" fitHeight="150.0" fitWidth="200.0" layoutX="119.0" layoutY="568.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage4" fitHeight="150.0" fitWidth="200.0" layoutX="766.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage0" fitHeight="150.0" fitWidth="200.0" layoutX="530.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage1" fitHeight="150.0" fitWidth="200.0" layoutX="907.0" layoutY="203.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage3" fitHeight="150.0" fitWidth="200.0" layoutX="1083.0" layoutY="487.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="windFlagImage2" fitHeight="150.0" fitWidth="200.0" layoutX="1083.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../../../../../../res/drawable/red_flag.png" />
-         </image>
-      </ImageView>
    </children>
 </AnchorPane>

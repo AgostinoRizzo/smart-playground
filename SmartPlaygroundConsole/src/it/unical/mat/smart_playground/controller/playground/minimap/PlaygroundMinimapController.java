@@ -6,6 +6,7 @@ package it.unical.mat.smart_playground.controller.playground.minimap;
 import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfController;
+import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfWindow;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
@@ -25,6 +26,7 @@ import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -42,6 +44,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	private static final int   BALL_SIZE = 30;
 	private static final int   HALF_BALL_SIZE = BALL_SIZE / 2;
 	
+	@FXML private ImageView minimapFieldImage;
 	@FXML private ImageView ballImage;
 	
 	@FXML private Parent windDirectionTile;
@@ -70,6 +73,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	private static final PlaygroundStatus PLAYGROUND_STATUS = PlaygroundStatus.getInstance();
 	private static final MinimapWindLinesAnimator MINIMAP_WIND_LINES_ANIMATOR = MinimapWindLinesAnimator.getInstance();
+	private static final ImageFactory IMAGE_FACTORY = ImageFactory.getInstance();
 	
 	
 	@Override
@@ -77,6 +81,12 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{
 		fieldCanvasGC = fieldCanvas.getGraphicsContext2D();
 		ballImage.setVisible(false);
+		
+		if ( win instanceof PlaySmartGolfWindow )
+		{
+			minimapFieldImage.setImage(IMAGE_FACTORY.getGolfFieldMinimapImage());
+			ballImage.setImage(IMAGE_FACTORY.getGolfBallImage());
+		}
 		
 		windDirectionTileController.onInitialize(win);
 		windSpeedTileController.onInitialize(win);
@@ -219,8 +229,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 			final GraphicsContext gc = fieldArea.getGraphicsContext2D();
 			gc.clearRect(0, 0, fieldArea.getWidth(), fieldArea.getHeight());
 			
-			gc.drawImage(ImageFactory.getInstance().getGolfHoleMiniImage(), 
-					x - 30 + fieldAreaPane.getLayoutX(), y - 50 + fieldAreaPane.getLayoutY());
+			final Image golfHoleImage = ImageFactory.getInstance().getGolfHoleMiniImage();
+			gc.drawImage(golfHoleImage, x - 20 + 20, 
+										y - golfHoleImage.getHeight() + 10 + 20);
 			
 			if ( parentController != null )
 				parentController.onGolfHoleLocated(percX, percY);

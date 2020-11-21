@@ -17,7 +17,7 @@ import javafx.scene.Parent;
 public abstract class PlaySmartGameController implements LayoutController
 {
 	@FXML private Parent playground;
-	@FXML private PlaygroundController playgroundController;
+	@FXML protected PlaygroundController playgroundController;
 	
 	@FXML private Parent minimap;
 	@FXML protected PlaygroundMinimapController minimapController;
