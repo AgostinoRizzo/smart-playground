@@ -60,7 +60,7 @@ implementation
 	{
 		if ( result == SUCCESS )
 		{
-			temp = data; // -39+0.01*data;
+			temp = -39+0.01*data;
 			buffer_sample_value(TEMP_ID, temp);
 		}
 	}
@@ -68,7 +68,7 @@ implementation
 	{
 		if ( result == SUCCESS )
 		{
-			humi = data;
+			humi = (-4+0.0405*data) + (-0.0000028*pow(data,2));
 			buffer_sample_value(HUMI_ID, humi);
 		}
 	}
@@ -76,7 +76,7 @@ implementation
 	{
 		if ( result == SUCCESS )
 		{
-			bright = data;
+			bright = 2.5*(data/4096.0)*6250.0;
 			buffer_sample_value(BRIGHT_ID, bright);
 		}
 	}

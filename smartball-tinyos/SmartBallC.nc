@@ -53,6 +53,8 @@ implementation
 	void invert_swing_running_dir( running_dir_t* dir );
 	bool running_swing_dir_eq( running_dir_t rdir, swing_dir_t sdir );
 	
+	void manage_go_straight( int16_t direction_angle );
+	
 	
 	event void Boot.booted()
 	{
@@ -64,64 +66,18 @@ implementation
 	
 	event void Communicate.on_start( int16_t direction_angle )
 	{
-		uint32_t rot_time;
-		int32_t  dir_mod;
-		
 		if ( curr_state != READY )
 			return;
 		
-		dir_mod     = mod(direction_angle);
-		rot_time    = get_rotation_time(dir_mod);
-		running_dir = dir_mod;
-		
-		if ( direction_angle >=0 )
-		{
-			swing_running_dir = RUNNING_DIR_LEFT;
-			call Drive.turn_right();
-		}
-		else
-		{
-			swing_running_dir = RUNNING_DIR_RIGHT;
-			call Drive.turn_left();
-		}
-		
-		curr_state = TRAJECTORY_ADJ;
-		call TrajectorAdjTimer.startOneShot( rot_time );
+		manage_go_straight(direction_angle);
 	}
 	event void Communicate.on_swing( int16_t direction_angle )
 	{
-		uint32_t rot_time;
-		int32_t  dir_mod;
-		
 		if ( curr_state != RUNNING )
 			return;
 		
-		if ( direction_angle == 0 )
-		{
-			call Drive.invert_direction();
-			call Drive.go_straight();
-			curr_state = RUNNING;
-		}
-		else
-		{
-			dir_mod     = mod(direction_angle);
-			rot_time    = get_rotation_time(dir_mod);
-			curr_state  = BOUNCING;
-			
-			if ( direction_angle >=0 )
-			{
-				swing_running_dir = RUNNING_DIR_LEFT;
-				call Drive.turn_right();
-			}
-			else
-			{
-				swing_running_dir = RUNNING_DIR_RIGHT;
-				call Drive.turn_left();
-			}
-					
-			invert_swing_running_dir( &swing_running_dir );
-			call BouncingTimer.startOneShot( rot_time );
-		}
+		call Drive.invert_direction();
+		manage_go_straight(direction_angle);
 	}
 	event void Communicate.on_stop()
 	{
@@ -296,5 +252,15 @@ implementation
 	bool running_swing_dir_eq( running_dir_t rdir, swing_dir_t sdir )
 	{
 		return ( rdir == sdir );
+	}
+	
+	void manage_go_straight( int16_t direction_angle )
+	{
+		if ( direction_angle == 0 )
+			call Drive.go_straight();
+		else
+			call Drive.go_straight_with_effect( direction_angle > 0 ? GO_EFFECT_RIGHT : GO_EFFECT_LEFT );
+		
+		curr_state = RUNNING;
 	}
 }

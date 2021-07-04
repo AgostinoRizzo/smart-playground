@@ -17,6 +17,8 @@ implementation
 {
 	components MotorsManagerP      as MotorsManager;
 	components HplMsp430GeneralIOC as IO;
+	components new TimerMilliC()   as PwmRightMotorSpeedTimer;
+	components new TimerMilliC()   as PwmLeftMotorSpeedTimer;
 	
 	Drive = MotorsManager.Drive;
 	
@@ -24,4 +26,10 @@ implementation
 	MotorsManager.IN2 -> IO_IN2_PIN;
 	MotorsManager.IN3 -> IO_IN3_PIN;
 	MotorsManager.IN4 -> IO_IN4_PIN;
+	
+	MotorsManager.PWM_RIGHT_MOTOR -> IO_PWM_RIGHT_MOTOR_PIN;
+	MotorsManager.PWM_LEFT_MOTOR  -> IO_PWM_LEFT_MOTOR_PIN;
+	
+	MotorsManager.PwmRightMotorSpeedTimer -> PwmRightMotorSpeedTimer;
+	MotorsManager.PwmLeftMotorSpeedTimer  -> PwmLeftMotorSpeedTimer;
 }

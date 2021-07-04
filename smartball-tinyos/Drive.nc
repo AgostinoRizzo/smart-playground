@@ -14,6 +14,7 @@ interface Drive
 	command void reset();
 	
 	command void go_straight();
+	command void go_straight_with_effect( goeffect_t effect );
 	
 	command void turn_right();
 	command void turn_left();
