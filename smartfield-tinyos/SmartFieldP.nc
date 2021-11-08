@@ -10,6 +10,14 @@
 #include "AM.h"
 #include "Serial.h"
 
+#include "Configs.h"
+#include "FieldCommands.h"
+#include "WindSensor.h"
+
+#define TRUE  1
+#define FALSE 0
+
+
 module SmartFieldP @safe() {
   uses {
     interface Boot;
@@ -28,6 +36,9 @@ module SmartFieldP @safe() {
     interface AMPacket as RadioAMPacket;
 
     interface Leds;
+    
+    interface FieldCommands;
+    interface WindSensor;
   }
 }
 
@@ -50,7 +61,10 @@ implementation
 
   task void uartSendTask();
   task void radioSendTask();
-
+  
+  /*** uart wind status message ***/
+  message_t windstat_msg;
+  
   void dropBlink() {
     call Leds.led2Toggle();
   }
@@ -61,7 +75,13 @@ implementation
 
   event void Boot.booted() {
     uint8_t i;
-
+	
+	// init field commands.
+	call FieldCommands.init();
+	
+	// init wind sensor.
+	call WindSensor.init();
+	
     for (i = 0; i < UART_QUEUE_LEN; i++)
       uartQueue[i] = &uartQueueBufs[i];
     uartIn = uartOut = 0;
@@ -187,31 +207,50 @@ implementation
     post uartSendTask();
   }
 
+  /* UART RECEIVE FROM SMART-PLAYGROUND-BASE (RASPBERRY PI) */
   event message_t *UartReceive.receive[am_id_t id](message_t *msg,
 						   void *payload,
 						   uint8_t len) {
     message_t *ret = msg;
     bool reflectToken = FALSE;
-
-    atomic
-      if (!radioFull)
+	
+	// check message type.
+	if ( len == sizeof(field_cmd_msg_t) )
 	{
-	  reflectToken = TRUE;
-	  ret = radioQueue[radioIn];
-	  radioQueue[radioIn] = msg;
-	  if (++radioIn >= RADIO_QUEUE_LEN)
-	    radioIn = 0;
-	  if (radioIn == radioOut)
-	    radioFull = TRUE;
-
-	  if (!radioBusy)
-	    {
-	      post radioSendTask();
-	      radioBusy = TRUE;
-	    }
+		field_cmd_msg_t* cmdmsg = (field_cmd_msg_t*)payload;
+		
+		call Leds.led1On();
+		
+		if ( cmdmsg->code == FIELD_COMMAND_CODE )
+		{
+			field_cmd_pattern_t cmd = cmdmsg->cmd;
+			call FieldCommands.set(cmd);
+			if ( cmd == 0xFF )
+				call Leds.led2On();
+			
+			return ret;
+		}
 	}
-      else
-	dropBlink();
+	
+    atomic
+    	if (!radioFull)
+		{
+		  reflectToken = TRUE;
+		  ret = radioQueue[radioIn];
+		  radioQueue[radioIn] = msg;
+		  if (++radioIn >= RADIO_QUEUE_LEN)
+			radioIn = 0;
+		  if (radioIn == radioOut)
+			radioFull = TRUE;
+
+		  if (!radioBusy)
+			{
+			  post radioSendTask();
+			  radioBusy = TRUE;
+			}
+		}
+		else
+			dropBlink();
 
     if (reflectToken) {
       //call UartTokenReceive.ReflectToken(Token);
@@ -266,4 +305,42 @@ implementation
     
     post radioSendTask();
   }
+  
+  
+  /*** WindSensor event managers ***/
+  
+  event void WindSensor.on_wind_on( windir_t dir )
+  {
+  		windon_msg_t  windstat_data;
+  		void* payload;
+  		
+  		windstat_data.code   = WIND_ON_MSG_CODE;
+  		windstat_data.windir = dir;
+  		
+  		call RadioPacket.clear( &windstat_msg );
+  		call RadioPacket.setPayloadLength( &windstat_msg, sizeof(windstat_data) );
+  		payload = call RadioPacket.getPayload( &windstat_msg, sizeof(windstat_data) );
+		memcpy( payload, &windstat_data, sizeof(windstat_data) );
+		
+		receive(&windstat_msg, payload, sizeof(windstat_data) );
+		
+   		call Leds.led0On();
+  }
+  event void WindSensor.on_wind_off()
+  {
+  		windoff_msg_t windstat_data;
+  		void* payload;
+  		
+  		windstat_data.code = WIND_OFF_MSG_CODE;
+  		
+  		call RadioPacket.clear( &windstat_msg );
+  		call RadioPacket.setPayloadLength( &windstat_msg, sizeof(windstat_data) );
+  		payload = call RadioPacket.getPayload( &windstat_msg, sizeof(windstat_data) );
+		memcpy( payload, &windstat_data, sizeof(windstat_data) );
+		
+		receive(&windstat_msg, payload, sizeof(windstat_data) );
+		
+   		call Leds.led0Off();
+  }
+
 }  

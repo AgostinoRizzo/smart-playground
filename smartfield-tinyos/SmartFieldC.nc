@@ -7,11 +7,16 @@
   *
   */
 
+#include "WindSensor.h"
+
 configuration SmartFieldC {
 }
 implementation {
   components MainC, SmartFieldP, LedsC;
   components ActiveMessageC as Radio, SerialActiveMessageC as Serial;
+  
+  components FieldCommandsManagerC;
+  components WindSensorManagerC;
   
   MainC.Boot <- SmartFieldP;
 
@@ -30,4 +35,7 @@ implementation {
   SmartFieldP.RadioAMPacket -> Radio;
   
   SmartFieldP.Leds -> LedsC;
+  
+  SmartFieldP.FieldCommands -> FieldCommandsManagerC.FieldCommands;
+  SmartFieldP.WindSensor    -> WindSensorManagerC.WindSensor;
 }
