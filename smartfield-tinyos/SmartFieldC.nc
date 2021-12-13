@@ -18,6 +18,8 @@ implementation {
   components FieldCommandsManagerC;
   components WindSensorManagerC;
   
+  components SensingManagerC;
+  
   MainC.Boot <- SmartFieldP;
 
   SmartFieldP.RadioControl -> Radio;
@@ -38,4 +40,6 @@ implementation {
   
   SmartFieldP.FieldCommands -> FieldCommandsManagerC.FieldCommands;
   SmartFieldP.WindSensor    -> WindSensorManagerC.WindSensor;
+  
+  SmartFieldP.Sense -> SensingManagerC.Sense;
 }

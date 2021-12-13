@@ -13,9 +13,19 @@
 #include "Configs.h"
 #include "FieldCommands.h"
 #include "WindSensor.h"
+#include "Sensing.h"
 
 #define TRUE  1
 #define FALSE 0
+
+#define SMARTFIELD_SENSING_SAMPLE_CODE 80
+typedef nx_struct sensing_sample_msg
+{
+	nx_uint8_t  code;
+	nx_uint16_t temp;
+	nx_uint16_t humi;
+	nx_uint16_t bright;
+} sensing_sample_msg_t;
 
 
 module SmartFieldP @safe() {
@@ -39,6 +49,8 @@ module SmartFieldP @safe() {
     
     interface FieldCommands;
     interface WindSensor;
+    
+	interface Sense;
   }
 }
 
@@ -65,6 +77,9 @@ implementation
   /*** uart wind status message ***/
   message_t windstat_msg;
   
+  /*** uart sensing sample message + local data ***/
+  message_t sensingsample_msg;
+  
   void dropBlink() {
     call Leds.led2Toggle();
   }
@@ -81,6 +96,9 @@ implementation
 	
 	// init wind sensor.
 	call WindSensor.init();
+	
+	// init sensing.
+	call Sense.start_sensing();
 	
     for (i = 0; i < UART_QUEUE_LEN; i++)
       uartQueue[i] = &uartQueueBufs[i];
@@ -341,6 +359,29 @@ implementation
 		receive(&windstat_msg, payload, sizeof(windstat_data) );
 		
    		call Leds.led0Off();
+  }
+  
+  
+  /*** Sense event managers ***/
+  event void Sense.on_new_sample( sensor_value_t* sample, uint8_t size )
+  {
+  		sensing_sample_msg_t sensing_sample_data;
+  		void* payload;
+  		
+  		if ( size >= 3 )
+  		{
+  			sensing_sample_data.code   = SMARTFIELD_SENSING_SAMPLE_CODE;
+  			sensing_sample_data.temp   = sample[0];
+  			sensing_sample_data.humi   = sample[1];
+  			sensing_sample_data.bright = sample[2];
+  			
+  			call RadioPacket.clear( &sensingsample_msg );
+  			call RadioPacket.setPayloadLength( &sensingsample_msg, sizeof(sensing_sample_data) );
+  			payload = call RadioPacket.getPayload( &sensingsample_msg, sizeof(sensing_sample_data) );
+			memcpy( payload, &sensing_sample_data, sizeof(sensing_sample_data) );
+		
+			receive(&sensingsample_msg, payload, sizeof(sensing_sample_data) );
+		}
   }
 
 }  
