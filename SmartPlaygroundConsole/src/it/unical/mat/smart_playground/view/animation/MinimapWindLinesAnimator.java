@@ -70,7 +70,7 @@ public class MinimapWindLinesAnimator
 		if ( windLines.isEmpty() )
 			return;
 		
-		final Vector2Int windDirection = GeometryUtil.computeDirectionVector(WIND_STATUS.getDirection(), 90);
+		final Vector2Int windDirection = GeometryUtil.computeDirectionVector((int) WIND_STATUS.getDirectionDegrees(), 0);
 		
 		clearWindLinesCanvas();
 		int i;

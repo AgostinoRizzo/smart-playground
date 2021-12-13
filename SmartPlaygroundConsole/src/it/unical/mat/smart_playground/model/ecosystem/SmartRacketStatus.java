@@ -31,6 +31,11 @@ public class SmartRacketStatus
 		EcosystemStatus.shrinkValuesList(accZValues, CAPACITY);
 		
 	}
+	public void updateNewAccelerometerValues( final SmartRacketStatus newStatus )
+	{
+		updateNewAccelerometerValues( newStatus.getAccXValues(), newStatus.getAccYValues(), newStatus.getAccZValues() );
+	}
+	
 	
 	public List<Integer> getAccXValues()
 	{

@@ -18,7 +18,7 @@ public class Strings
 	
 	public static final String TEMPERATURE_UNIT = "°C";
 	public static final String HUMIDITY_UNIT = "%";
-	public static final String BRIGHTNESS_UNIT = "°C";
+	public static final String BRIGHTNESS_UNIT = "lx";
 	
 	public static final String CHOOSE_GAME_WINDOW_TITLE = "Choose a Game";
 	public static final String SMART_TENNIS_PLAYING_WINDOW_TITLE = "Smart Tennis";

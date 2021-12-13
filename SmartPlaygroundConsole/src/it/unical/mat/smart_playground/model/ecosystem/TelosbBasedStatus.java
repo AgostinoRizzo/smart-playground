@@ -6,6 +6,8 @@ package it.unical.mat.smart_playground.model.ecosystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.unical.mat.smart_playground.view.widget.LightsFansCtrlTileController;
+
 /**
  * @author Agostino
  *
@@ -22,6 +24,18 @@ public class TelosbBasedStatus
 	{
 		temperatureValues.addAll(newValues);
 		EcosystemStatus.shrinkValuesList(temperatureValues, CAPACITY);
+		
+		final double fansThr = LightsFansCtrlTileController.getFansThr();
+		if ( fansThr >= 0 )
+		{
+			for ( final Integer newTemp : newValues )
+				if ( newTemp >= fansThr )
+				{
+					LightsFansCtrlTileController.getInstance().onAllFansTurnOn();
+					return;
+				}
+			LightsFansCtrlTileController.getInstance().onAllFansTurnOff();
+		}
 	}
 	
 	public void updateNewHumidityValues( final List< Integer > newValues )
@@ -34,6 +48,18 @@ public class TelosbBasedStatus
 	{
 		brightnessValues.addAll(newValues);
 		EcosystemStatus.shrinkValuesList(brightnessValues, CAPACITY);
+		
+		final double lightsThr = LightsFansCtrlTileController.getLightsThr();
+		if ( lightsThr >= 0 )
+		{
+			for ( final Integer newBright : newValues )
+				if ( newBright <= lightsThr )
+				{
+					LightsFansCtrlTileController.getInstance().onAllLightsTurnOn();
+					return;
+				}
+			LightsFansCtrlTileController.getInstance().onAllLightsTurnOff();
+		}
 	}
 	
 	public List<Integer> getTemperatureValues()

@@ -46,6 +46,6 @@ public class WindDirectionTileController implements LayoutController, Playground
 	
 	private void setWindImageViewOrientation( final WindStatus status )
 	{
-		windOrientationImage.setRotate(status.getDirection());
+		windOrientationImage.setRotate(status.getDirectionDegrees());
 	}
 }

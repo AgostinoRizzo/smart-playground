@@ -10,14 +10,21 @@ package it.unical.mat.smart_playground.model.playground;
 public class WindStatus
 {
 	private boolean isActive = false;
-	private short direction = 0;
+	private short direction = 0; // 0-4095
 		
 	public short getDirection()
 	{
 		return direction;
 	}
+	public double getDirectionDegrees()
+	{
+		// from 0-4095 to 0-269
+		return direction*269/4095 - 120.0;
+	}
 	public void setDirection(short direction)
 	{
+		if ( direction < 0 ) direction = 0;
+		else if ( direction > 4095 ) direction = 4095;
 		this.direction = direction;
 	}
 	

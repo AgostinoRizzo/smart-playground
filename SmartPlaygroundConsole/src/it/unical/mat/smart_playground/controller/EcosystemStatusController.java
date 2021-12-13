@@ -22,6 +22,7 @@ import it.unical.mat.smart_playground.view.animation.WindSpeedAnimationManager;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.PlaygroundField;
 import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
+import it.unical.mat.smart_playground.view.widget.LightsFansCtrlTileController;
 import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
@@ -95,46 +96,20 @@ public class EcosystemStatusController implements ViewController
 	private AreaChart< String, Double > gatherSmartBallBrightnessSensorChart;
 	
 	
+	// smartfield/smartball average sensors charts.
+	
+	@FXML
+	private AreaChart< String, Double > averageTemperatureSensorsChart;
+	@FXML
+	private AreaChart< String, Double > averageHumiditySensorsChart;
+	@FXML
+	private AreaChart< String, Double > averageBrightnessSensorChart;
+
+	
 	// motion controller charts.
 	
 	@FXML
 	private PieChart motionControllerPlayerDirectionChart;
-	
-	
-	// smart pole charts.
-	
-	@FXML
-	private PieChart smartPoleWindDirectionChart;
-	
-	@FXML
-	private CategoryAxis xAxisMainSmartPoleTemperatureSensorsChart;
-	@FXML
-	private CategoryAxis xAxisGatherSmartPoleTemperatureSensorsChart;
-	
-	@FXML
-	private CategoryAxis xAxisMainSmartPoleHumiditySensorsChart;
-	@FXML
-	private CategoryAxis xAxisGatherSmartPoleHumiditySensorsChart;
-	
-	@FXML
-	private CategoryAxis xAxisMainSmartPoleBrightnessSensorsChart;
-	@FXML
-	private CategoryAxis xAxisGatherSmartPoleBrightnessSensorsChart;
-	
-	@FXML
-	private AreaChart< String, Double > mainSmartPoleTemperatureSensorsChart;
-	@FXML
-	private AreaChart< String, Double > gatherSmartPoleTemperatureSensorsChart;
-	
-	@FXML
-	private AreaChart< String, Double > mainSmartPoleHumiditySensorsChart;
-	@FXML
-	private AreaChart< String, Double > gatherSmartPoleHumiditySensorsChart;
-	
-	@FXML
-	private AreaChart< String, Double > mainSmartPoleBrightnessSensorChart;
-	@FXML
-	private AreaChart< String, Double > gatherSmartPoleBrightnessSensorChart;
 	
 	
 	// main smart racket chart.
@@ -200,6 +175,9 @@ public class EcosystemStatusController implements ViewController
 	@FXML private Parent ballOrientationTile;
 	@FXML private BallOrientationTileController ballOrientationTileController;
 	
+	@FXML private Parent lightsFansCrtlTile;
+	@FXML private LightsFansCtrlTileController lightsFansCtrlTileController;
+	
 	@FXML private Canvas windFanCanvas;
 	
 	private MainApplication mainApp=null;
@@ -231,6 +209,8 @@ public class EcosystemStatusController implements ViewController
 		secondWindSpeedTileController.onInitialize(null);
 		
 		ballOrientationTileController.onInitialize(null);
+		
+		//lightsFansCtrlTileController.onInitialize(null);
 		
 		initCharts();
 		
@@ -267,6 +247,8 @@ public class EcosystemStatusController implements ViewController
 		secondWindSpeedTileController.onFinalize();		
 		
 		ballOrientationTileController.onFinalize();
+		
+		lightsFansCtrlTileController.onFinalize();
 	}
 
 	@Override
@@ -287,6 +269,7 @@ public class EcosystemStatusController implements ViewController
 			( EcosystemStatus.getInstance().getSmartGamePlatformStatus(), "Game Platform",
 					null, null, null,
 					gatherGamePlatformTemperatureSensorsChart, gatherGamePlatformHumiditySensorsChart, gatherGamePlatformBrightnessSensorChart,
+					averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
 					temperatureLabel, humidityLabel, brightnessLabel );
 	}
 	
@@ -296,6 +279,7 @@ public class EcosystemStatusController implements ViewController
 		( EcosystemStatus.getInstance().getSmartBallStatus(), "Smart Ball",
 				mainSmartBallTemperatureSensorsChart, mainSmartBallHumiditySensorsChart, mainSmartBallBrightnessSensorChart,
 				gatherSmartBallTemperatureSensorsChart, gatherSmartBallHumiditySensorsChart, gatherSmartBallBrightnessSensorChart,
+				averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
 				temperatureLabel, humidityLabel, brightnessLabel );
 	}
 	
@@ -306,20 +290,6 @@ public class EcosystemStatusController implements ViewController
 		motionControllerPlayerDirectionChart.getData().add
 			( new PieChart.Data(Integer.toString(motionControllerStatus.getPlayerDirection()) + "°", 
 					motionControllerStatus.getPlayerDirection()) );
-	}
-	
-	public void onSmartPoleStatus()
-	{
-		final SmartPoleStatus smartPoleStatus = EcosystemStatus.getInstance().getSmartPoleStatus();
-		smartPoleWindDirectionChart.getData().clear();
-		smartPoleWindDirectionChart.getData().add
-			( new PieChart.Data(WindDirection.toString(smartPoleStatus.getWindDirection()), WindDirection.toDouble( smartPoleStatus.getWindDirection() )) );
-		
-		updateLightTelosbBasedStatus
-		( EcosystemStatus.getInstance().getSmartPoleStatus(), "Smart Pole",
-				mainSmartPoleTemperatureSensorsChart, mainSmartPoleHumiditySensorsChart, mainSmartPoleBrightnessSensorChart,
-				gatherSmartPoleTemperatureSensorsChart, gatherSmartPoleHumiditySensorsChart, gatherSmartPoleBrightnessSensorChart,
-				temperatureLabel, humidityLabel, brightnessLabel);
 	}
 	
 	public void onSmartRacketStatus( final SmartRacketType smartRacket )
@@ -441,6 +411,9 @@ public class EcosystemStatusController implements ViewController
 													  final AreaChart< String, Double > gatherTemperatureChart,
 													  final AreaChart< String, Double > gatherHumidityChart,
 													  final AreaChart< String, Double > gatherBrightnessChart,
+													  final AreaChart< String, Double > averageTemperatureChart,
+													  final AreaChart< String, Double > averageHumidityChart,
+													  final AreaChart< String, Double > averageBrightnessChart,
 													  final Label                       temperatureLabel,
 													  final Label                       humidityLabel,
 													  final Label                       brightnessLabel )
@@ -457,14 +430,17 @@ public class EcosystemStatusController implements ViewController
 		final XYChart.Series<String, Double> seriesGatherBrightness   = new XYChart.Series<>();
 		final XYChart.Series<String, Double> seriesBrightnessAverage  = new XYChart.Series<>();
 		
-		seriesTemperature.setName("Sensor (°C)");
-		seriesGatherTemperature.setName(sensorName + " Sensor (°C)");
+		seriesTemperature.setName("Temperature (" + Strings.TEMPERATURE_UNIT + ")");
+		seriesGatherTemperature.setName(sensorName + " Sensor (" + Strings.TEMPERATURE_UNIT + ")");
+		seriesTemperatureAverage.setName("Average (" + Strings.TEMPERATURE_UNIT + ")");
 		
-		seriesHumidity.setName("Sensor");
-		seriesGatherHumidity.setName(sensorName + " Sensor (°C)");
+		seriesHumidity.setName("Humidity (" + Strings.HUMIDITY_UNIT + ")");
+		seriesGatherHumidity.setName(sensorName + " Sensor (" + Strings.HUMIDITY_UNIT + ")");
+		seriesHumidityAverage.setName("Average (" + Strings.HUMIDITY_UNIT + ")");
 		
-		seriesBrightness.setName("Sensor");
-		seriesGatherBrightness.setName(sensorName + " Sensor (°C)");
+		seriesBrightness.setName("Brightness (" + Strings.BRIGHTNESS_UNIT + ")");
+		seriesGatherBrightness.setName(sensorName + " Sensor (" + Strings.BRIGHTNESS_UNIT + ")");
+		seriesBrightnessAverage.setName("Average (" + Strings.BRIGHTNESS_UNIT + ")");
 		
 		final List< Integer > temperatureValues = status.getTemperatureValues();
 		final List< Integer > humidityValues = status.getHumidityValues();
@@ -476,7 +452,6 @@ public class EcosystemStatusController implements ViewController
 		final List< Integer > humidityAverageValues = ecosystemStatus.getHumidityAverageValues( humidityValues.size() );
 		final List< Integer > brightnessAverageValues = ecosystemStatus.getBrightnessAverageValues( brightnessValues.size() );
 		
-		
 		updateLightDataCharts( temperatureValues, seriesTemperature );
 		updateLightDataCharts( humidityValues, seriesHumidity );
 		updateLightDataCharts( brightnessValues, seriesBrightness );
@@ -487,6 +462,11 @@ public class EcosystemStatusController implements ViewController
 		updateLightDataCharts( brightnessValues, seriesGatherBrightness );
 		
 		
+		updateLightDataCharts( temperatureAverageValues, seriesTemperatureAverage );
+		updateLightDataCharts( humidityAverageValues, seriesHumidityAverage );
+		updateLightDataCharts( brightnessAverageValues, seriesBrightnessAverage );
+		
+		
 		updateLightChartWithData( mainTemperatureChart, seriesTemperature );
 		updateLightChartWithData( mainHumidityChart, seriesHumidity );
 		updateLightChartWithData( mainBrightnessChart, seriesBrightness );
@@ -494,6 +474,10 @@ public class EcosystemStatusController implements ViewController
 		updateLightChartWithData( gatherTemperatureChart, seriesGatherTemperature );
 		updateLightChartWithData( gatherHumidityChart, seriesGatherHumidity );
 		updateLightChartWithData( gatherBrightnessChart, seriesGatherBrightness );
+		
+		updateLightChartWithData( averageTemperatureChart, seriesTemperatureAverage );
+		updateLightChartWithData( averageHumidityChart, seriesHumidityAverage );
+		updateLightChartWithData( averageBrightnessChart, seriesBrightnessAverage );
 		
 		
 		updateSensorValueLabel( temperatureLabel, temperatureAverageValues, Strings.TEMPERATURE_UNIT );
@@ -674,21 +658,16 @@ public class EcosystemStatusController implements ViewController
 		
 		
 		mainSmartBallHumiditySensorsChart.getStylesheets().add( second_chart_style_sheet );
-		mainSmartBallBrightnessSensorChart.getStylesheets().add( third_chart_style_sheet );
-		
-		mainSmartPoleHumiditySensorsChart.getStylesheets().add( second_chart_style_sheet );
-		mainSmartPoleBrightnessSensorChart.getStylesheets().add( third_chart_style_sheet );
-		
+		mainSmartBallBrightnessSensorChart.getStylesheets().add( third_chart_style_sheet );		
 		
 		gatherSmartBallTemperatureSensorsChart.getStylesheets().add( second_chart_style_sheet );
-		gatherSmartPoleTemperatureSensorsChart.getStylesheets().add( third_chart_style_sheet );
+		averageTemperatureSensorsChart.getStylesheets().add( third_chart_style_sheet );
 		
 		gatherSmartBallHumiditySensorsChart.getStylesheets().add( second_chart_style_sheet );
-		gatherSmartPoleHumiditySensorsChart.getStylesheets().add( third_chart_style_sheet );
+		averageHumiditySensorsChart.getStylesheets().add( third_chart_style_sheet );
 		
-		gatherSmartPoleBrightnessSensorChart.getStylesheets().add( second_chart_style_sheet );
-		gatherSmartPoleBrightnessSensorChart.getStylesheets().add( third_chart_style_sheet );
-		
+		gatherSmartBallBrightnessSensorChart.getStylesheets().add( second_chart_style_sheet );
+		averageBrightnessSensorChart.getStylesheets().add( third_chart_style_sheet );
 		
 		mainRacketYAccelerometerSensorsChart.getStylesheets().add( second_chart_style_sheet );
 		mainRacketZAccelerometerSensorsChart.getStylesheets().add( third_chart_style_sheet );

@@ -16,6 +16,5 @@ public interface PlaygroundBaseCommCallback
 	public void onSmartGamePlatformStatus();
 	public void onSmartBallStatus();
 	public void onMotionControllerStatus();
-	public void onSmartPoleStatus();
 	public void onSmartRacketStatus( final SmartRacketType smartRacket, final SmartRacketStatus newStatus );
 }

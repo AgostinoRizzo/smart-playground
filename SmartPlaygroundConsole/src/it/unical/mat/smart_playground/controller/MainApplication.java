@@ -1,14 +1,18 @@
 package it.unical.mat.smart_playground.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
+import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.network.NetDiscoveryCallback;
+import it.unical.mat.smart_playground.network.NetDiscoveryClient;
 import it.unical.mat.smart_playground.network.NetService;
 import it.unical.mat.smart_playground.network.PlaygroundBaseCommCallback;
+import it.unical.mat.smart_playground.network.PlaygroundBaseCommProvider;
 import it.unical.mat.smart_playground.view.ActionType;
 import it.unical.mat.smart_playground.view.Strings;
 import it.unical.mat.smart_playground.view.ViewConfigs;
@@ -25,6 +29,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -83,7 +88,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		//rootLayoutController.showNewAction( Action.USER_ACK );
 		
 		// TODO: remove to re-activate initialization (check git repository).
-		onNetServiceDiscovery( null );
+		/*onNetServiceDiscovery( null );
 		new Thread()
 		{
 			public void run() {
@@ -104,7 +109,7 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 					e.printStackTrace();
 				}
 			};
-		}.start();
+		}.start();*/
 		
 		new AnimationTimer()
 		{
@@ -127,8 +132,8 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 			( new StatusPopupContent(Strings.ECOSYSTEM_DISCOVERING_NOTIFICATION) );
 	}
 	
-	@Override
-	public void onNetServiceDiscovery( final NetService service )
+	
+	public void onNetServiceDiscovery_OLD( final NetService service )
 	{
 		// TODO: uncomment (check git repository).
 		/*if ( service == null )
@@ -182,6 +187,59 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 			}
 		}
 	}
+	@Override
+	public void onNetServiceDiscovery( final NetService service )
+	{
+		if ( service == null )
+		{
+			rootLayoutController.getStatusPopup().clearContent();
+			if ( ViewController.showYesNoAlert
+					( "Ecosystem discovery error", "No ecosystem found over the network", "Do you want to retry?" ).equals( "yes" ) )
+			{
+				NetDiscoveryClient netDiscoveryClient = new NetDiscoveryClient(this);
+				netDiscoveryClient.start();
+			
+			}
+			else
+				;/*closeAppWithAlert( AlertType.ERROR, 
+								   "Ecosystem discovery error", 
+								   null, 
+								   "No ecosystem found over the network" );*/
+		}
+		else
+		{
+			
+			final byte[] service_code = service.getCode();
+			if ( service_code.length == 1 && 
+					service_code[0] == 2/*ControllerConfigs.ECOSYSTEM_SERVICE_CODE*/ )
+			{
+				final InetAddress baseStationAddress = service.getServerAddress();
+				try
+				{
+					PlaygroundBaseCommProvider ecosystemEventProvider = new PlaygroundBaseCommProvider( baseStationAddress, APPLICATION_MANAGER );
+				
+				
+					Platform.runLater( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							rootLayoutController.getStatusPopup().showNewContent
+								( new StatusPopupContent( "Ecosystem base station found at: " + baseStationAddress.getHostAddress() ) );						
+							rootLayoutController.getActionPopup().showNewContent( new ActionPopupContent(ActionType.USER_ACK) );
+						}
+					});
+				} catch (IOException e)
+				{
+					/*closeAppWithAlert( AlertType.ERROR, 
+									   "Ecosystem connection error", 
+									   "Ecosystem unreachable over " + baseStationAddress, 
+									   e.getMessage() );*/
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	@Override
 	public void onAckEvent()
@@ -217,14 +275,9 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	}
 	
 	@Override
-	public void onSmartPoleStatus()
-	{
-		mainLayoutController.getEcosystemStatusController().onSmartPoleStatus();
-	}
-	
-	@Override
 	public void onSmartRacketStatus(SmartRacketType smartRacket, SmartRacketStatus newStatus)
 	{
+		EcosystemStatus.getInstance().getMainSmartRacketStatus().updateNewAccelerometerValues(newStatus);
 		mainLayoutController.getEcosystemStatusController().onSmartRacketStatus(smartRacket);
 	}
 	
@@ -240,10 +293,10 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 			return;
 		lastUpdate = now;
 		
-		final WindStatus newWindStatus = new WindStatus();
-		newWindStatus.setActive(true);
+		//final WindStatus newWindStatus = new WindStatus();
+		//newWindStatus.setActive(true);
 		//newWindStatus.setDirection((short) 45);
-		PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
+		//PlaygroundStatus.getInstance().updateWindStatus(newWindStatus);
 		
 		WindFlagAnimationManager.getInstance().onUpdate(now);
 		WindSpeedAnimationManager.getInstance().onUpdate(now);

@@ -159,20 +159,6 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			}
 		});
 	}
-
-	@Override
-	public void onSmartPoleStatus()
-	{
-		Platform.runLater( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				for ( final PlaygroundBaseCommCallback c : playgroundBaseCommApplicationCallbacks )
-					c.onSmartPoleStatus();
-			}
-		});
-	}
 	
 	@Override
 	public void onSmartRacketStatus(SmartRacketType smartRacket, SmartRacketStatus newStatus)

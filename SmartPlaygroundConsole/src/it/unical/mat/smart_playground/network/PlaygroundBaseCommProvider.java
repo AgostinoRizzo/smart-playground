@@ -23,6 +23,8 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartPoleStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.ecosystem.WindDirection;
+import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
+import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.JSONUtil;
 
 /**
@@ -37,9 +39,19 @@ public class PlaygroundBaseCommProvider extends Thread
 	private final DataOutputStream out;
 	private final BufferedReader in;
 	
+	private static PlaygroundBaseCommProvider instance = null;
+	
+	public static PlaygroundBaseCommProvider getInstance()
+	{
+		return instance;
+	}
+	
 	public PlaygroundBaseCommProvider( final InetAddress baseStationAddress,
 								   final PlaygroundBaseCommCallback callback ) throws IOException
 	{
+		if ( instance != null )
+			throw new RuntimeException("An instance of the class already exists.");
+		
 		this.callback=callback;
 		
 		eventSocket = new Socket( baseStationAddress, Services.EVENT_SOCKET_PORT );
@@ -47,6 +59,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		in = new BufferedReader( new InputStreamReader( eventSocket.getInputStream() ) );
 		
 		this.start();
+		instance = this;
 	}
 	@Override
 	public void run()
@@ -97,14 +110,22 @@ public class PlaygroundBaseCommProvider extends Thread
 		}
 	}
 	
+	public void sendCommand( final JsonObject command )
+	{
+		try
+			{ out.writeBytes(command.toString() + "\n"); } 
+		catch (IOException e)
+			{ e.printStackTrace(); }
+	}
+	
 	private void handleEvent( final JsonObject event ) throws IOException
 	{
 		final String dataType = event.get("dataType").getAsString();
 		
-		if      ( dataType.equals( PlaygroundBaseCommConfigs.ACK_EVENT ) )                   callback.onAckEvent();
+		if      ( dataType.equals( PlaygroundBaseCommConfigs.ACK_EVENT ) )                   {callback.onAckEvent(); System.out.println("A+B");}
 		//else if ( dataType.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_STATUS ) )  handleSmartGamePlatformStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTBALL_STATUS ) )            handleSmartBallStatus(event.get("sample").getAsJsonArray());
-		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTPOLE_STATUS ) )            handleSmartPoleStatus(event.get("sample").getAsJsonArray());
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.FIELD_WIND_STATUS ) )           handleFieldWindStatus(event);
 		if      ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, 
 																												 event.get("accs_values").getAsJsonArray());
 	}
@@ -127,10 +148,18 @@ public class PlaygroundBaseCommProvider extends Thread
 	}*/
 	private void handleSmartBallStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
+		final JsonArray temperatureValuesJsonArray = new JsonArray(1);
+		final JsonArray humidityValuesJsonArray    = new JsonArray(1);
+		final JsonArray brightnessValuesJsonArray  = new JsonArray(1);
+		
 		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
-		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
-		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
+		temperatureValuesJsonArray.add(sensorsDataSample.get(0));
+		humidityValuesJsonArray   .add(sensorsDataSample.get(1));
+		brightnessValuesJsonArray .add(sensorsDataSample.get(2));
+		
+		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(temperatureValuesJsonArray);
+		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(humidityValuesJsonArray);
+		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(brightnessValuesJsonArray);
 		
 		// update model
 		final SmartBallStatus smartBallStatus = EcosystemStatus.getInstance().getSmartBallStatus();
@@ -146,24 +175,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		
 		// TODO: update model
 	}*/
-	private void handleSmartPoleStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
-	{
-		// read wind direction value
-		//final int wind_direction = readNextIntegerValues().get(0);
-		
-		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
-		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
-		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
 	
-		// update model
-		final SmartPoleStatus smartPoleStatus = EcosystemStatus.getInstance().getSmartPoleStatus();
-		smartPoleStatus.updateNewTemperatureValues(temperatureValues);
-		smartPoleStatus.updateNewHumidityValues(humidityValues);
-		smartPoleStatus.updateNewBrightnessValues(brightnessValues);
-		
-		callback.onSmartPoleStatus();
-	}
 	private void handleSmartRacketStatus( final SmartRacketType smartRacket, final JsonArray accsValues ) throws NumberFormatException, IOException
 	{
 		// read xyz accelerometer values.
@@ -176,6 +188,26 @@ public class PlaygroundBaseCommProvider extends Thread
 		newSmartRacketStatus.updateNewAccelerometerValues(accXValues, accYValues, accZValues);
 		
 		callback.onSmartRacketStatus(smartRacket, newSmartRacketStatus);
+	}
+	
+	private void handleFieldWindStatus( final JsonObject windStatusJson )
+	{
+		final PlaygroundStatus playgroundStatus = PlaygroundStatus.getInstance();
+		final boolean windOn = windStatusJson.get("status").getAsString().equals("on");
+		
+		final WindStatus windStatus = new WindStatus();
+		windStatus.set(playgroundStatus.getWindStatus());
+		windStatus.setActive(windOn);
+		
+		if ( windOn )
+		{
+			final short dir = (short) windStatusJson.get("dir").getAsInt();
+			windStatus.setDirection(dir);
+			//System.out.println("Wind direction: " + windStatus.getDirection() + " / " + windStatus.getDirectionDegrees());
+		}
+		
+		System.out.println("Wind Status: " + windOn);
+		PlaygroundStatus.getInstance().updateWindStatus(windStatus);
 	}
 	
 	// TODO: test function
@@ -213,6 +245,5 @@ public class PlaygroundBaseCommProvider extends Thread
 		callback.onSmartGamePlatformStatus();
 		callback.onSmartBallStatus();
 		callback.onMotionControllerStatus();
-		callback.onSmartPoleStatus();
 	}
 }

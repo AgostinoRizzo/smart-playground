@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="128.0" prefWidth="376.0" styleClass="tile" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.widget.LightsFansCtrlTileController">
+   <children>
+      <HBox prefHeight="41.0" prefWidth="362.0">
+         <children>
+            <VBox prefHeight="42.0" prefWidth="74.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="100.0" text="Lights" textAlignment="RIGHT">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="100.0" text="THR" textAlignment="RIGHT">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Slider fx:id="lightsThrSlider" blockIncrement="20.0" max="300.0" min="50.0" prefHeight="45.0" prefWidth="183.0" showTickLabels="true" showTickMarks="true" value="100.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <tooltip>
+                  <Tooltip text="A sensor value lower or equal to the slider's value will turn on lights." />
+               </tooltip>
+            </Slider>
+            <VBox prefHeight="50.0" prefWidth="73.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onAllLightsTurnOn" prefHeight="25.0" prefWidth="70.0" text="ALL ON" textFill="#0b831b">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onAllLightsTurnOff" prefHeight="25.0" prefWidth="70.0" text="ALL OFF" textFill="#820c0c">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+               <HBox.margin>
+                  <Insets left="15.0" top="-5.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </HBox>
+      <Separator prefWidth="200.0">
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Separator>
+      <HBox prefHeight="59.0" prefWidth="451.0">
+         <children>
+            <VBox prefHeight="200.0" prefWidth="75.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="100.0" text="Fans" textAlignment="RIGHT">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="CENTER" prefHeight="21.0" prefWidth="100.0" text="THR (°C)" textAlignment="RIGHT">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </VBox>
+            <Slider fx:id="fansThrSlider" blockIncrement="20.0" majorTickUnit="10.0" max="50.0" prefHeight="45.0" prefWidth="183.0" showTickLabels="true" showTickMarks="true" value="30.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <tooltip>
+                  <Tooltip text="A sensor value greater or equal to the slider's value will turn on fans." />
+               </tooltip>
+            </Slider>
+            <VBox prefHeight="50.0" prefWidth="73.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onAllFansTurnOn" prefHeight="23.0" prefWidth="70.0" text="ALL ON" textFill="#0b831b">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onAllFansTurnOff" prefHeight="23.0" prefWidth="70.0" text="ALL OFF" textFill="#820c0c">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+               </children>
+               <HBox.margin>
+                  <Insets left="15.0" top="-5.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets top="8.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+</VBox>
