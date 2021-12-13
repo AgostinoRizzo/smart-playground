@@ -175,6 +175,9 @@ class EcosystemEventProvider:
 
     def send_smartball_sensors_sample(self, sample):
         self.send_sensors_sample(services.SMARTBALL_SENSORS_SAMPLE_CODE, sample)
+    
+    def send_smartfield_sensors_sample(self, sample):
+        self.send_sensors_sample(services.SMARTFIELD_SENSORS_SAMPLE_CODE, sample)
 
     def send_smartpole_sensors_sample(self, sample):
         self.send_sensors_sample(services.SMARTPOLE_SENSORS_SAMPLE_CODE, sample)

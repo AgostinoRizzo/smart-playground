@@ -105,7 +105,8 @@ class SmartBall(SmartObject):
 
         self.status = SmartBallStatus.READY
         self.on_collision_callback = None
-        self.on_sensors_sample_callback = None
+        self.on_smartball_sensors_sample_callback = None
+        self.on_smartfield_sensors_sample_callback = None
         self.on_field_wind_status_callback = None
 
     def hit(self, swing_direction, swing_effect):
@@ -163,8 +164,11 @@ class SmartBall(SmartObject):
         elif size == tinyos_serial.BallSensorsSampleMsg.SIZE:
             rcv_msg = tinyos_serial.BallSensorsSampleMsg(p.data)
             if rcv_msg.code == tinyos_serial.SMART_BALL_MSG_SENSORS_SAMPLE_CODE and \
-                    self.on_sensors_sample_callback is not None:
-                self.on_sensors_sample_callback([rcv_msg.temp, rcv_msg.humi, rcv_msg.bright])
+                    self.on_smartball_sensors_sample_callback is not None:
+                self.on_smartball_sensors_sample_callback([rcv_msg.temp, rcv_msg.humi, rcv_msg.bright])
+            elif rcv_msg.code == tinyos_serial.SMART_FIELD_MSG_SENSORS_SAMPLE_CODE and \
+                    self.on_smartfield_sensors_sample_callback is not None:
+                self.on_smartfield_sensors_sample_callback([rcv_msg.temp, rcv_msg.humi, rcv_msg.bright])
         
         elif size == tinyos_serial.FieldWindStatusOnMsg.SIZE:
             rcv_msg = tinyos_serial.FieldWindStatusOnMsg(p.data)
@@ -175,8 +179,11 @@ class SmartBall(SmartObject):
     def register_on_collision_callback(self, callback):
         self.on_collision_callback = callback
 
-    def register_on_sensors_sample_callback(self, callback):
-        self.on_sensors_sample_callback = callback
+    def register_on_smartball_sensors_sample_callback(self, callback):
+        self.on_smartball_sensors_sample_callback = callback
+    
+    def register_on_smartfield_sensors_sample_callback(self, callback):
+        self.on_smartfield_sensors_sample_callback = callback
     
     def register_on_field_wind_status_callback(self, callback):
         self.on_field_wind_status_callback = callback
@@ -315,6 +322,9 @@ def on_smart_ball_collision():
 def on_smart_ball_sensors_sample(sample):
     SmartObjectsMediator.get_current_instance().on_smart_ball_sensors_sample(sample)
 
+def on_smart_field_sensors_sample(sample):
+    SmartObjectsMediator.get_current_instance().on_smart_field_sensors_sample(sample)
+
 
 def on_main_racket_buttons_changed(buttons):
     SmartObjectsMediator.get_current_instance().on_main_racket_buttons_changed(buttons)
@@ -353,7 +363,8 @@ class SmartObjectsMediator:
         self.main_smart_racket = main_smart_racket
 
         self.smart_ball.register_on_collision_callback(on_smart_ball_collision)
-        self.smart_ball.register_on_sensors_sample_callback(on_smart_ball_sensors_sample)
+        self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
+        self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
         self.smart_ball.register_on_field_wind_status_callback(self.on_field_wind_status)
         self.main_smart_racket.register_buttons_changed_callback(on_main_racket_buttons_changed)
         self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
@@ -372,6 +383,10 @@ class SmartObjectsMediator:
     @staticmethod
     def on_smart_ball_sensors_sample(sample):
         network.EcosystemEventProvider.get_instance().send_smartball_sensors_sample(sample)
+    
+    @staticmethod
+    def on_smart_field_sensors_sample(sample):
+        network.EcosystemEventProvider.get_instance().send_smartfield_sensors_sample(sample)
     
     @staticmethod
     def on_field_wind_status(dir):
