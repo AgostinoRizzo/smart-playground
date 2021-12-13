@@ -119,20 +119,6 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 	}
 
 	@Override
-	public void onSmartGamePlatformStatus()
-	{
-		Platform.runLater( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				for ( final PlaygroundBaseCommCallback c : playgroundBaseCommApplicationCallbacks )
-					c.onSmartGamePlatformStatus();
-			}
-		});
-	}
-
-	@Override
 	public void onSmartBallStatus()
 	{
 		Platform.runLater( new Runnable()
@@ -142,6 +128,20 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			{
 				for ( final PlaygroundBaseCommCallback c : playgroundBaseCommApplicationCallbacks )
 					c.onSmartBallStatus();
+			}
+		});
+	}
+	
+	@Override
+	public void onSmartFieldStatus()
+	{
+		Platform.runLater( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for ( final PlaygroundBaseCommCallback c : playgroundBaseCommApplicationCallbacks )
+					c.onSmartFieldStatus();
 			}
 		});
 	}

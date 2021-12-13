@@ -13,8 +13,8 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 public interface PlaygroundBaseCommCallback
 {
 	public void onAckEvent();
-	public void onSmartGamePlatformStatus();
 	public void onSmartBallStatus();
+	public void onSmartFieldStatus();
 	public void onMotionControllerStatus();
 	public void onSmartRacketStatus( final SmartRacketType smartRacket, final SmartRacketStatus newStatus );
 }

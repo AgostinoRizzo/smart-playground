@@ -64,7 +64,7 @@
                                           </HBox>
                                           <HBox prefHeight="248.0" prefWidth="737.0">
                                              <children>
-                                                <AreaChart fx:id="gatherGamePlatformTemperatureSensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                <AreaChart fx:id="gatherSmartFieldTemperatureSensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <xAxis>
                                                       <CategoryAxis side="BOTTOM" visible="false" fx:id="xAxisGatherGamePlatformTemperatureSensorsChart" />
                                                    </xAxis>
@@ -177,7 +177,7 @@
                                           </HBox>
                                           <HBox prefHeight="256.0" prefWidth="737.0">
                                              <children>
-                                                <AreaChart fx:id="gatherGamePlatformHumiditySensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                <AreaChart fx:id="gatherSmartFieldHumiditySensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -277,7 +277,7 @@
                                           </HBox>
                                           <HBox prefHeight="258.0" prefWidth="737.0">
                                              <children>
-                                                <AreaChart fx:id="gatherGamePlatformBrightnessSensorChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                <AreaChart fx:id="gatherSmartFieldBrightnessSensorChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -370,11 +370,11 @@
                                                 <Insets bottom="10.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox prefHeight="411.0" prefWidth="740.0">
+                                          <HBox prefHeight="375.0" prefWidth="740.0">
                                              <children>
-                                                <AnchorPane prefHeight="428.0" prefWidth="740.0">
+                                                <AnchorPane prefHeight="392.0" prefWidth="740.0">
                                                    <children>
-                                                      <AnchorPane layoutY="61.0" prefHeight="355.0" prefWidth="740.0">
+                                                      <AnchorPane layoutY="61.0" prefHeight="309.0" prefWidth="740.0">
                                                          <children>
                                                             <ImageView fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
                                                                <image>
@@ -433,7 +433,7 @@
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
                                                 </ImageView>
-                                                <AreaChart fx:id="mainSmartPoleBrightnessSensorChart1" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css" title="Brightness">
+                                                <AreaChart fx:id="mainSmartFieldBrightnessSensorChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -462,7 +462,7 @@
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
                                                 </ImageView>
-                                                <AreaChart fx:id="mainSmartPoleHumiditySensorsChart1" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css" title="Humidity">
+                                                <AreaChart fx:id="mainSmartFieldHumiditySensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>
@@ -491,7 +491,7 @@
                                                       <Insets top="10.0" />
                                                    </HBox.margin>
                                                 </ImageView>
-                                                <AreaChart fx:id="mainSmartPoleTemperatureSensorsChart1" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css" title="Temperature">
+                                                <AreaChart fx:id="mainSmartFieldTemperatureSensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
                                                    </effect>

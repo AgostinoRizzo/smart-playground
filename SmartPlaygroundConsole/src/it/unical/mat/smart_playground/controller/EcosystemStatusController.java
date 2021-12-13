@@ -9,7 +9,7 @@ import it.unical.mat.smart_playground.controller.playground.PlaygroundController
 import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.MotionControllerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
-import it.unical.mat.smart_playground.model.ecosystem.SmartPoleStatus;
+import it.unical.mat.smart_playground.model.ecosystem.SmartFieldStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.ecosystem.TelosbBasedStatus;
@@ -46,22 +46,6 @@ public class EcosystemStatusController implements ViewController
 	private final double CHARTS_MAX_WIDTH  = 430.0;
 	private final double CHARTS_MAX_HEIGHT = 230.0;
 	
-	// smart game platform sensors charts.
-	
-	@FXML
-	private CategoryAxis xAxisGatherGamePlatformTemperatureSensorsChart;
-	@FXML
-	private CategoryAxis xAxisGatherGamePlatformHumiditySensorsChart;
-	@FXML
-	private CategoryAxis xAxisGatherGamePlatformBrightnessSensorsChart;
-	
-	@FXML
-	private AreaChart< String, Double > gatherGamePlatformTemperatureSensorsChart;
-	@FXML
-	private AreaChart< String, Double > gatherGamePlatformHumiditySensorsChart;
-	@FXML
-	private AreaChart< String, Double > gatherGamePlatformBrightnessSensorChart;
-	
 	
 	// smart ball sensors charts.
 	
@@ -94,6 +78,24 @@ public class EcosystemStatusController implements ViewController
 	private AreaChart< String, Double > mainSmartBallBrightnessSensorChart;
 	@FXML
 	private AreaChart< String, Double > gatherSmartBallBrightnessSensorChart;
+	
+	
+	// smart ball sensors charts.
+	
+	@FXML
+	private AreaChart< String, Double > mainSmartFieldTemperatureSensorsChart;
+	@FXML
+	private AreaChart< String, Double > gatherSmartFieldTemperatureSensorsChart;
+	
+	@FXML
+	private AreaChart< String, Double > mainSmartFieldHumiditySensorsChart;
+	@FXML
+	private AreaChart< String, Double > gatherSmartFieldHumiditySensorsChart;
+	
+	@FXML
+	private AreaChart< String, Double > mainSmartFieldBrightnessSensorChart;
+	@FXML
+	private AreaChart< String, Double > gatherSmartFieldBrightnessSensorChart;
 	
 	
 	// smartfield/smartball average sensors charts.
@@ -263,22 +265,22 @@ public class EcosystemStatusController implements ViewController
 		return content;
 	}
 	
-	public void onGamePlatformStatus()
-	{
-		updateLightTelosbBasedStatus
-			( EcosystemStatus.getInstance().getSmartGamePlatformStatus(), "Game Platform",
-					null, null, null,
-					gatherGamePlatformTemperatureSensorsChart, gatherGamePlatformHumiditySensorsChart, gatherGamePlatformBrightnessSensorChart,
-					averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
-					temperatureLabel, humidityLabel, brightnessLabel );
-	}
-	
 	public void onSmartBallStatus()
 	{
 		updateLightTelosbBasedStatus
 		( EcosystemStatus.getInstance().getSmartBallStatus(), "Smart Ball",
 				mainSmartBallTemperatureSensorsChart, mainSmartBallHumiditySensorsChart, mainSmartBallBrightnessSensorChart,
 				gatherSmartBallTemperatureSensorsChart, gatherSmartBallHumiditySensorsChart, gatherSmartBallBrightnessSensorChart,
+				averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
+				temperatureLabel, humidityLabel, brightnessLabel );
+	}
+	
+	public void onSmartFieldStatus()
+	{
+		updateLightTelosbBasedStatus
+		( EcosystemStatus.getInstance().getSmartFieldStatus(), "Smart Field",
+				mainSmartFieldTemperatureSensorsChart, mainSmartFieldHumiditySensorsChart, mainSmartFieldBrightnessSensorChart,
+				gatherSmartFieldTemperatureSensorsChart, gatherSmartFieldHumiditySensorsChart, gatherSmartFieldBrightnessSensorChart,
 				averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
 				temperatureLabel, humidityLabel, brightnessLabel );
 	}
@@ -671,5 +673,8 @@ public class EcosystemStatusController implements ViewController
 		
 		mainRacketYAccelerometerSensorsChart.getStylesheets().add( second_chart_style_sheet );
 		mainRacketZAccelerometerSensorsChart.getStylesheets().add( third_chart_style_sheet );
+		
+		mainSmartBallHumiditySensorsChart.getStylesheets().add( second_chart_style_sheet );
+		mainSmartBallTemperatureSensorsChart.getStylesheets().add( third_chart_style_sheet );	
 	}	
 }

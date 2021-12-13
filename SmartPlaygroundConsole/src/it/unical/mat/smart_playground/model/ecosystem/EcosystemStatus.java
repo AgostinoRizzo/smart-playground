@@ -21,7 +21,7 @@ public class EcosystemStatus
 	private final SmartGamePlatformStatus gamePlatformStatus      = new SmartGamePlatformStatus();
 	private final SmartBallStatus         smartBallStatus         = new SmartBallStatus();
 	private final MotionControllerStatus  motionControllerStatus  = new MotionControllerStatus();
-	private final SmartPoleStatus         smartPoleStatus         = new SmartPoleStatus();
+	private final SmartFieldStatus        smartFieldStatus        = new SmartFieldStatus();
 	
 	private final SmartRacketStatus       mainSmartRacketStatus   = new SmartRacketStatus();
 	private final SmartRacketStatus       secondSmartRacketStatus = new SmartRacketStatus();
@@ -48,9 +48,9 @@ public class EcosystemStatus
 	{
 		return motionControllerStatus;
 	}
-	public SmartPoleStatus getSmartPoleStatus()
+	public SmartFieldStatus getSmartFieldStatus()
 	{
-		return smartPoleStatus;
+		return smartFieldStatus;
 	}
 	public SmartRacketStatus getMainSmartRacketStatus()
 	{
@@ -75,7 +75,7 @@ public class EcosystemStatus
 		final List< List< Integer > > valuesLists = new ArrayList<>();
 		valuesLists.add( gamePlatformStatus.getTemperatureValues() );
 		valuesLists.add( smartBallStatus.getTemperatureValues() );
-		valuesLists.add( smartPoleStatus.getTemperatureValues() );
+		valuesLists.add( smartFieldStatus.getTemperatureValues() );
 		
 		return computeValuesAverage( valuesLists, t );
 		
@@ -85,7 +85,7 @@ public class EcosystemStatus
 		final List< List< Integer > > valuesLists = new ArrayList<>();
 		valuesLists.add( gamePlatformStatus.getHumidityValues() );
 		valuesLists.add( smartBallStatus.getHumidityValues() );
-		valuesLists.add( smartPoleStatus.getHumidityValues() );
+		valuesLists.add( smartFieldStatus.getHumidityValues() );
 		
 		return computeValuesAverage( valuesLists, t );
 		
@@ -95,7 +95,7 @@ public class EcosystemStatus
 		final List< List< Integer > > valuesLists = new ArrayList<>();
 		valuesLists.add( gamePlatformStatus.getBrightnessValues() );
 		valuesLists.add( smartBallStatus.getBrightnessValues() );
-		valuesLists.add( smartPoleStatus.getBrightnessValues() );
+		valuesLists.add( smartFieldStatus.getBrightnessValues() );
 		
 		return computeValuesAverage( valuesLists, t );
 		

@@ -257,15 +257,15 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	}
 	
 	@Override
-	public void onSmartGamePlatformStatus()
-	{
-		mainLayoutController.getEcosystemStatusController().onGamePlatformStatus();
-	}
-	
-	@Override
 	public void onSmartBallStatus()
 	{
 		mainLayoutController.getEcosystemStatusController().onSmartBallStatus();
+	}
+	
+	@Override
+	public void onSmartFieldStatus()
+	{
+		mainLayoutController.getEcosystemStatusController().onSmartFieldStatus();
 	}
 	
 	@Override

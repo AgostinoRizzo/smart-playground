@@ -14,7 +14,7 @@ public class PlaygroundBaseCommConfigs
 	public static final String ECOSYSTEM_STATUS = "STATUS";
 	public static final String SMART_GAME_PLATFORM_STATUS = "SGP_STATUS";
 	public static final String SMARTBALL_STATUS = "SB_STATUS";
-	public static final String SMARTPOLE_STATUS = "SP_STATUS";
+	public static final String SMARTFIELD_STATUS = "SF_STATUS";
 	public static final String MAIN_SMART_RACKET_STATUS = "MSR_STATUS";
 	public static final String FIELD_WIND_STATUS = "WIND_STATUS";
 	

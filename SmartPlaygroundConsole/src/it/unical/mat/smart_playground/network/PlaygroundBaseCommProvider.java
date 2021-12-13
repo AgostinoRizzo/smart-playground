@@ -19,10 +19,9 @@ import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.MotionControllerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartGamePlatformStatus;
-import it.unical.mat.smart_playground.model.ecosystem.SmartPoleStatus;
+import it.unical.mat.smart_playground.model.ecosystem.SmartFieldStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
-import it.unical.mat.smart_playground.model.ecosystem.WindDirection;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.JSONUtil;
@@ -125,6 +124,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		if      ( dataType.equals( PlaygroundBaseCommConfigs.ACK_EVENT ) )                   {callback.onAckEvent(); System.out.println("A+B");}
 		//else if ( dataType.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_STATUS ) )  handleSmartGamePlatformStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTBALL_STATUS ) )            handleSmartBallStatus(event.get("sample").getAsJsonArray());
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTFIELD_STATUS ) )           handleSmartFieldStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.FIELD_WIND_STATUS ) )           handleFieldWindStatus(event);
 		if      ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, 
 																												 event.get("accs_values").getAsJsonArray());
@@ -168,7 +168,31 @@ public class PlaygroundBaseCommProvider extends Thread
 		smartBallStatus.updateNewBrightnessValues(brightnessValues);
 		
 		callback.onSmartBallStatus();
-	}/*
+	}
+	private void handleSmartFieldStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
+	{
+		final JsonArray temperatureValuesJsonArray = new JsonArray(1);
+		final JsonArray humidityValuesJsonArray    = new JsonArray(1);
+		final JsonArray brightnessValuesJsonArray  = new JsonArray(1);
+		
+		// read temperature, humidity and brightness values.
+		temperatureValuesJsonArray.add(sensorsDataSample.get(0));
+		humidityValuesJsonArray   .add(sensorsDataSample.get(1));
+		brightnessValuesJsonArray .add(sensorsDataSample.get(2));
+		
+		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(temperatureValuesJsonArray);
+		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(humidityValuesJsonArray);
+		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(brightnessValuesJsonArray);
+		
+		// update model
+		final SmartFieldStatus smartFieldStatus = EcosystemStatus.getInstance().getSmartFieldStatus();
+		smartFieldStatus.updateNewTemperatureValues(temperatureValues);
+		smartFieldStatus.updateNewHumidityValues(humidityValues);
+		smartFieldStatus.updateNewBrightnessValues(brightnessValues);
+		
+		callback.onSmartFieldStatus();
+	}
+	/*
 	private void handleMotionControllerStatus() throws NumberFormatException, IOException
 	{
 		//final int direction = Integer.parseInt( in.readLine() );
@@ -228,7 +252,6 @@ public class PlaygroundBaseCommProvider extends Thread
 		final SmartGamePlatformStatus gamePLatformStatus = ecosystemStatus.getSmartGamePlatformStatus();
 		final SmartBallStatus smartBallStatus = ecosystemStatus.getSmartBallStatus();
 		final MotionControllerStatus motionControllerStatus = ecosystemStatus.getMotionControllerStatus();
-		final SmartPoleStatus smartPoleStatus = ecosystemStatus.getSmartPoleStatus();
 		
 		gamePLatformStatus.updateNewTemperatureValues(temperatureValues);
 		gamePLatformStatus.updateNewBrightnessValues(brightnessValues);
@@ -238,11 +261,6 @@ public class PlaygroundBaseCommProvider extends Thread
 		
 		motionControllerStatus.updatePlayerDirection(40);
 		
-		smartPoleStatus.updateWindDirection( WindDirection.EAST );
-		smartPoleStatus.updateNewTemperatureValues(temperatureValues);
-		smartPoleStatus.updateNewBrightnessValues(brightnessValues);
-		
-		callback.onSmartGamePlatformStatus();
 		callback.onSmartBallStatus();
 		callback.onMotionControllerStatus();
 	}
