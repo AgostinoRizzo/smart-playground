@@ -20,8 +20,8 @@ implementation
 	
 	FieldCommands = FieldCommandsManager.FieldCommands;
 	
-	FieldCommandsManager.CS_pin   -> SPI_CS_PIN;
-	FieldCommandsManager.CLK_pin  -> SPI_CLK_PIN
-	FieldCommandsManager.DIN_pin  -> SPI_DIN_PIN;
-	FieldCommandsManager.DOUT_pin -> SPI_DOUT_PIN;
+	FieldCommandsManager.CMD_bit1_pin -> CMD_BIT1_PIN;
+	FieldCommandsManager.CMD_bit2_pin -> CMD_BIT2_PIN
+	FieldCommandsManager.CMD_bit3_pin -> CMD_BIT3_PIN;
+	FieldCommandsManager.CMD_bit4_pin -> CMD_BIT4_PIN;
 }
