@@ -7,6 +7,7 @@ import sys
 import smart_objects
 from threading import Thread, RLock, Condition
 import collections
+import smart_objects
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -58,6 +59,28 @@ class DiscoveryServer(threading.Thread):
                 logging.error(e)
                 sys.exit(1)       
 
+
+class ConsoleCommandReader(Thread):
+    def __init__(self, inputStream):
+        Thread.__init__(self)
+        self.setDaemon(True)
+        self.inputStream = inputStream
+    
+    def run(self):
+        while True:
+            try:
+                jsonObjStr = self.inputStream.readline()
+                cmdJson = json.loads(jsonObjStr)
+
+                if cmdJson['type'] == 'lights_cmd':
+                    smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_lights(int(cmdJson['pattern']))
+                elif cmdJson['type'] == 'fans_cmd':
+                    smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_fans(int(cmdJson['pattern']))
+            except Exception as e:
+                print("ConsoleCommandReader closed: " + str(e))
+                break
+
+
 class NetworkCommunicator(Thread):
     
     def __init__(self, serverPort, callback=None):
@@ -83,9 +106,12 @@ class NetworkCommunicator(Thread):
         
         while True:
             # wait for a connection.
-            connection, client_addr = self.server_socket.accept()
-            inputFile = connection.makefile()
-            outputFile = connection.makefile("w")
+            connection, _ = self.server_socket.accept()
+            inputFile = connection.makefile('r')
+            outputFile = connection.makefile('w')
+
+            self.consoleCommandReader = ConsoleCommandReader(inputFile)
+            self.consoleCommandReader.start()
             
             with self.lock:
                 
@@ -113,6 +139,7 @@ class NetworkCommunicator(Thread):
     def createSocket(self):
         try:
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server_socket.bind(('', self.serverPort))
             self.server_socket.listen(1)
             return True
@@ -162,6 +189,12 @@ class EcosystemEventProvider:
 
     def send_sensors_sample(self, source_code, sample):
         self.netcomm.sendData( { 'dataType': source_code, 'sample': sample } )
+    
+    def send_field_wind_status(self, dir):
+        if dir is None:
+            self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'off'} )
+        else:
+            self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'on', 'dir': dir } )
 
     @staticmethod
     def handle_data_request(data):
