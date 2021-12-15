@@ -21,6 +21,7 @@ public class PlaygroundStatus
 	
 	private final SmartBallStatus ballStatus = new SmartBallStatus();
 	private final WindStatus windStatus = new WindStatus();
+	private Integer temperature, humidity, brightness;
 	
 	private Map<PlaygroundStatusTopic, List<PlaygroundStatusObserver>> observersMap = new HashMap<>();
 	
@@ -65,6 +66,22 @@ public class PlaygroundStatus
 		notifyStatusChange(PlaygroundStatusTopic.WIND_STATUS);
 	}
 	
+	public void updateTemperatureStatus( final Integer currentTemp )
+	{
+		temperature = currentTemp;
+		notifyStatusChange(PlaygroundStatusTopic.TEMP_STATUS);
+	}
+	public void updateHumidityStatus( final Integer currentHumi )
+	{
+		humidity = currentHumi;
+		notifyStatusChange(PlaygroundStatusTopic.HUMI_STATUS);
+	}
+	public void updateBrightnessStatus( final Integer currentBright )
+	{
+		brightness = currentBright;
+		notifyStatusChange(PlaygroundStatusTopic.BRIGHTNESS_STATUS);
+	}
+	
 	public SmartBallStatus getBallStatus()
 	{
 		return ballStatus;
@@ -73,6 +90,19 @@ public class PlaygroundStatus
 	public WindStatus getWindStatus()
 	{
 		return windStatus;
+	}
+	
+	public Integer getTemperature()
+	{
+		return temperature;
+	}
+	public Integer getHumidity()
+	{
+		return humidity;
+	}
+	public Integer getBrightness()
+	{
+		return brightness;
 	}
 	
 	private void notifyStatusChange( final PlaygroundStatusTopic topic )

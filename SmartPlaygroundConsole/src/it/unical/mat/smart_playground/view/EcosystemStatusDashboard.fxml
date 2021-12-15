@@ -11,17 +11,17 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<ScrollPane prefHeight="2337.0" prefWidth="1969.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.EcosystemStatusController">
+<ScrollPane prefHeight="2293.0" prefWidth="1969.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.EcosystemStatusController">
    <content>
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2332.0" prefWidth="1945.0" style="-fx-background-color: #ffff;">
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2435.0" prefWidth="1945.0" style="-fx-background-color: #ffff;">
          <center>
-            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="2302.0" prefWidth="1945.0" BorderPane.alignment="CENTER">
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="2335.0" prefWidth="1945.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2327.0" prefWidth="1925.0">
+                  <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2291.0" prefWidth="1925.0">
                      <children>
-                        <VBox>
+                        <VBox prefHeight="2414.0" prefWidth="761.0">
                            <children>
-                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="487.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="469.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="786.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
                                     <VBox prefHeight="447.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
                                        <children>
@@ -72,7 +72,7 @@
                                                       <NumberAxis side="LEFT" upperBound="50.0" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                    <effect>
                                                       <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
@@ -100,7 +100,7 @@
                                                       <NumberAxis side="LEFT" upperBound="50.0" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
                                                    </HBox.margin>
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" top="10.0" />
@@ -134,9 +134,9 @@
                                     <Insets bottom="20.0" right="20.0" />
                                  </VBox.margin>
                               </ScrollPane>
-                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="345.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="323.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                                    <VBox prefHeight="312.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
                                        <children>
                                           <HBox prefHeight="55.0" prefWidth="737.0">
                                              <children>
@@ -188,7 +188,7 @@
                                                       <NumberAxis side="LEFT" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                 </AreaChart>
                                                 <AreaChart fx:id="gatherSmartBallHumiditySensorsChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
@@ -216,7 +216,7 @@
                                                       <NumberAxis side="LEFT" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
                                                    </HBox.margin>
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" top="10.0" />
@@ -234,9 +234,9 @@
                                     <Insets bottom="20.0" right="20.0" />
                                  </VBox.margin>
                               </ScrollPane>
-                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="347.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="331.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="319.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                                    <VBox prefHeight="311.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
                                        <children>
                                           <HBox prefHeight="54.0" prefWidth="499.0">
                                              <children>
@@ -255,7 +255,7 @@
                                                             <Insets left="30.0" />
                                                          </VBox.margin>
                                                       </Label>
-                                                      <Label fx:id="brightnessLabel" text="30Lux">
+                                                      <Label fx:id="brightnessLabel" text="30lx">
                                                          <font>
                                                             <Font size="18.0" />
                                                          </font>
@@ -288,7 +288,7 @@
                                                       <NumberAxis side="LEFT" upperBound="300.0" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
                                                    </HBox.margin>
                                                 </AreaChart>
                                                 <AreaChart fx:id="gatherSmartBallBrightnessSensorChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
@@ -316,7 +316,7 @@
                                                       <NumberAxis side="LEFT" upperBound="300.0" />
                                                    </yAxis>
                                                    <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
                                                    </HBox.margin>
                                                    <VBox.margin>
                                                       <Insets bottom="10.0" top="10.0" />
@@ -334,18 +334,18 @@
                                     <Insets bottom="20.0" right="20.0" />
                                  </VBox.margin>
                               </ScrollPane>
-                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="1071.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="1066.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="1045.0" prefWidth="740.0">
+                                    <VBox prefHeight="1045.0" prefWidth="563.0">
                                        <children>
-                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="736.0">
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="626.0">
                                              <children>
                                                 <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../../../../../../res/drawable/virtual_ball_icon.png" />
                                                    </image>
                                                 </ImageView>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                                <VBox prefHeight="61.0" prefWidth="611.0" HBox.hgrow="ALWAYS">
                                                    <children>
                                                       <Label text="Playground Field">
                                                          <font>
@@ -367,14 +367,14 @@
                                                 </VBox>
                                              </children>
                                              <VBox.margin>
-                                                <Insets bottom="10.0" />
+                                                <Insets bottom="10.0" left="-10.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox prefHeight="375.0" prefWidth="740.0">
+                                          <HBox prefHeight="437.0" prefWidth="711.0">
                                              <children>
-                                                <AnchorPane prefHeight="392.0" prefWidth="740.0">
+                                                <AnchorPane prefHeight="437.0" prefWidth="722.0">
                                                    <children>
-                                                      <AnchorPane layoutY="61.0" prefHeight="309.0" prefWidth="740.0">
+                                                      <AnchorPane layoutY="61.0" prefHeight="314.0" prefWidth="736.0">
                                                          <children>
                                                             <ImageView fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
                                                                <image>
@@ -420,6 +420,9 @@
                                                          </children>
                                                       </VBox>
                                                    </children>
+                                                   <HBox.margin>
+                                                      <Insets left="-15.0" />
+                                                   </HBox.margin>
                                                 </AnchorPane>
                                              </children>
                                           </HBox>
@@ -451,6 +454,9 @@
                                                    </VBox.margin>
                                                 </AreaChart>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox>
                                              <children>
@@ -480,6 +486,9 @@
                                                    </VBox.margin>
                                                 </AreaChart>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                           <HBox>
                                              <children>
@@ -509,8 +518,14 @@
                                                    </VBox.margin>
                                                 </AreaChart>
                                              </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                        </children>
+                                       <padding>
+                                          <Insets left="15.0" />
+                                       </padding>
                                     </VBox>
                                  </content>
                                  <effect>
@@ -825,141 +840,9 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane prefHeight="435.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="680.0" prefWidth="490.0">
-                                       <children>
-                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="480.0">
-                                             <children>
-                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/second_tennis_racket_icon.png" />
-                                                   </image>
-                                                </ImageView>
-                                                <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                                                   <children>
-                                                      <Label text="Smart Racket TODO">
-                                                         <font>
-                                                            <Font name="System Bold" size="18.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" />
-                                                         </VBox.margin>
-                                                      </Label>
-                                                      <Label text="Second Wiimote">
-                                                         <font>
-                                                            <Font size="18.0" />
-                                                         </font>
-                                                         <VBox.margin>
-                                                            <Insets left="30.0" />
-                                                         </VBox.margin>
-                                                      </Label>
-                                                   </children>
-                                                </VBox>
-                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/bluetooth_icon.png" />
-                                                   </image>
-                                                </ImageView>
-                                             </children>
-                                             <VBox.margin>
-                                                <Insets bottom="10.0" />
-                                             </VBox.margin>
-                                          </HBox>
-                                          <HBox prefHeight="257.0" prefWidth="491.0">
-                                             <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
-                                                   <HBox.margin>
-                                                      <Insets />
-                                                   </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketAccelerometerSensorsChart1" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketAccelerometerSensorsChart1" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
-                                             </children>
-                                          </HBox>
-                                          <HBox prefHeight="257.0" prefWidth="491.0">
-                                             <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
-                                                   <HBox.margin>
-                                                      <Insets />
-                                                   </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketAccelerometerSensorsChart11" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketAccelerometerSensorsChart11" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
-                                             </children>
-                                          </HBox>
-                                          <HBox prefHeight="257.0" prefWidth="491.0">
-                                             <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
-                                                   <HBox.margin>
-                                                      <Insets />
-                                                   </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketAccelerometerSensorsChart12" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketAccelerometerSensorsChart12" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
-                                             </children>
-                                          </HBox>
-                                       </children>
-                                    </VBox>
-                                 </content>
-                                 <effect>
-                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                 </effect>
-                                 <HBox.margin>
-                                    <Insets bottom="20.0" right="20.0" />
-                                 </HBox.margin>
-                                 <VBox.margin>
-                                    <Insets bottom="20.0" right="20.0" />
-                                 </VBox.margin>
-                              </ScrollPane>
-                              <ScrollPane prefHeight="607.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
-                                 <content>
-                                    <VBox prefHeight="578.0" prefWidth="492.0">
+                                    <VBox prefHeight="415.0" prefWidth="492.0">
                                        <children>
                                           <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="480.0">
                                              <children>
@@ -1001,24 +884,17 @@
                                                 <Insets bottom="10.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox fx:id="motionControllerDataBox" prefHeight="248.0" prefWidth="391.0">
+                                          <HBox fx:id="motionControllerDataBox" prefHeight="142.0" prefWidth="492.0">
                                              <children>
                                                 <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
                                                       <Image url="@../../../../../../res/drawable/compass_icon.png" />
                                                    </image>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets right="10.0" />
                                                    </HBox.margin>
                                                 </ImageView>
-                                                <PieChart fx:id="motionControllerPlayerDirectionChart" prefHeight="228.0" prefWidth="500.0" style="-fx-background-color: white;" title="Player Orientation">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </PieChart>
+                                                <fx:include fx:id="playerOrientationTile" source="widget/player_orientation_tile.fxml" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="206.0" prefWidth="566.0">
@@ -1057,9 +933,9 @@
                                     <Insets bottom="20.0" right="20.0" />
                                  </VBox.margin>
                               </ScrollPane>
-                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="605.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="774.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="399.0" prefWidth="491.0">
+                                    <VBox prefHeight="754.0" prefWidth="491.0">
                                        <children>
                                           <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="480.0">
                                              <children>
@@ -1100,80 +976,92 @@
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubXAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubXAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickLabelGap="8.0" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketXAccelerometerSensorsChart1" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart1" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubYAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubYAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketXAccelerometerSensorsChart2" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart2" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="257.0" prefWidth="491.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/axis_icon.png" />
-                                                   </image>
+                                                <StackPane alignment="BOTTOM_LEFT" prefHeight="150.0">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubZAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubZAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
                                                    <HBox.margin>
-                                                      <Insets />
+                                                      <Insets top="10.0" />
                                                    </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketXAccelerometerSensorsChart3" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart3" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                </StackPane>
                                              </children>
                                           </HBox>
                                        </children>

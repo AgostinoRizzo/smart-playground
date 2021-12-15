@@ -70,6 +70,18 @@ public class EcosystemStatus
 		}
 	}
 	
+	public Integer getCurrentTemperatureAverage()
+	{
+		return getTemperatureAverage(smartFieldStatus.getTemperatureValues().size() - 1);
+	}
+	public Integer getCurrentHumidityAverage()
+	{
+		return getHumidityAverage(smartFieldStatus.getHumidityValues().size() - 1);
+	}
+	public Integer getCurrentBrightnessAverage()
+	{
+		return getBrightnessAverage(smartFieldStatus.getBrightnessValues().size() - 1);
+	}
 	public Integer getTemperatureAverage( final int t )
 	{
 		final List< List< Integer > > valuesLists = new ArrayList<>();

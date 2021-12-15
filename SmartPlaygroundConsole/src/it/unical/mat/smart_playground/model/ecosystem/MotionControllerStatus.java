@@ -9,14 +9,14 @@ package it.unical.mat.smart_playground.model.ecosystem;
  */
 public class MotionControllerStatus
 {
-	private int player_direction = 0;
+	private double player_orientation = 0;
 	
-	public void updatePlayerDirection( final int direction )
+	public void updatePlayerOrientation( final double orientation )
 	{
-		player_direction=direction;
+		player_orientation=orientation;
 	}
-	public int getPlayerDirection()
+	public double getPlayerOrientation()
 	{
-		return player_direction;
+		return player_orientation;
 	}
 }

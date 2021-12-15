@@ -22,7 +22,7 @@
             </ImageView>
             <AnchorPane prefHeight="85.0" prefWidth="80.0">
                <children>
-                  <Label fx:id="sensorLabel" text="30Lux">
+                  <Label fx:id="sensorLabel" text="30lx">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>

@@ -23,6 +23,7 @@ import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.PlaygroundField;
 import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
 import it.unical.mat.smart_playground.view.widget.LightsFansCtrlTileController;
+import it.unical.mat.smart_playground.view.widget.PlayerOrientationTileController;
 import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
@@ -80,7 +81,7 @@ public class EcosystemStatusController implements ViewController
 	private AreaChart< String, Double > gatherSmartBallBrightnessSensorChart;
 	
 	
-	// smart ball sensors charts.
+	// smart field sensors charts.
 	
 	@FXML
 	private AreaChart< String, Double > mainSmartFieldTemperatureSensorsChart;
@@ -108,10 +109,10 @@ public class EcosystemStatusController implements ViewController
 	private AreaChart< String, Double > averageBrightnessSensorChart;
 
 	
-	// motion controller charts.
+	// player motion controller charts.
 	
-	@FXML
-	private PieChart motionControllerPlayerDirectionChart;
+	@FXML private Parent playerOrientationTile;
+	// TODO: add PlayerOrientationController, even in fxml file
 	
 	
 	// main smart racket chart.
@@ -131,16 +132,28 @@ public class EcosystemStatusController implements ViewController
 	private AreaChart< String, Double > mainRacketZAccelerometerSensorsChart;
 	
 	
+	// main smart club chart.
+	
+	@FXML
+	private CategoryAxis xAxisClubXAccelerometerSensorsChart;
+	@FXML
+	private CategoryAxis xAxisClubYAccelerometerSensorsChart;
+	@FXML
+	private CategoryAxis xAxisClubZAccelerometerSensorsChart;
+	@FXML
+	private AreaChart< String, Double > mainClubXAccelerometerSensorsChart;
+	@FXML
+	private AreaChart< String, Double > mainClubYAccelerometerSensorsChart;
+	@FXML
+	private AreaChart< String, Double > mainClubZAccelerometerSensorsChart;
+	
+	
 	@FXML
 	private Label gamePlatformDescription;
 	@FXML
 	private HBox gamePlatformDataBox;
 	@FXML
 	private HBox ballDataBox;
-	@FXML
-	private HBox motionControllerDataBox;
-	@FXML
-	private HBox smartPoleDataBox;
 	@FXML
 	private Label temperatureLabel;
 	@FXML
@@ -287,11 +300,8 @@ public class EcosystemStatusController implements ViewController
 	
 	public void onMotionControllerStatus()
 	{
-		final MotionControllerStatus motionControllerStatus = EcosystemStatus.getInstance().getMotionControllerStatus();
-		motionControllerPlayerDirectionChart.getData().clear();
-		motionControllerPlayerDirectionChart.getData().add
-			( new PieChart.Data(Integer.toString(motionControllerStatus.getPlayerDirection()) + "°", 
-					motionControllerStatus.getPlayerDirection()) );
+		PlayerOrientationTileController.updateOrientation
+			(EcosystemStatus.getInstance().getMotionControllerStatus().getPlayerOrientation());
 	}
 	
 	public void onSmartRacketStatus( final SmartRacketType smartRacket )
@@ -309,13 +319,13 @@ public class EcosystemStatusController implements ViewController
 	
 	public void onMainSmartRacketStatus()
 	{
-		updateSmartRacketStatus( EcosystemStatus.getInstance().getMainSmartRacketStatus(), 
+		final SmartRacketStatus mainSmartRacketStatus = EcosystemStatus.getInstance().getMainSmartRacketStatus();
+		
+		updateSmartRacketStatus( mainSmartRacketStatus, 
 				mainRacketXAccelerometerSensorsChart, mainRacketYAccelerometerSensorsChart, mainRacketZAccelerometerSensorsChart );
-	}
-	
-	public void onSecondSmartRacketStatus()
-	{
-		// TODO: updateSmartRacketStatus( EcosystemStatus.getInstance().getMainSmartRacketStatus(), mainRacketAccelerometerSensorsChart );
+		
+		updateSmartRacketStatus( mainSmartRacketStatus, 
+				mainClubXAccelerometerSensorsChart, mainClubYAccelerometerSensorsChart, mainClubZAccelerometerSensorsChart );
 	}
 	
 	public void onScale( final double scale_factor )
@@ -673,6 +683,9 @@ public class EcosystemStatusController implements ViewController
 		
 		mainRacketYAccelerometerSensorsChart.getStylesheets().add( second_chart_style_sheet );
 		mainRacketZAccelerometerSensorsChart.getStylesheets().add( third_chart_style_sheet );
+		
+		mainClubYAccelerometerSensorsChart.getStylesheets().add( second_chart_style_sheet );
+		mainClubZAccelerometerSensorsChart.getStylesheets().add( third_chart_style_sheet );
 		
 		mainSmartBallHumiditySensorsChart.getStylesheets().add( second_chart_style_sheet );
 		mainSmartBallTemperatureSensorsChart.getStylesheets().add( third_chart_style_sheet );	

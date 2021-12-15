@@ -168,6 +168,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		smartBallStatus.updateNewBrightnessValues(brightnessValues);
 		
 		callback.onSmartBallStatus();
+		updatePlaygroundStatusTempHumiBright();
 	}
 	private void handleSmartFieldStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
@@ -191,6 +192,16 @@ public class PlaygroundBaseCommProvider extends Thread
 		smartFieldStatus.updateNewBrightnessValues(brightnessValues);
 		
 		callback.onSmartFieldStatus();
+		updatePlaygroundStatusTempHumiBright();
+	}
+	private void updatePlaygroundStatusTempHumiBright()
+	{
+		final PlaygroundStatus playgroundStatus = PlaygroundStatus.getInstance();
+		final EcosystemStatus ecosystemStatus = EcosystemStatus.getInstance();
+		
+		playgroundStatus.updateTemperatureStatus( ecosystemStatus.getCurrentTemperatureAverage() );
+		playgroundStatus.updateHumidityStatus(ecosystemStatus.getCurrentHumidityAverage() );
+		playgroundStatus.updateBrightnessStatus(ecosystemStatus.getCurrentBrightnessAverage() );
 	}
 	/*
 	private void handleMotionControllerStatus() throws NumberFormatException, IOException
@@ -259,7 +270,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		smartBallStatus.updateNewTemperatureValues(temperatureValues);
 		smartBallStatus.updateNewBrightnessValues(brightnessValues);
 		
-		motionControllerStatus.updatePlayerDirection(40);
+		motionControllerStatus.updatePlayerOrientation(40);
 		
 		callback.onSmartBallStatus();
 		callback.onMotionControllerStatus();
