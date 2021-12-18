@@ -23,7 +23,8 @@ import android.view.View;
  * @see android.view.View#setSystemUiVisibility(int)
  * @see android.view.WindowManager.LayoutParams#FLAG_FULLSCREEN
  */
-public abstract class SystemUiHider {
+public abstract class SystemUiHider
+{
     /**
      * When this flag is set, the
      * {@link android.view.WindowManager.LayoutParams#FLAG_LAYOUT_IN_SCREEN}
@@ -91,15 +92,19 @@ public abstract class SystemUiHider {
      *                   {@link #FLAG_HIDE_NAVIGATION}, and
      *                   {@link #FLAG_LAYOUT_IN_SCREEN_OLDER_DEVICES}.
      */
-    public static SystemUiHider getInstance(Activity activity, View anchorView, int flags) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+    public static SystemUiHider getInstance(Activity activity, View anchorView, int flags)
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+        {
             return new SystemUiHiderHoneycomb(activity, anchorView, flags);
-        } else {
+        } else
+        {
             return new SystemUiHiderBase(activity, anchorView, flags);
         }
     }
 
-    protected SystemUiHider(Activity activity, View anchorView, int flags) {
+    protected SystemUiHider(Activity activity, View anchorView, int flags)
+    {
         mActivity = activity;
         mAnchorView = anchorView;
         mFlags = flags;
@@ -129,10 +134,13 @@ public abstract class SystemUiHider {
     /**
      * Toggle the visibility of the system UI.
      */
-    public void toggle() {
-        if (isVisible()) {
+    public void toggle()
+    {
+        if (isVisible())
+        {
             hide();
-        } else {
+        } else
+        {
             show();
         }
     }
@@ -141,8 +149,10 @@ public abstract class SystemUiHider {
      * Registers a callback, to be triggered when the system UI visibility
      * changes.
      */
-    public void setOnVisibilityChangeListener(OnVisibilityChangeListener listener) {
-        if (listener == null) {
+    public void setOnVisibilityChangeListener(OnVisibilityChangeListener listener)
+    {
+        if (listener == null)
+        {
             listener = sDummyListener;
         }
 
@@ -152,16 +162,19 @@ public abstract class SystemUiHider {
     /**
      * A dummy no-op callback for use when there is no other listener set.
      */
-    private static OnVisibilityChangeListener sDummyListener = new OnVisibilityChangeListener() {
+    private static OnVisibilityChangeListener sDummyListener = new OnVisibilityChangeListener()
+    {
         @Override
-        public void onVisibilityChange(boolean visible) {
+        public void onVisibilityChange(boolean visible)
+        {
         }
     };
 
     /**
      * A callback interface used to listen for system UI visibility changes.
      */
-    public interface OnVisibilityChangeListener {
+    public interface OnVisibilityChangeListener
+    {
         /**
          * Called when the system UI visibility has changed.
          *

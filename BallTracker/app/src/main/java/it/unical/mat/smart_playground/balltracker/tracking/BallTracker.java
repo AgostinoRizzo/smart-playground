@@ -1,5 +1,8 @@
 package it.unical.mat.smart_playground.balltracker.tracking;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import it.unical.mat.smart_playground.balltracker.util.Vector2;
 
 /**
@@ -12,9 +15,6 @@ public class BallTracker
     public static final int PADDING_BOTTOM_INDEX = 2;
     public static final int PADDING_LEFT_INDEX   = 3;
 
-    private static final float MIN_BALL_LOCATION_DELTA_PERCENTAGE = 0.1f;
-    private static final short MIN_BALL_ORIENTATION_DELTA = 1;  // 0-359 degrees
-
     private static final int TOP_LEFT_CORNER_INDEX     = 0;
     private static final int TOP_RIGHT_CORNER_INDEX    = 1;
     private static final int BOTTOM_LEFT_CORNER_INDEX  = 2;
@@ -22,6 +22,10 @@ public class BallTracker
 
     private static final short WIDTH = 0;
     private static final short HEIGHT = 1;
+
+    private static float MIN_BALL_LOCATION_DELTA_PERCENTAGE = 0.1f;
+    private static short MIN_BALL_ORIENTATION_DELTA = 1;  // 0-359 degrees
+    private static final Lock SETTINGS_LOCK = new ReentrantLock();
 
     private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
 
@@ -39,6 +43,24 @@ public class BallTracker
         if ( instance == null )
             instance = new BallTracker();
         return instance;
+    }
+
+    public static void updateTrackingSettings(final TrackingSettings settings)
+    {
+        SETTINGS_LOCK.lock();
+        MIN_BALL_LOCATION_DELTA_PERCENTAGE = settings.getMinBallLocationDeltaPercentage();
+        MIN_BALL_ORIENTATION_DELTA = settings.getMinBallOrientationDelta();
+        SETTINGS_LOCK.unlock();
+    }
+    public static TrackingSettings getTrackingSettings()
+    {
+        try
+        {
+            SETTINGS_LOCK.lock();
+            return new TrackingSettings(MIN_BALL_LOCATION_DELTA_PERCENTAGE, MIN_BALL_ORIENTATION_DELTA);
+        }
+        finally
+        { SETTINGS_LOCK.unlock(); }
     }
 
     private BallTracker()
@@ -88,10 +110,12 @@ public class BallTracker
         try { newBallOrientation = marker.getOrientation(); }
         catch (NoOrientationDetectedException e) {}
 
+        final TrackingSettings trackingSettings = getTrackingSettings();
+
         // update and send new ball status.
-        final boolean onLocationUpdate = getBallLocationDeltaPercentage(newBallLocation) >= MIN_BALL_LOCATION_DELTA_PERCENTAGE ||
+        final boolean onLocationUpdate = getBallLocationDeltaPercentage(newBallLocation) >= trackingSettings.getMinBallLocationDeltaPercentage() ||
                                             TRACKING_COMM_STATS.getBallLocationCommStat().onKeepAlive();
-        final boolean onOrientationUpdate = (newBallOrientation >= 0 && Math.abs(newBallOrientation - ballStatus.getOrientation()) >= MIN_BALL_ORIENTATION_DELTA) ||
+        final boolean onOrientationUpdate = (newBallOrientation >= 0 && Math.abs(newBallOrientation - ballStatus.getOrientation()) >= trackingSettings.getMinBallOrientationDelta()) ||
                                             TRACKING_COMM_STATS.getBallOrientationCommStat().onKeepAlive();
 
         if ( onLocationUpdate && onOrientationUpdate )
