@@ -12,6 +12,14 @@ public class SmartBallStatus extends TelosbBasedStatus
 	private final SmartBallLocation location = new SmartBallLocation();
 	private int orientation = -1;
 	
+	public SmartBallStatus()
+	{}
+	public SmartBallStatus( final SmartBallStatus other )
+	{
+		location.set(other.getLocation());
+		setOrientation(other.getOrientation());
+	}
+	
 	public SmartBallLocation getLocation()
 	{
 		return location;
@@ -36,5 +44,15 @@ public class SmartBallStatus extends TelosbBasedStatus
 	public boolean isKnown()
 	{
 		return ( orientation >= 0.0 && location.isKnown() );
+	}
+	
+	@Override
+	public String toString()
+	{
+		if ( isKnown() )
+			return "BALL LOCATION: " + location.getLeft() + ", " + location.getTop() + 
+					"\nBALL ORIENTATION: " + orientation;
+		else
+			return "BALL STATUS UNKNOWN";
 	}
 }

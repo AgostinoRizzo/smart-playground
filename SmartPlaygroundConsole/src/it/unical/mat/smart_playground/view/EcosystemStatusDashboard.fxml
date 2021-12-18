@@ -402,7 +402,7 @@
                                                                </image>
                                                             </ImageView>
                                                             <Canvas fx:id="playgroundFieldCanvas" height="326.0" width="500.0" />
-                                                            <ImageView fx:id="playgroundFieldBallImage" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true">
+                                                            <ImageView fx:id="playgroundFieldBallImage" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" visible="false">
                                                                <image>
                                                                   <Image url="@../../../../../../res/drawable/soccer_ball.png" />
                                                                </image>

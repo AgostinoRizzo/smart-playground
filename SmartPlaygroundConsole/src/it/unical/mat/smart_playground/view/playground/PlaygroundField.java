@@ -64,8 +64,6 @@ public class PlaygroundField implements PlaygroundStatusObserver
 		}		
 	}
 	
-	private int currOrientation = 0;  // TODO: remove
-	
 	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
 	{
 		if ( newBallStatus.isKnown() )
@@ -85,8 +83,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 				ballImageView.setRotate(ballRotation);
 			}
 			
-			lastBallOrientation = currOrientation; //newBallStatus.getOrientation();
-			currOrientation = (currOrientation + 10) % 360;
+			lastBallOrientation = newBallStatus.getOrientation();
 			drawBallOrientation();
 			
 			if ( !ballImageView.isVisible() )
@@ -110,7 +107,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	{
 		clearFieldCanvas();
 		
-		final Vector2Int directionVector = GeometryUtil.computeDirectionVector(lastBallOrientation);
+		final Vector2Int directionVector = GeometryUtil.computeDirectionVector(lastBallOrientation, + 180);
 		final Vector2Int startPointSceenCoords = playgroundFieldMap.getScreenCoords(lastBallLocation.getLeft(), 
 																					lastBallLocation.getTop());
 		final Vector2Int arrowPointSceenCoords = playgroundFieldMap.getScreenCoordsFromPivot(startPointSceenCoords, 

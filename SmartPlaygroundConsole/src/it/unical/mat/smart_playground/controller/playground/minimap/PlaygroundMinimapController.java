@@ -119,6 +119,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 		case ALL :
 			onBallStatusChanged(status.getBallStatus());
 			onWindStatusChanged(status.getWindStatus()); break;
+		default: break;
 		}
 	}
 	
@@ -148,7 +149,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 			ballImage.setLayoutX( ballX - HALF_BALL_SIZE );
 			ballImage.setLayoutY( ballY - HALF_BALL_SIZE );
 			
-			final Vector2Int directionVector = GeometryUtil.computeDirectionVector(newBallStatus.getOrientation(), 90);
+			final Vector2Int directionVector = GeometryUtil.computeDirectionVector(newBallStatus.getOrientation(), -90);
 			
 			clearFieldCanvas();
 			drawBallTrajectory(ballX, ballY, directionVector);

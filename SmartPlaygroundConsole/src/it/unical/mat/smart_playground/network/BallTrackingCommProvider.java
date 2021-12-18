@@ -3,6 +3,7 @@
  */
 package it.unical.mat.smart_playground.network;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -45,11 +46,12 @@ public class BallTrackingCommProvider extends Thread
 		final byte[] databuff = new byte[MAX_RCV_DATA_BUFFER_SIZE];
 		final DatagramPacket rcvPacket = new DatagramPacket(databuff, databuff.length);
 		
-		float loc = 0f;
-		float inc = .03f;
+		//float loc = 0f;
+		//float inc = .03f;
 		
 		while ( true )
 		{
+			/*
 			ballStatus.setOrientation(0);
 			final SmartBallLocation location = ballStatus.getLocation();
 			location.setLeft(loc);
@@ -77,8 +79,9 @@ public class BallTrackingCommProvider extends Thread
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			*/
 			
-			/*
+			
 			try
 			{
 				socket.receive(rcvPacket);
@@ -86,7 +89,7 @@ public class BallTrackingCommProvider extends Thread
 			} 
 			catch (IOException e)
 			{}
-			*/
+			
 		}
 	}
 	
@@ -111,20 +114,19 @@ public class BallTrackingCommProvider extends Thread
 			
 			final SmartBallLocation ballLocation = ballStatus.getLocation();
 			ballLocation.setLeft(ballLeft);
-			ballLocation.setTop(ballTop);
+			ballLocation.setTop(1.0f - ballTop);
 		}
 		
 		if ( rcvDataLength == 6 || rcvDataLength == 14 )
 		{
 			final short ballOrientation = rcvByteBuffer.getShort();
 			ballStatus.setOrientation(ballOrientation);
-			System.out.println("ORIENTATION: " + ballOrientation);
 		}
 		
 		if ( rcvDataLength == 4 )
 			ballStatus.setUnknownStatus();
 		
-		seqdata_number = seqnumber + 1;
+		seqdata_number = seqnumber;
 		
 		onBallStatusChanged();
 	}
@@ -139,10 +141,8 @@ public class BallTrackingCommProvider extends Thread
 	
 	private void onBallStatusChanged()
 	{
-		final SmartBallStatus newBallStatus = new SmartBallStatus();
-		newBallStatus.getLocation().set(ballStatus.getLocation());
-		newBallStatus.setOrientation(ballStatus.getOrientation());
-		
-		callback.onBallStatusChanged(ballStatus);
+		final SmartBallStatus newBallStatus = new SmartBallStatus(ballStatus);		
+		System.out.println(newBallStatus);
+		callback.onBallStatusChanged(newBallStatus);
 	}
 }

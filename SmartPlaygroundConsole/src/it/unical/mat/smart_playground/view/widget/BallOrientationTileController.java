@@ -48,7 +48,7 @@ public class BallOrientationTileController implements LayoutController, Playgrou
 	{
 		if ( status.isKnown() )
 		{
-			ballOrientationImage.setRotate(status.getOrientation());
+			ballOrientationImage.setRotate(status.getOrientation() + 90);
 			if ( !ballOrientationImage.isVisible() )
 				ballOrientationImage.setVisible(true);
 		}
