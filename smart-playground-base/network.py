@@ -152,12 +152,14 @@ class NetworkCommunicator(Thread):
 class EcosystemEventProvider:
     
     _instance = None
+    _lock = RLock()
 
     @staticmethod
     def get_instance():
-        if EcosystemEventProvider._instance is None:
-            EcosystemEventProvider._instance = EcosystemEventProvider()
-        return EcosystemEventProvider._instance
+        with EcosystemEventProvider._lock:
+            if EcosystemEventProvider._instance is None:
+                EcosystemEventProvider._instance = EcosystemEventProvider()
+            return EcosystemEventProvider._instance
 
     def __init__(self):
         if EcosystemEventProvider._instance is not None:

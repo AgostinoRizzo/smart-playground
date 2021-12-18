@@ -20,26 +20,26 @@ class PlaygroundBaseStatus:
     
     def __init__(self):
         self.ballLocation = PointLocation(-1.0, -1.0)
-        self.ballOrientation = None
+        self.ballOrientation = -1
         self.lock = RLock()
     
     def update_ball_location(self, left, top):
         with self.lock:
             self.ballLocation.left = left
             self.ballLocation.top = top
-            print("New ball location: %f, %f" % (left, top))
+            #print("New ball location: %f, %f" % (left, top))
     
     def update_ball_orientation(self, orientation):
         with self.lock:
             self.ballOrientation = orientation
-            print("New ball orientation: %d" % orientation)
+            #print("New ball orientation: %d" % orientation)
     
     def set_unknown_ball_status(self):
         with self.lock:
             self.ballLocation.left = -1.0
             self.ballLocation.top = -1.0
             self.ballOrientation = -1
-            print("Ball status unknown.")
+            #print("Ball status unknown.")
     
     def get_ball_location(self) -> PointLocation:
         with self.lock:
@@ -129,7 +129,7 @@ class BallTracker(Thread):
             buff_offset += 4
             ball_top, = struct.unpack_from('>f', databuff, buff_offset)
             buff_offset += 4
-            self.playgroundBaseStatus.update_ball_location(ball_left, ball_top)
+            self.playgroundBaseStatus.update_ball_location(ball_left, 1.0 - ball_top)
             
         if databuff_length == 6 or databuff_length == 14:
             ball_orientation, = struct.unpack_from('>h', databuff, buff_offset)
@@ -139,7 +139,8 @@ class BallTracker(Thread):
         if databuff_length == 4:
             self.playgroundBaseStatus.set_unknown_ball_status()
         
-        self.seqdata_number += 1
+        self.seqdata_number = seqnumber
+        #print(self.playgroundBaseStatus.get_ascii_status())
     
 
 

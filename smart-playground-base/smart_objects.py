@@ -211,7 +211,7 @@ class SmartRacket(SmartObject):
         """
         smart racket - bluetooth connection setup with nintendo wiimote
         """
-
+    
         wiimotes = []
         finding_rounds = 4
 
