@@ -3,13 +3,15 @@
  */
 package it.unical.mat.smart_playground.network;
 
+import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 
 /**
  * @author Agostino
  *
  */
-public interface BallTrackingCommCallback
+public interface BallTrackingMotionCtrlCommCallback
 {
 	public void onBallStatusChanged( final SmartBallStatus newBallStatus );
+	public void onPlayerStatusChanged( final PlayerStatus newPlayerStatus );
 }

@@ -273,6 +273,5 @@ public class PlaygroundBaseCommProvider extends Thread
 		motionControllerStatus.updatePlayerOrientation(40);
 		
 		callback.onSmartBallStatus();
-		callback.onMotionControllerStatus();
 	}
 }

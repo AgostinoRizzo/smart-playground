@@ -15,7 +15,7 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.ecosystem.TelosbBasedStatus;
 import it.unical.mat.smart_playground.model.ecosystem.WindDirection;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
-import it.unical.mat.smart_playground.network.BallTrackingCommProvider;
+import it.unical.mat.smart_playground.network.BallTrackingMotionCtrlCommProvider;
 import it.unical.mat.smart_playground.view.Strings;
 import it.unical.mat.smart_playground.view.animation.WindFlagAnimationManager;
 import it.unical.mat.smart_playground.view.animation.WindSpeedAnimationManager;
@@ -296,12 +296,6 @@ public class EcosystemStatusController implements ViewController
 				gatherSmartFieldTemperatureSensorsChart, gatherSmartFieldHumiditySensorsChart, gatherSmartFieldBrightnessSensorChart,
 				averageTemperatureSensorsChart, averageHumiditySensorsChart, averageBrightnessSensorChart,
 				temperatureLabel, humidityLabel, brightnessLabel );
-	}
-	
-	public void onMotionControllerStatus()
-	{
-		PlayerOrientationTileController.updateOrientation
-			(EcosystemStatus.getInstance().getMotionControllerStatus().getPlayerOrientation());
 	}
 	
 	public void onSmartRacketStatus( final SmartRacketType smartRacket )

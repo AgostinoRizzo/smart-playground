@@ -26,7 +26,7 @@ public class BallOrientationTileController implements LayoutController, Playgrou
 	public void onInitialize(Window win)
 	{
 		PLAYGROUND_STATUS.addObserver(this, PlaygroundStatusTopic.BALL_STATUS);
-		setBallImageViewOrientation(PLAYGROUND_STATUS.getBallStatus());
+		onPlaygroundStatusChanged(PLAYGROUND_STATUS, PlaygroundStatusTopic.BALL_STATUS);
 	}
 
 	@Override
@@ -41,18 +41,7 @@ public class BallOrientationTileController implements LayoutController, Playgrou
 		if ( topic != PlaygroundStatusTopic.BALL_STATUS )
 			return;
 		
-		setBallImageViewOrientation(status.getBallStatus());
-	}
-	
-	private void setBallImageViewOrientation( final SmartBallStatus status )
-	{
-		if ( status.isKnown() )
-		{
-			ballOrientationImage.setRotate(status.getOrientation() + 90);
-			if ( !ballOrientationImage.isVisible() )
-				ballOrientationImage.setVisible(true);
-		}
-		else if ( ballOrientationImage.isVisible() )
-			ballOrientationImage.setVisible(false);
+		final SmartBallStatus ballStatus = status.getBallStatus();
+		OrientationTileUtil.setBallImageViewOrientation(ballOrientationImage, ballStatus.isKnown(), ballStatus.getOrientation());
 	}
 }

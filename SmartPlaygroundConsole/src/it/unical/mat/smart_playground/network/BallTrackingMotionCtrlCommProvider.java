@@ -9,6 +9,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 
@@ -16,20 +17,25 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
  * @author Agostino
  *
  */
-public class BallTrackingCommProvider extends Thread
+public class BallTrackingMotionCtrlCommProvider extends Thread
 {
 	private static final int SOCKET_PORT = 3000;
 	private static final int MAX_RCV_DATA_BUFFER_SIZE = 14;
-	private static final int[] BALL_STATUS_DATA_BUFFER_SIZES = {4, 6, 12, 14};
+	private static final int[] BALL_STATUS_DATA_BUFFER_SIZES = {4, 5, 6, 9, 12, 14};
+	
+	private static final byte PACKET_TYPE_ORIENTATION_UPDATE  = 1;
+	private static final byte PACKET_TYPE_ORIENTATION_SYNC    = 2;
+	private static final byte PACKET_TYPE_ORIENTATION_UNKNOWN = 3;
 	
 	private DatagramSocket socket;
 	
-	private int seqdata_number = 0;
+	private int balltrack_seqdata_number = 0, motionctrl_seqdata_number = 0;
 	private SmartBallStatus ballStatus = new SmartBallStatus();
+	private PlayerStatus playerStatus = new PlayerStatus();
 	
-	private final BallTrackingCommCallback callback;
+	private final BallTrackingMotionCtrlCommCallback callback;
 	
-	public BallTrackingCommProvider( final BallTrackingCommCallback callback )
+	public BallTrackingMotionCtrlCommProvider( final BallTrackingMotionCtrlCommCallback callback )
 	{
 		this.callback = callback;
 		setDaemon(true);
@@ -46,42 +52,8 @@ public class BallTrackingCommProvider extends Thread
 		final byte[] databuff = new byte[MAX_RCV_DATA_BUFFER_SIZE];
 		final DatagramPacket rcvPacket = new DatagramPacket(databuff, databuff.length);
 		
-		//float loc = 0f;
-		//float inc = .03f;
-		
 		while ( true )
 		{
-			/*
-			ballStatus.setOrientation(0);
-			final SmartBallLocation location = ballStatus.getLocation();
-			location.setLeft(loc);
-			location.setTop (loc);
-			
-			loc += inc;
-			if ( loc > 1f )
-			{
-				loc = 1f;
-				inc = -inc;
-			}
-			else if ( loc < 0f )
-			{
-				loc = 0f;
-				inc = -inc;
-			}
-			
-			onBallStatusChanged();
-			
-			try
-			{
-				sleep(100);
-			} catch (InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			*/
-			
-			
 			try
 			{
 				socket.receive(rcvPacket);
@@ -89,7 +61,6 @@ public class BallTrackingCommProvider extends Thread
 			} 
 			catch (IOException e)
 			{}
-			
 		}
 	}
 	
@@ -102,10 +73,19 @@ public class BallTrackingCommProvider extends Thread
 		
 		final byte[] rcvData = rcvPacket.getData();
 		final ByteBuffer rcvByteBuffer = ByteBuffer.wrap(rcvData, 0, rcvDataLength);
-		final int seqnumber = rcvByteBuffer.getInt();
 		
-		if ( seqnumber <= seqdata_number )
+		if ( rcvDataLength == 4 || rcvDataLength == 6 || rcvDataLength == 14 )
+			manageBallTrackingReceivedData( rcvByteBuffer, rcvDataLength );
+		else if ( rcvDataLength == 5 || rcvDataLength == 9 )
+			manageMotionControllerReceivedData( rcvByteBuffer, rcvDataLength );
+	}
+	
+	private void manageBallTrackingReceivedData( final ByteBuffer rcvByteBuffer, final int rcvDataLength )
+	{
+		final int seqnumber = rcvByteBuffer.getInt();
+		if ( seqnumber <= balltrack_seqdata_number )
 			return;
+		balltrack_seqdata_number = seqnumber;
 		
 		if ( rcvDataLength >= 12 )
 		{
@@ -126,9 +106,36 @@ public class BallTrackingCommProvider extends Thread
 		if ( rcvDataLength == 4 )
 			ballStatus.setUnknownStatus();
 		
-		seqdata_number = seqnumber;
-		
 		onBallStatusChanged();
+	}
+	
+	private void manageMotionControllerReceivedData( final ByteBuffer rcvByteBuffer, final int rcvDataLength )
+	{
+		final int seqnumber = rcvByteBuffer.getInt();
+		if ( seqnumber <= motionctrl_seqdata_number )
+			return;
+		motionctrl_seqdata_number = seqnumber;
+		
+		final byte type = rcvByteBuffer.get();
+		
+		if ( rcvDataLength == 9 )
+		{
+			final float orientation = rcvByteBuffer.getFloat();
+			
+			switch (type)
+			{
+			case PACKET_TYPE_ORIENTATION_UPDATE:  playerStatus.updateAbsoluteOrientation(orientation); 
+												  onPlayerStatusChanged(); break;
+			case PACKET_TYPE_ORIENTATION_SYNC:    playerStatus.syncOrientation(orientation);
+												  onPlayerStatusChanged(); break;
+			}
+		}
+		else if ( rcvDataLength == 5 && type == PACKET_TYPE_ORIENTATION_UNKNOWN )
+		{
+			playerStatus.onUnknownOrientation();
+			onPlayerStatusChanged();
+		}
+		
 	}
 	
 	private static boolean checkRecvDataBufferSize( final int dataBufferSize )
@@ -144,5 +151,12 @@ public class BallTrackingCommProvider extends Thread
 		final SmartBallStatus newBallStatus = new SmartBallStatus(ballStatus);		
 		System.out.println(newBallStatus);
 		callback.onBallStatusChanged(newBallStatus);
+	}
+	
+	private void onPlayerStatusChanged()
+	{
+		final PlayerStatus newPlayerStatus = new PlayerStatus(playerStatus);
+		System.out.println(newPlayerStatus);
+		callback.onPlayerStatusChanged(newPlayerStatus);
 	}
 }

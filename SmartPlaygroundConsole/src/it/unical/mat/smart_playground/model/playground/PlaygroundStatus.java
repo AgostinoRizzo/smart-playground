@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 
 /**
@@ -20,6 +21,7 @@ public class PlaygroundStatus
 	private static PlaygroundStatus instance = null;
 	
 	private final SmartBallStatus ballStatus = new SmartBallStatus();
+	private final PlayerStatus playerStatus = new PlayerStatus();
 	private final WindStatus windStatus = new WindStatus();
 	private Integer temperature, humidity, brightness;
 	
@@ -60,6 +62,12 @@ public class PlaygroundStatus
 		notifyStatusChange(PlaygroundStatusTopic.BALL_STATUS);
 	}
 	
+	public void updatePlayerStatus( final PlayerStatus newPlayerStatus )
+	{
+		playerStatus.set(newPlayerStatus);
+		notifyStatusChange(PlaygroundStatusTopic.PLAYER_STATUS);
+	}
+	
 	public void updateWindStatus( final WindStatus newWindStatus )
 	{
 		windStatus.set(newWindStatus);
@@ -85,6 +93,11 @@ public class PlaygroundStatus
 	public SmartBallStatus getBallStatus()
 	{
 		return ballStatus;
+	}
+	
+	public PlayerStatus getPlayerStatus()
+	{
+		return playerStatus;
 	}
 	
 	public WindStatus getWindStatus()

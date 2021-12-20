@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
-import it.unical.mat.smart_playground.network.BallTrackingCommCallback;
-import it.unical.mat.smart_playground.network.BallTrackingCommProvider;
+import it.unical.mat.smart_playground.network.BallTrackingMotionCtrlCommCallback;
+import it.unical.mat.smart_playground.network.BallTrackingMotionCtrlCommProvider;
 import it.unical.mat.smart_playground.network.NetDiscoveryCallback;
 import it.unical.mat.smart_playground.network.NetDiscoveryClient;
 import it.unical.mat.smart_playground.network.NetService;
@@ -25,12 +26,12 @@ import javafx.application.Platform;
  * @author Agostino
  *
  */
-public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseCommCallback, BallTrackingCommCallback
+public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseCommCallback, BallTrackingMotionCtrlCommCallback
 {
 	private static ApplicationManager instance = new ApplicationManager();
 	
 	private final NetDiscoveryClient netDiscoveryClient;
-	private final BallTrackingCommProvider ballTrackingCommProvider;
+	private final BallTrackingMotionCtrlCommProvider ballTrackingMotionCtrlCommProvider;
 	private PlaygroundBaseCommProvider playgroundBaseCommProvider=null;
 	
 	private final List<NetDiscoveryCallback>       netDiscoveryApplicationCallbacks = new ArrayList<>();
@@ -44,7 +45,7 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 	private ApplicationManager()
 	{
 		netDiscoveryClient = new NetDiscoveryClient(this);
-		ballTrackingCommProvider = new BallTrackingCommProvider(this);
+		ballTrackingMotionCtrlCommProvider = new BallTrackingMotionCtrlCommProvider(this);
 	}
 	
 	public void addNetworkDiscoveryCallback( final NetDiscoveryCallback callback )
@@ -77,7 +78,7 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			}
 		}, 500 /*3000*/);
 		
-		ballTrackingCommProvider.start();
+		ballTrackingMotionCtrlCommProvider.start();
 	}
 	
 	public void finalize()
@@ -145,20 +146,6 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			}
 		});
 	}
-
-	@Override
-	public void onMotionControllerStatus()
-	{
-		Platform.runLater( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				for ( final PlaygroundBaseCommCallback c : playgroundBaseCommApplicationCallbacks )
-					c.onMotionControllerStatus();
-			}
-		});
-	}
 	
 	@Override
 	public void onSmartRacketStatus(SmartRacketType smartRacket, SmartRacketStatus newStatus)
@@ -183,6 +170,18 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			public void run()
 			{
 				PlaygroundStatus.getInstance().updateBallStatus(newBallStatus);
+			}
+		});
+	}
+	@Override
+	public void onPlayerStatusChanged(PlayerStatus newPlayerStatus)
+	{
+		Platform.runLater( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				PlaygroundStatus.getInstance().updatePlayerStatus(newPlayerStatus);
 			}
 		});
 	}

@@ -269,12 +269,6 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 	}
 	
 	@Override
-	public void onMotionControllerStatus()
-	{
-		mainLayoutController.getEcosystemStatusController().onMotionControllerStatus();
-	}
-	
-	@Override
 	public void onSmartRacketStatus(SmartRacketType smartRacket, SmartRacketStatus newStatus)
 	{
 		EcosystemStatus.getInstance().getMainSmartRacketStatus().updateNewAccelerometerValues(newStatus);
