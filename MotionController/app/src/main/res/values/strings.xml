@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Motion Controller</string>
+
+    <string name="action_sync">Sync</string>
+</resources>
