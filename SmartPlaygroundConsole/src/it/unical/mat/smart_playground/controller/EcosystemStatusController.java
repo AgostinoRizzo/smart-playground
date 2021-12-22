@@ -23,7 +23,7 @@ import it.unical.mat.smart_playground.view.animation.WindSpeedAnimator;
 import it.unical.mat.smart_playground.view.playground.PlaygroundField;
 import it.unical.mat.smart_playground.view.widget.BallOrientationTileController;
 import it.unical.mat.smart_playground.view.widget.LightsFansCtrlTileController;
-import it.unical.mat.smart_playground.view.widget.PlayerOrientationTileController;
+import it.unical.mat.smart_playground.view.widget.PlayerMotionStatusTileController;
 import it.unical.mat.smart_playground.view.widget.WindDirectionTileController;
 import it.unical.mat.smart_playground.view.widget.WindSpeedTileController;
 import javafx.fxml.FXML;
@@ -112,7 +112,9 @@ public class EcosystemStatusController implements ViewController
 	// player motion controller charts.
 	
 	@FXML private Parent playerOrientationTile;
-	// TODO: add PlayerOrientationController, even in fxml file
+	@FXML private Parent playerStepsTile;
+	@FXML private Parent playerDistanceTile;
+	@FXML private Parent playerCaloriesTile;
 	
 	
 	// main smart racket chart.

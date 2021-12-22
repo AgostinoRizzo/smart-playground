@@ -840,9 +840,9 @@
                         </VBox>
                         <VBox>
                            <children>
-                              <ScrollPane prefHeight="435.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                              <ScrollPane prefHeight="344.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
                                  <content>
-                                    <VBox prefHeight="415.0" prefWidth="492.0">
+                                    <VBox prefHeight="320.0" prefWidth="492.0">
                                        <children>
                                           <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="480.0">
                                              <children>
@@ -884,44 +884,21 @@
                                                 <Insets bottom="10.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox fx:id="motionControllerDataBox" prefHeight="142.0" prefWidth="492.0">
+                                          <HBox prefHeight="104.0" prefWidth="492.0" spacing="10.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/compass_icon.png" />
-                                                   </image>
-                                                   <HBox.margin>
-                                                      <Insets right="10.0" />
-                                                   </HBox.margin>
-                                                </ImageView>
-                                                <fx:include fx:id="playerOrientationTile" source="widget/player_orientation_tile.fxml" />
+                                                <fx:include fx:id="playerStepsTile" source="widget/player_steps_tile.fxml" />
+                                                <fx:include fx:id="playerDistanceTile" source="widget/player_distance_tile.fxml" />
+                                                <fx:include fx:id="playerCaloriesTile" source="widget/player_calories_tile.fxml" />
                                              </children>
                                           </HBox>
-                                          <HBox prefHeight="206.0" prefWidth="566.0">
+                                          <HBox prefHeight="139.0" prefWidth="492.0" spacing="10.0">
                                              <children>
-                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                                   <image>
-                                                      <Image url="@../../../../../../res/drawable/moving_icon.png" />
-                                                   </image>
-                                                   <HBox.margin>
-                                                      <Insets top="10.0" />
-                                                   </HBox.margin>
-                                                </ImageView>
-                                                <AreaChart fx:id="mainRacketAccelerometerSensorsChart3" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css" title="Accelerometer">
-                                                   <effect>
-                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
-                                                   </effect>
-                                                   <xAxis>
-                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketAccelerometerSensorsChart3" />
-                                                   </xAxis>
-                                                   <yAxis>
-                                                      <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
-                                                   </yAxis>
-                                                   <HBox.margin>
-                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                                   </HBox.margin>
-                                                </AreaChart>
+                                                <fx:include fx:id="playerOrientationTile" source="widget/player_orientation_tile.fxml" />
+                                                <fx:include source="widget/player_body_info_tile.fxml" />
                                              </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
                                           </HBox>
                                        </children>
                                     </VBox>

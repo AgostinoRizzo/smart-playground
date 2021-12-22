@@ -26,6 +26,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 	private static final byte PACKET_TYPE_ORIENTATION_UPDATE  = 1;
 	private static final byte PACKET_TYPE_ORIENTATION_SYNC    = 2;
 	private static final byte PACKET_TYPE_ORIENTATION_UNKNOWN = 3;
+	private static final byte PACKET_TYPE_STEPS_UPDATE        = 4;
 	
 	private DatagramSocket socket;
 	
@@ -120,14 +121,23 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 		
 		if ( rcvDataLength == 9 )
 		{
-			final float orientation = rcvByteBuffer.getFloat();
-			
-			switch (type)
+			if ( type == PACKET_TYPE_STEPS_UPDATE )
 			{
-			case PACKET_TYPE_ORIENTATION_UPDATE:  playerStatus.updateAbsoluteOrientation(orientation); 
-												  onPlayerStatusChanged(); break;
-			case PACKET_TYPE_ORIENTATION_SYNC:    playerStatus.syncOrientation(orientation);
-												  onPlayerStatusChanged(); break;
+				final int totalSteps = rcvByteBuffer.getInt();
+				playerStatus.updateTotalSteps(totalSteps);
+				onPlayerStatusChanged();
+			}
+			else
+			{
+				final float orientation = rcvByteBuffer.getFloat();
+				
+				switch (type)
+				{
+				case PACKET_TYPE_ORIENTATION_UPDATE:  playerStatus.updateAbsoluteOrientation(orientation); 
+													  onPlayerStatusChanged(); break;
+				case PACKET_TYPE_ORIENTATION_SYNC:    playerStatus.syncOrientation(orientation);
+													  onPlayerStatusChanged(); break;
+				}
 			}
 		}
 		else if ( rcvDataLength == 5 && type == PACKET_TYPE_ORIENTATION_UNKNOWN )

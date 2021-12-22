@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox prefHeight="111.0" prefWidth="133.0" styleClass="tile" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.widget.PlayerCaloriesTileController">
+   <children>
+      <HBox prefHeight="70.0" prefWidth="140.0">
+         <children>
+            <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../res/drawable/calories_icon.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <AnchorPane prefHeight="50.0" prefWidth="93.0">
+               <children>
+                  <Label fx:id="playerCaloriesLabel" alignment="CENTER" prefHeight="35.0" prefWidth="97.0" text="0.0 cal">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <Label alignment="CENTER" prefHeight="21.0" prefWidth="157.0" text="Burned Calories" textAlignment="RIGHT">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+   </children>
+</VBox>
