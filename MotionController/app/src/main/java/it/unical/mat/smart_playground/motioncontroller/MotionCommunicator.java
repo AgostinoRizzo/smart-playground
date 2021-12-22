@@ -9,4 +9,5 @@ public interface MotionCommunicator
     public long sendOrientation( final float orientation );
     public long sendOrientationSync( final float orientation );
     public long sendUnknownOrientation();
+    public long sendSteps( final int totalSteps );
 }

@@ -48,6 +48,8 @@ public class MotionManager
         }
     }
 
+    public void updateSteps( final int totalSteps ) { communicator.sendSteps(totalSteps); }
+
     private boolean canSend()
     {
         return ( System.currentTimeMillis() - lastSendTime >= SEND_TIME_DELTA );

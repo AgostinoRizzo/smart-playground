@@ -25,6 +25,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
     private static final byte ORIENTATION_UPDATE  = 1;
     private static final byte ORIENTATION_SYNC    = 2;
     private static final byte ORIENTATION_UNKNOWN = 3;
+    private static final byte STEPS_UPDATE        = 4;
 
     private List<InetAddress> destinationAddrs = null;
     private DatagramSocket udpSocket = null;
@@ -94,6 +95,27 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
                 buffer = ByteBuffer.allocate(5);
                 buffer.putInt(sequenceNumber);
                 buffer.put(ORIENTATION_UNKNOWN);
+
+                bufferAvailableCond.signal();
+                return System.currentTimeMillis();
+            }
+            return -1;
+        }
+        finally { lock.unlock(); }
+    }
+
+    @Override
+    public long sendSteps(int totalSteps)
+    {
+        try
+        {
+            lock.lock();
+            if (createUDPSocket() && buffer == null)
+            {
+                buffer = ByteBuffer.allocate(9);
+                buffer.putInt(sequenceNumber);
+                buffer.put(STEPS_UPDATE);
+                buffer.putInt(totalSteps);
 
                 bufferAvailableCond.signal();
                 return System.currentTimeMillis();

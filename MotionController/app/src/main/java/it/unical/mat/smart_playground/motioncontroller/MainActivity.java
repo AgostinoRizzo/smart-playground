@@ -15,8 +15,15 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements SensorEventListener
 {
     private TextView orientationTextView;
+    private TextView stepsTextView;
+
     private SensorManager sensorManager;
     private MotionManager motionManager;
+
+    private Sensor orientationSensor;
+    private Sensor accelSensor;
+
+    private final StepCounter stepCounter = new StepCounter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -25,8 +32,13 @@ public class MainActivity extends Activity implements SensorEventListener
         setContentView(R.layout.activity_main);
 
         orientationTextView = (TextView) findViewById(R.id.orientationTextView);
+        stepsTextView = (TextView) findViewById(R.id.stepsTextView);
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         motionManager = MotionManager.getInstance();
+
+        orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
 
@@ -68,16 +80,34 @@ public class MainActivity extends Activity implements SensorEventListener
     protected void onResume()
     {
         super.onResume();
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), sensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, orientationSensor, sensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, accelSensor, sensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent)
     {
-        // get orientation around the z-axis
-        final float orientationDegrees = Math.round(sensorEvent.values[0]);
-        motionManager.updateOrientation(orientationDegrees);
-        orientationTextView.setText(Float.toString(orientationDegrees) + "°");
+        synchronized (this)
+        {
+            final int sensorType = sensorEvent.sensor.getType();
+            if ( sensorType == Sensor.TYPE_ORIENTATION )
+            {
+                // get orientation around the z-axis
+                final float orientationDegrees = Math.round(sensorEvent.values[0]);
+                motionManager.updateOrientation(orientationDegrees);
+                orientationTextView.setText(Float.toString(orientationDegrees) + "°");
+            }
+            else if ( sensorType == Sensor.TYPE_ACCELEROMETER )
+            {
+                final int currentSteps = stepCounter.getSteps();
+                final int newSteps = stepCounter.onAccelValues(sensorEvent.values);
+                if ( newSteps != currentSteps )
+                {
+                    motionManager.updateSteps(newSteps);
+                    stepsTextView.setText(Integer.toString(newSteps) + " steps");
+                }
+            }
+        }
     }
 
     @Override
