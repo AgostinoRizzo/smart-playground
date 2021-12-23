@@ -1,7 +1,10 @@
-from threading import Thread, RLock, Event
+#!/usr/bin/python3
+
+from threading import Condition, Thread, RLock, Event
 import socket
 import services
 import struct
+import game
 
 
 
@@ -10,6 +13,10 @@ class PointLocation:
     def __init__(self, left=0, top=0):
         self.left = left
         self.top = top
+    
+    def set(self, other:"PointLocation"):
+        self.left = other.left
+        self.top = other.top
 
 
 class PlaygroundBaseStatus:
@@ -29,11 +36,13 @@ class PlaygroundBaseStatus:
         with self.lock:
             self.ballLocation.left = left
             self.ballLocation.top = top
+            game.onBallLocationUpdate(self.ballLocation)
             #print("New ball location: %f, %f" % (left, top))
     
     def update_ball_orientation(self, orientation):
         with self.lock:
             self.ballOrientation = orientation
+            game.onBallOrientationUpdate(self.ballOrientation)
             #print("New ball orientation: %d" % orientation)
     
     def set_unknown_ball_status(self):
@@ -41,19 +50,24 @@ class PlaygroundBaseStatus:
             self.ballLocation.left = -1.0
             self.ballLocation.top = -1.0
             self.ballOrientation = -1
+            game.onBallLocationUpdate(self.ballLocation)
+            game.onBallOrientationUpdate(self.ballOrientation)
             #print("Ball status unknown.")
     
     def update_abs_player_orientation(self, newAbsOrientation):
         with self.lock:
             self.absPlayerOrientation = newAbsOrientation
+            game.onPlayerOrientationUpdateUpdate(self.get_relative_player_orientation())
     
     def sync_player_orientation(self, orientationAnchor):
         with self.lock:
             self.playerOrientationAnchor = self.absPlayerOrientation = orientationAnchor
+            game.onPlayerOrientationUpdateUpdate(self.get_relative_player_orientation())
     
     def set_unknown_player_orientation(self):
         with self.lock:
             self.absPlayerOrientation = -1.0
+            game.onPlayerOrientationUpdateUpdate(self.get_relative_player_orientation())
     
     def get_ball_location(self) -> PointLocation:
         with self.lock:
@@ -77,7 +91,11 @@ class PlaygroundBaseStatus:
         with self.lock:
             if self.absPlayerOrientation < 0.0:
                 return self.absPlayerOrientation
-            return (self.absPlayerOrientation - self.playerOrientationAnchor) % 360.0
+            if self.absPlayerOrientation == self.playerOrientationAnchor:
+                return 0.0
+            if self.absPlayerOrientation > self.playerOrientationAnchor:
+                return self.absPlayerOrientation - self.playerOrientationAnchor
+            return 360.0 - (self.playerOrientationAnchor - self.absPlayerOrientation)
     
     def get_player_ascii_status(self) -> str:
         status_str = 'PLAYER ORIENTATION: '

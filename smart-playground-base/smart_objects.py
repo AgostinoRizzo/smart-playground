@@ -9,6 +9,7 @@ import wiimote
 import wiimote_configs
 import environment
 import network
+import game
 
 
 class SmartObject:
@@ -445,11 +446,15 @@ class SmartObjectsMediator:
                 self.main_smart_racket.swing_start = time.time()
 
                 Logger.default().debug("SWING! [" + str(swing_dir) + "]")
+                
+                """
+                the main racket swing has only effect during gameplay
+                """
+                if game.canMainRacketSwing():
+                    environment.play_racket_hit_sound()
 
-                environment.play_racket_hit_sound()
-
-                self.smart_ball.hit(swing_dir, self.main_smart_racket.swing_effect)
-                self.main_smart_racket.rumble(0.1)
+                    self.smart_ball.hit(swing_dir, self.main_smart_racket.swing_effect)
+                    self.main_smart_racket.rumble(0.1)
 
         # update status sample
         if self.main_smart_racket.status_sample.append_new_values(xyz) and \
@@ -457,3 +462,7 @@ class SmartObjectsMediator:
             network.EcosystemEventProvider.get_instance() \
                 .send_smart_racket_status_sample(self.main_smart_racket.status_sample)
             self.main_smart_racket.status_sample.clear()
+    
+    def onArtificialPlayerBallSwing(self, swing_dir):
+        environment.play_racket_hit_sound()
+        self.smart_ball.hit(swing_dir, False)

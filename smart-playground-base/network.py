@@ -8,6 +8,7 @@ import smart_objects
 from threading import Thread, RLock, Condition
 import collections
 import smart_objects
+import game
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -61,10 +62,11 @@ class DiscoveryServer(threading.Thread):
 
 
 class ConsoleCommandReader(Thread):
-    def __init__(self, inputStream):
+    def __init__(self, inputStream, networkCommunicator):
         Thread.__init__(self)
         self.setDaemon(True)
         self.inputStream = inputStream
+        self.networkCommunicator = networkCommunicator
     
     def run(self):
         while True:
@@ -76,6 +78,8 @@ class ConsoleCommandReader(Thread):
                     smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_lights(int(cmdJson['pattern']))
                 elif cmdJson['type'] == 'fans_cmd':
                     smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_fans(int(cmdJson['pattern']))
+                elif cmdJson['type'] == 'game_init':
+                    game.initializeGame(cmdJson, self.networkCommunicator)
             except Exception as e:
                 print("ConsoleCommandReader closed: " + str(e))
                 break
@@ -110,7 +114,7 @@ class NetworkCommunicator(Thread):
             inputFile = connection.makefile('r')
             outputFile = connection.makefile('w')
 
-            self.consoleCommandReader = ConsoleCommandReader(inputFile)
+            self.consoleCommandReader = ConsoleCommandReader(inputFile, self)
             self.consoleCommandReader.start()
             
             with self.lock:
