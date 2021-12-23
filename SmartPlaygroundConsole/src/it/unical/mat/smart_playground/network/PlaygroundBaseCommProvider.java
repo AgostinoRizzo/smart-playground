@@ -38,6 +38,8 @@ public class PlaygroundBaseCommProvider extends Thread
 	private final DataOutputStream out;
 	private final BufferedReader in;
 	
+	private GameEventCallback gameEventCallback = null;
+	
 	private static PlaygroundBaseCommProvider instance = null;
 	
 	public static PlaygroundBaseCommProvider getInstance()
@@ -117,35 +119,27 @@ public class PlaygroundBaseCommProvider extends Thread
 			{ e.printStackTrace(); }
 	}
 	
+	public void setGameEventCallback( final GameEventCallback callback )
+	{
+		gameEventCallback = callback;
+	}
+	public void removeGameEventCallback()
+	{
+		gameEventCallback = null;
+	}
+	
 	private void handleEvent( final JsonObject event ) throws IOException
 	{
 		final String dataType = event.get("dataType").getAsString();
 		
 		if      ( dataType.equals( PlaygroundBaseCommConfigs.ACK_EVENT ) )                   {callback.onAckEvent(); System.out.println("A+B");}
-		//else if ( dataType.equals( EcosystemEventConfigs.SMART_GAME_PLATFORM_STATUS ) )  handleSmartGamePlatformStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTBALL_STATUS ) )            handleSmartBallStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.SMARTFIELD_STATUS ) )           handleSmartFieldStatus(event.get("sample").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.FIELD_WIND_STATUS ) )           handleFieldWindStatus(event);
-		if      ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, 
-																												 event.get("accs_values").getAsJsonArray());
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, event.get("accs_values").getAsJsonArray());
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.GAME_EVENT ) )                  handleGameEvent(event);
 	}
-	/*
-	private void handleSmartGamePlatformStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
-	{
-		// read temperature, humidity and brightness values.
-		final List< Integer > temperatureValues = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(0).getAsJsonArray());
-		final List< Integer > humidityValues    = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(1).getAsJsonArray());
-		final List< Integer > brightnessValues  = JSONUtil.fromJsonArrayToIntegerList(sensorsDataSample.get(2).getAsJsonArray());
-		
-		// update model
-		final SmartGamePlatformStatus gamePlatformStatus = EcosystemStatus.getInstance().getSmartGamePlatformStatus();
-		gamePlatformStatus.updateNewTemperatureValues(temperatureValues);
-		gamePlatformStatus.updateNewHumidityValues(humidityValues);
-		gamePlatformStatus.updateNewBrightnessValues(brightnessValues);
-		
-		callback.onSmartGamePlatformStatus();
-		
-	}*/
+	
 	private void handleSmartBallStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
 	{
 		final JsonArray temperatureValuesJsonArray = new JsonArray(1);
@@ -203,14 +197,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		playgroundStatus.updateHumidityStatus(ecosystemStatus.getCurrentHumidityAverage() );
 		playgroundStatus.updateBrightnessStatus(ecosystemStatus.getCurrentBrightnessAverage() );
 	}
-	/*
-	private void handleMotionControllerStatus() throws NumberFormatException, IOException
-	{
-		//final int direction = Integer.parseInt( in.readLine() );
 		
-		// TODO: update model
-	}*/
-	
 	private void handleSmartRacketStatus( final SmartRacketType smartRacket, final JsonArray accsValues ) throws NumberFormatException, IOException
 	{
 		// read xyz accelerometer values.
@@ -243,6 +230,12 @@ public class PlaygroundBaseCommProvider extends Thread
 		
 		System.out.println("Wind Status: " + windOn);
 		PlaygroundStatus.getInstance().updateWindStatus(windStatus);
+	}
+	
+	private void handleGameEvent( final JsonObject gameEvent )
+	{
+		if ( gameEventCallback != null )
+			gameEventCallback.onGameEvent(gameEvent);
 	}
 	
 	// TODO: test function

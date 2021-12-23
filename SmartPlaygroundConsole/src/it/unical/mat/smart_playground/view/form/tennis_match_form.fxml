@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -8,67 +9,170 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<VBox prefHeight="330.0" prefWidth="472.0" styleClass="playground-sidebox" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.form.TennisMatchFormController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="472.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.form.TennisMatchFormController">
    <children>
-      <Label text="Smart Tennis">
-         <font>
-            <Font name="System Bold" size="24.0" />
-         </font>
-      </Label>
-      <Label text="Match configuration">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <GridPane prefHeight="198.0" prefWidth="432.0" vgap="10.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" prefWidth="263.0" />
-          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="169.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="111.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="83.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="37.0" minHeight="0.0" prefHeight="6.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <VBox fx:id="matchOptionsBox" prefHeight="330.0" prefWidth="472.0" styleClass="playground-sidebox" stylesheets="@../application.css" visible="false">
          <children>
-            <ChoiceBox fx:id="matchSetsOptions" prefWidth="150.0" GridPane.columnIndex="1" />
-            <ChoiceBox fx:id="setGamesOptions" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <Label text="Smart Tennis">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <Label text="Match configuration">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <GridPane prefHeight="198.0" prefWidth="432.0" vgap="10.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" prefWidth="263.0" />
+                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="169.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="111.0" minHeight="10.0" prefHeight="81.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="83.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="37.0" minHeight="0.0" prefHeight="6.0" vgrow="SOMETIMES" />
+              </rowConstraints>
                <children>
-                  <Label text="Match Sets:">
+                  <ChoiceBox fx:id="matchSetsOptions" prefWidth="150.0" GridPane.columnIndex="1" />
+                  <ChoiceBox fx:id="setGamesOptions" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Match Sets:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label text="Number of Sets in the match (best of)" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="63.0" prefWidth="281.0" GridPane.rowIndex="1">
+                     <children>
+                        <Label text="Set Games:">
+                           <font>
+                              <Font name="System Bold" size="18.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="50.0" prefWidth="263.0" text="Number of Games per Set played with the same player serving (best of)" wrapText="true" />
+                     </children>
+                  </VBox>
+                  <Label text="Artificial Player Level:" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <Label text="Number of Sets in the match (best of)" />
+                  <ChoiceBox fx:id="artificialPlayerLevelOptions" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                </children>
-            </VBox>
-            <VBox prefHeight="63.0" prefWidth="281.0" GridPane.rowIndex="1">
-               <children>
-                  <Label text="Set Games:">
-                     <font>
-                        <Font name="System Bold" size="18.0" />
-                     </font>
-                  </Label>
-                  <Label prefHeight="50.0" prefWidth="263.0" text="Number of Games per Set played with the same player serving (best of)" wrapText="true" />
-               </children>
-            </VBox>
-            <Label text="Artificial Player Level:" GridPane.rowIndex="2">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </GridPane>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#playMatch" text="Play Match">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
-            </Label>
-            <ChoiceBox fx:id="artificialPlayerLevelOptions" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            </Button>
          </children>
-         <VBox.margin>
-            <Insets top="10.0" />
-         </VBox.margin>
-      </GridPane>
-      <Button defaultButton="true" mnemonicParsing="false" onAction="#playMatch" text="Play Match">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Button>
+      </VBox>
+      <AnchorPane fx:id="matchStatusBox" layoutX="20.0" layoutY="20.0" prefHeight="330.0" prefWidth="472.0" styleClass="playground-sidebox" stylesheets="@../application.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <ImageView fitHeight="161.0" fitWidth="450.0" layoutX="11.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../../res/drawable/tennis_scoreboard.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="scoreboardLabel00" alignment="CENTER" layoutX="133.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel01" alignment="CENTER" layoutX="181.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel02" alignment="CENTER" layoutX="231.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel03" alignment="CENTER" layoutX="281.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel04" alignment="CENTER" layoutX="331.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel05" alignment="CENTER" layoutX="387.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="54.0" text="--" textFill="#eb3630">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel15" alignment="CENTER" layoutX="387.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="54.0" text="--" textFill="#eb3630">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel14" alignment="CENTER" layoutX="331.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel13" alignment="CENTER" layoutX="281.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel12" alignment="CENTER" layoutX="231.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel11" alignment="CENTER" layoutX="181.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <Label fx:id="scoreboardLabel10" alignment="CENTER" layoutX="133.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="43.0" prefWidth="45.0" text="--" textFill="#f2dc35">
+               <font>
+                  <Font name="System Bold" size="33.0" />
+               </font>
+            </Label>
+            <VBox layoutX="17.0" layoutY="193.0" prefHeight="126.0" prefWidth="443.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="26.0" prefWidth="445.0" text="Player A: Human Player      Player B: Artificial Player" textFill="#1a5e07">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="currentMatchSetLabel" alignment="CENTER" prefHeight="26.0" prefWidth="454.0" text="Current Match Set: --" textFill="#9e8110">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Label fx:id="currentSetGameLabel" alignment="CENTER" prefHeight="26.0" prefWidth="444.0" text="Current Set Game: --">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="errorMessageLabel" alignment="CENTER" prefHeight="26.0" prefWidth="444.0" textFill="#a40e0e">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
    </children>
-</VBox>
+</AnchorPane>

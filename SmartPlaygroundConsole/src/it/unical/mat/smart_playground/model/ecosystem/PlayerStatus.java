@@ -29,7 +29,11 @@ public class PlayerStatus
 	{
 		if ( orientation < 0f )
 			return orientation;
-		return (orientation - orientationAnchor) % 360f;
+		if ( orientation == orientationAnchor )
+			return 0f;
+		if ( orientation > orientationAnchor )
+			return orientation - orientationAnchor;
+		return 360f - (orientationAnchor - orientation);
 	}
 	public void updateAbsoluteOrientation( final float orientation )
 	{
@@ -74,7 +78,8 @@ public class PlayerStatus
 	@Override
 	public String toString()
 	{
-		return "PLAYER ORIENTATION: " + orientation + "\nORIENTATION ANCHOR: " + orientationAnchor + "\nTOTAL STEPS: " + totalSteps;
+		return "PLAYER ORIENTATION: " + orientation + "\nORIENTATION ANCHOR: " + orientationAnchor + 
+				"\nRELATIVE ORIENTATION: " + getRelativeOrientation() + "\nTOTAL STEPS: " + totalSteps;
 	}
 	
 	private void copy( final PlayerStatus other )
