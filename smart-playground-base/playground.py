@@ -197,7 +197,7 @@ class BallTrackerMotionController(Thread):
             buff_offset += 4
             ball_top, = struct.unpack_from('>f', databuff, buff_offset)
             buff_offset += 4
-            self.playgroundBaseStatus.update_ball_location(ball_left, 1.0 - ball_top)
+            self.playgroundBaseStatus.update_ball_location(ball_left, ball_top)
             
         if databuff_length == 6 or databuff_length == 14:
             ball_orientation, = struct.unpack_from('>h', databuff, buff_offset)

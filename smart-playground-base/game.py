@@ -11,6 +11,7 @@ class ArtificialTennisPlayer:
     def manageSwing(self):
         if self.__canSwing():
             smart_objects.SmartObjectsMediator.get_current_instance().onArtificialPlayerBallSwing(self.__getSwingDir())
+            print("ARTIFICIAL PLAYER SWING.")
     
     def __canSwing(self) -> bool:
         if self.level == 'Easy' : return random.randrange(3) == 0
@@ -23,6 +24,9 @@ class ArtificialTennisPlayer:
         else: return wiimote_configs.RIGHT_SWING
 
 class GameManager(Thread):
+    PLAYER_A = 0
+    PLAYER_B = 1
+
     def __init__(self, jsonGameSettings, playgroundBaseStatus : playground.PlaygroundBaseStatus, networkCommunicator):
         Thread.__init__(self)
         self.setDaemon(True)
@@ -48,7 +52,7 @@ class GameManager(Thread):
 
     def onBallLocationUpdate(self, newLocation):
         with self.lock:
-            self.set(newLocation)
+            self.ballLocation.set(newLocation)
             self.ballLocationChangedCond.notify_all()
             self.statusReadyForPlayingCond.notify_all()
     
@@ -75,19 +79,28 @@ class GameManager(Thread):
         
         currentMatchSet = currentSetGame = 1
         mainPlayerScore = artificialPlayerScore = 0
+        totalMainPlayerScore = totalArtificialPlayerScore = 0
+        
+        isServing = True
 
         while True:
             
             terminated = currentMatchSet > self.matchSets
-            with self.lock:
-                self.terminated = True
+            if terminated:
+                with self.lock:
+                    self.terminated = True
+                currentMatchSet = self.matchSets
+                currentSetGame = self.setGames
 
             # send current match status/scores
             matchStatus = {'dataType': 'GAME_EVENT', 'subType' : 'match_status', 'currentMatchSet' : currentMatchSet, 'currentSetGame' : currentSetGame, \
                              'main' : mainPlayerScore, 'artificial' : artificialPlayerScore, \
+                             'totalMain' : totalMainPlayerScore, 'totalArtificial' : totalArtificialPlayerScore,
                              'terminated' : terminated}
             self.networkCommunicator.sendData(matchStatus)
 
+            if currentSetGame == 0:
+                mainPlayerScore = artificialPlayerScore = 0
             if terminated:
                 break
             
@@ -103,26 +116,31 @@ class GameManager(Thread):
             while True:
                 # enable main racket swing
                 self.__enableMainRacketSwing()
+                self.networkCommunicator.sendData(self.__getMatchTurnInfo(GameManager.PLAYER_A))
                 
                 # wait for ball on opposite (artificial player) field side
-                if not self.__waitForArtificialPlayerCanHit():  ############ here main player net
+                if not self.__waitForArtificialPlayerCanHit(isServing):  ############ here main player net
                     artificialPlayerScore += 1
+                    totalArtificialPlayerScore += 1
                     break # exit because ball on main player net
+                isServing = False
 
                 # hit the ball based on artificial player level
+                self.networkCommunicator.sendData(self.__getMatchTurnInfo(GameManager.PLAYER_B))
                 self.artificialPlayer.manageSwing()
 
                 # wait for ball on opposite (main player) field side
                 if not self.__waitForMainPlayerCanHit():  ############ here artificial player net
                     mainPlayerScore += 1
+                    totalMainPlayerScore += 1
                     break # exit because ball on artificial player net
         
             # go to next game/set
             currentSetGame += 1
+            isServing = True
             if currentSetGame > self.setGames:
                 currentSetGame = 0
                 currentMatchSet += 1
-                mainPlayerScore = artificialPlayerScore = 0
     
     
     def __enableMainRacketSwing(self):
@@ -141,30 +159,30 @@ class GameManager(Thread):
                 self.statusReadyForPlayingCond.wait()
     def __isBallReady(self) -> bool:
         return self.__isBallLocationKnown() and self.__isBallOrientationKnown() and \
-                self.ballLocation.top <= 0.5 and \
-                (self.ballOrientation <= 10 or self.ballOrientation >= 350)
+                self.ballLocation.left >= 0.5 and \
+                self.ballOrientation <= 270+10 and self.ballOrientation >= 270-10
     def __isPlayerReady(self) -> bool:
-        return self.__isPlayerOrientationKnown() and (self.playerOrientation <= 10 or self.playerOrientation >= 350)
+        return self.__isPlayerOrientationKnown() and self.playerOrientation <= 10 or self.playerOrientation >= 350
     
-    def __waitForArtificialPlayerCanHit(self):
+    def __waitForArtificialPlayerCanHit(self, isServing) -> bool:
         with self.lock:
             while True:
-                if not self.__isBallLocationKnown:
+                if not self.__isBallLocationKnown():
                     self.ballLocationChangedCond.wait()
-                elif self.ballLocation.top < 0.1:
+                elif not isServing and self.ballLocation.left > 0.9:  # main (human) player's net
                     return False
-                elif self.ballLocation.top < 0.7:
+                elif self.ballLocation.left > 0.3:
                     self.ballLocationChangedCond.wait()
                 else:
                     return True
     def __waitForMainPlayerCanHit(self) -> bool:
         with self.lock:
             while True:
-                if not self.__isBallLocationKnown:
+                if not self.__isBallLocationKnown():
                     self.ballLocationChangedCond.wait()
-                elif self.ballLocation.top > 0.9:
+                elif self.ballLocation.left < 0.1:  # artificial player's net
                     return False
-                elif self.ballLocation.top > 0.5:
+                elif self.ballLocation.left < 0.5:
                     self.ballLocationChangedCond.wait()
                 else:
                     return True
@@ -175,6 +193,12 @@ class GameManager(Thread):
         return self.ballOrientation >= 0
     def __isPlayerOrientationKnown(self) -> bool:
         return self.playerOrientation >= 0.0
+    
+    def __getMatchTurnInfo(self, turn):
+        info = {'dataType': 'GAME_EVENT', 'subType' : 'match_turn', 'turn' : ''}
+        if turn == GameManager.PLAYER_A: info['turn'] = 'player_a'
+        elif turn == GameManager.PLAYER_B: info['turn'] = 'player_b'
+        return info
 
 
 gameManager = None
