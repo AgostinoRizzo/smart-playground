@@ -162,7 +162,7 @@
                         <Font name="System Bold" size="17.0" />
                      </font>
                   </Label>
-                  <Label fx:id="errorMessageLabel" alignment="CENTER" prefHeight="26.0" prefWidth="444.0" textFill="#a40e0e">
+                  <Label fx:id="infoErrorMessageLabel" alignment="CENTER" prefHeight="26.0" prefWidth="444.0" textFill="#0f68a3">
                      <font>
                         <Font name="System Bold" size="17.0" />
                      </font>

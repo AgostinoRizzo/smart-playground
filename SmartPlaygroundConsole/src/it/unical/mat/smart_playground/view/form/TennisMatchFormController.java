@@ -15,6 +15,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 
 /**
  * @author Agostino
@@ -49,7 +50,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	@FXML private Label scoreboardLabel15;
 	@FXML private Label currentMatchSetLabel;
 	@FXML private Label currentSetGameLabel;
-	@FXML private Label errorMessageLabel;
+	@FXML private Label infoErrorMessageLabel;
 	
 	private final Label[][] scoreboardLabels = new Label[2][6];
 	
@@ -92,6 +93,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		matchStatusBox.setVisible(true);
 		
 		initScoreboardLabelsText();
+		displayInfoMessage("Waiting for match initialization...");
 		
 		PlaygroundBaseCommProvider.getInstance().sendCommand(gameSettings);
 	}
@@ -107,7 +109,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 			@Override
 			public void run()
 			{
-				errorMessageLabel.setText("");
+				//clearInfoErrorMessage();
 				
 				final String subType = gameEvent.get("subType").getAsString();
 				if ( subType.equals("game_status_ready") )
@@ -124,17 +126,32 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 						if ( !isPlayerReady )
 							message.append("Player not in place.");
 						
-						errorMessageLabel.setText(message.toString());
+						displayErrorMessage(message.toString());
 					}
 				}
 				else if ( subType.equals("match_status") )
 				{
-					final int currentMatchSet       = gameEvent.get("currentMatchSet").getAsInt();
-					final int currentSetGame        = gameEvent.get("currentSetGame").getAsInt();
-					final int mainPlayerScore       = gameEvent.get("main").getAsInt();
-					final int artificialPlayerScore = gameEvent.get("artificial").getAsInt();
+					final int currentMatchSet            = gameEvent.get("currentMatchSet").getAsInt();
+					final int currentSetGame             = gameEvent.get("currentSetGame").getAsInt();
+					final int mainPlayerScore            = gameEvent.get("main").getAsInt();
+					final int artificialPlayerScore      = gameEvent.get("artificial").getAsInt();
+					final int totalMainPlayerScore       = gameEvent.get("totalMain").getAsInt();
+					final int totalArtificialPlayerScore = gameEvent.get("totalArtificial").getAsInt();
+					final boolean terminated             = gameEvent.get("terminated").getAsBoolean();
 					
-					updateScoreboardLabelsText(currentMatchSet, currentSetGame, mainPlayerScore, artificialPlayerScore);
+					updateScoreboardLabelsText(currentMatchSet, currentSetGame, mainPlayerScore, artificialPlayerScore, 
+												totalMainPlayerScore, totalArtificialPlayerScore);
+					if ( terminated )
+						displayInfoMessage("Match terminated. Player " + 
+									(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!");
+				}
+				else if ( subType.equals("match_turn") )
+				{
+					final String playerTurn = gameEvent.get("turn").getAsString();
+					if ( playerTurn.equals("player_a") )
+						displayInfoMessage("Human player turn.");
+					else if ( playerTurn.equals("player_b") )
+						displayInfoMessage("Artificial player turn.");
 				}
 			}
 		});
@@ -172,24 +189,15 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		currentSetGameLabel.setText("Current Set Game: --");
 	}
 	private void updateScoreboardLabelsText( final int currentMatchSet, final int currentSetGame, 
-											 final int mainPlayerScore, final int artificialPlayerScore )
+											 final int mainPlayerScore, final int artificialPlayerScore,
+											 final int totalMainPlayerScore, final int totalArtificialPlayerScore )
 	{
 		final int currenttMatchSetIndex = currentMatchSet - 1;
 		scoreboardLabels[PLAYER_A][currenttMatchSetIndex].setText(Integer.toString(mainPlayerScore));
 		scoreboardLabels[PLAYER_B][currenttMatchSetIndex].setText(Integer.toString(artificialPlayerScore));
 		
-		final int[] totalScore = { 0, 0 };
-		for ( int j=0; j<currentMatchSet; ++j )
-		{
-			try
-			{
-				totalScore[PLAYER_A] += Integer.parseInt(scoreboardLabels[PLAYER_A][j].getText());
-				totalScore[PLAYER_B] += Integer.parseInt(scoreboardLabels[PLAYER_B][j].getText());
-			}
-			catch ( NumberFormatException e ) {}
-		}
-		scoreboardLabels[PLAYER_A][5].setText(Integer.toString(totalScore[PLAYER_A]));
-		scoreboardLabels[PLAYER_B][5].setText(Integer.toString(totalScore[PLAYER_B]));
+		scoreboardLabels[PLAYER_A][5].setText(Integer.toString(totalMainPlayerScore));
+		scoreboardLabels[PLAYER_B][5].setText(Integer.toString(totalArtificialPlayerScore));
 		
 		currentMatchSetLabel.setText("Current Match Set: " + Integer.toString(currentMatchSet));
 		currentSetGameLabel.setText("Current Set Game: " + Integer.toString(currentSetGame));
@@ -199,5 +207,20 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	{
 		chioceBox.getItems().addAll(options);
 		chioceBox.getSelectionModel().selectFirst();
+	}
+	
+	private void displayInfoMessage( final String message )
+	{
+		infoErrorMessageLabel.setText(message);
+		infoErrorMessageLabel.setTextFill( Paint.valueOf("#0f68a3") );
+	}
+	private void displayErrorMessage( final String message )
+	{
+		infoErrorMessageLabel.setText(message);
+		infoErrorMessageLabel.setTextFill( Paint.valueOf("#a40e0e") );
+	}
+	private void clearInfoErrorMessage()
+	{
+		infoErrorMessageLabel.setText("");
 	}
 }

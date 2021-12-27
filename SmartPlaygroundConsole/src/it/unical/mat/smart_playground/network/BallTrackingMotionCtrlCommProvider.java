@@ -159,14 +159,14 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 	private void onBallStatusChanged()
 	{
 		final SmartBallStatus newBallStatus = new SmartBallStatus(ballStatus);		
-		System.out.println(newBallStatus);
+		//System.out.println(newBallStatus);
 		callback.onBallStatusChanged(newBallStatus);
 	}
 	
 	private void onPlayerStatusChanged()
 	{
 		final PlayerStatus newPlayerStatus = new PlayerStatus(playerStatus);
-		System.out.println(newPlayerStatus);
+		//System.out.println(newPlayerStatus);
 		callback.onPlayerStatusChanged(newPlayerStatus);
 	}
 }
