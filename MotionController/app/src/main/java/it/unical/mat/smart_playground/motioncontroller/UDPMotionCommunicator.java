@@ -39,7 +39,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
     {
         setDaemon(true);
         createUDPSocket();
-        start();
+        start();System.out.println("CONTRUCTOR!!!!!!!!!!!!!!!!");
     }
 
     @Override
@@ -143,7 +143,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
     }
 
     private boolean createUDPSocket()
-    {
+    {System.out.println("ON SOCKET CREATE");
         if ( destinationAddrs != null && !destinationAddrs.isEmpty() && udpSocket != null )
             return true;
         try
@@ -153,10 +153,10 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
                 return false;
 
             udpSocket = new DatagramSocket();
-            udpSocket.setBroadcast(true);
+            udpSocket.setBroadcast(true); System.out.println("SOCKET PROPERLY CREATED");
             return true;
         }
-        catch (SocketException e) { udpSocket = null; return false; }
+        catch (SocketException e) { System.out.println("SOCKET EXCEPTION");udpSocket = null; return false; }
     }
 
     private boolean sendBufferData()
@@ -169,7 +169,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
         for ( final InetAddress destAddr : destinationAddrs )
         {
             final DatagramPacket dataPacket = new DatagramPacket(bufferData, bufferData.length, destAddr, SOCKET_PORT);
-            try {  udpSocket.send(dataPacket); ++sequenceNumber; }
+            try {  udpSocket.send(dataPacket); ++sequenceNumber;System.out.println("SEND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); }
             catch (IOException e) {}
         }
 
@@ -178,6 +178,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
 
     private static List<InetAddress> getDestinationAddrs() throws SocketException
     {
+        final List<InetAddress> destinationAddrs = new ArrayList<>();
         final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         NetworkInterface netIface;
         while ( interfaces.hasMoreElements() )
@@ -185,7 +186,6 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
             netIface = interfaces.nextElement();
             if ( netIface.isUp() && !netIface.isLoopback() )
             {
-                final List<InetAddress> destinationAddrs = new ArrayList<>();
                 final List<InterfaceAddress> ifaceAddrs = netIface.getInterfaceAddresses();
 
                 for ( final InterfaceAddress addr : ifaceAddrs )
@@ -194,10 +194,12 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
                     if ( broadcast != null )
                         destinationAddrs.add(broadcast);
                 }
-
-                return destinationAddrs;
             }
         }
-        return null;
+
+        if ( destinationAddrs.isEmpty() )
+            return null;
+
+        return destinationAddrs;
     }
 }

@@ -33,9 +33,10 @@ public class MainActivity extends Activity implements SensorEventListener
 
         orientationTextView = (TextView) findViewById(R.id.orientationTextView);
         stepsTextView = (TextView) findViewById(R.id.stepsTextView);
-
+        System.out.println("ON CREATE 1");
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         motionManager = MotionManager.getInstance();
+        System.out.println("ON CREATE 2");
 
         orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -61,6 +62,7 @@ public class MainActivity extends Activity implements SensorEventListener
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sync)
         {
+            System.out.println("SYNC");
             motionManager.onOrientationSync();
             return true;
         }
