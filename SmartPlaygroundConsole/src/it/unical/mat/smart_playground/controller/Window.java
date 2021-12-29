@@ -27,7 +27,7 @@ public abstract class Window
 		{
 			@Override
 			public void handle(WindowEvent event)
-			{ onClose(); }
+			{ onClose(event); }
 		});
 		
 		try 
@@ -48,10 +48,10 @@ public abstract class Window
 	public void close()
 	{
 		stage.close();
-		onClose();
+		onClose(null);
 	}
 	
-	protected void onClose()
+	protected void onClose( final WindowEvent event )
 	{
 		layoutController.onFinalize();
 	}

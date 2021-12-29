@@ -254,6 +254,9 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		// show the scene containing the main layout
 		final ScrollPane center = new ScrollPane(mainLayoutController.getEcosystemStatusController().getContent());
 		rootLayout.setCenter(center);
+		
+		if ( rootLayoutController != null )
+			rootLayoutController.enablePlayGamesAction();
 	}
 	
 	@Override

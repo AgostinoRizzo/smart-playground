@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 
@@ -21,19 +22,15 @@ import javafx.scene.image.ImageView;
  */
 public class RootLayoutController implements ViewController
 {	
-	@FXML
-	private Button statusButton;
-	@FXML
-	private Button ecosystemButton;
-	@FXML
-	private Button actionButton;
+	@FXML private Button statusButton;
+	@FXML private Button ecosystemButton;
+	@FXML private Button actionButton;
+	@FXML private MenuButton gamesMenuButton;
+	@FXML private Button playGameButton;
 	
-	@FXML
-	private Slider zoomSlider;
-	@FXML
-	private ImageView zoomInImageView;
-	@FXML
-	private ImageView zoomOutImageView;
+	@FXML private Slider zoomSlider;
+	@FXML private ImageView zoomInImageView;
+	@FXML private ImageView zoomOutImageView;
 	
 	private MainApplication mainApp=null;
 	private Node content=null;
@@ -63,6 +60,10 @@ public class RootLayoutController implements ViewController
 				handleContentZoom( new_val.doubleValue()/100.0 );
 			}
 		});
+		
+		gamesMenuButton.setDisable(true);
+		playGameButton.setDisable(true);
+		
 		//initEcosystemStatusView();
 		//ecosystemStatusPopup = new EcosystemStatusPopup
 		//		( this, ecosystemButton, ecosystemStatusController.getContent() );
@@ -106,6 +107,12 @@ public class RootLayoutController implements ViewController
 	@Override
 	public void updateAnimation(long now)
 	{}
+	
+	public void enablePlayGamesAction()
+	{
+		gamesMenuButton.setDisable(false);
+		playGameButton.setDisable(false);
+	}
 	
 	/*public EcosystemStatusController getEcosystemStatusController()
 	{

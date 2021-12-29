@@ -25,7 +25,7 @@
                     <items>
                       <Button fx:id="ecosystemButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleShowCurrentEcosystemStatus" prefHeight="31.0" prefWidth="90.0" text="Ecosystem" />
                         <Button fx:id="statusButton" defaultButton="true" mnemonicParsing="false" onAction="#handleShowCurrentStatus" prefHeight="31.0" prefWidth="90.0" text="Status" textAlignment="CENTER" />
-                        <MenuButton mnemonicParsing="false" text="Games">
+                        <MenuButton fx:id="gamesMenuButton" disable="true" mnemonicParsing="false" text="Games">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handlePlayGame" text="Smart Table Tennis" />
                             <MenuItem mnemonicParsing="false" onAction="#handlePlayGame" text="Smart Golf" />
@@ -74,7 +74,7 @@
                <center>
                   <ToolBar prefHeight="45.0" prefWidth="142.0" BorderPane.alignment="CENTER_RIGHT">
                     <items>
-                      <Button alignment="CENTER_RIGHT" contentDisplay="RIGHT" defaultButton="true" mnemonicParsing="false" onAction="#handlePlayGame" text="Play a Game" />
+                      <Button fx:id="playGameButton" alignment="CENTER_RIGHT" contentDisplay="RIGHT" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#handlePlayGame" text="Play a Game" />
                     </items>
                      <BorderPane.margin>
                         <Insets />

@@ -94,7 +94,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 						ballTop  = rcvByteBuffer.getFloat();
 			
 			final SmartBallLocation ballLocation = ballStatus.getLocation();
-			ballLocation.setLeft(ballLeft);
+			ballLocation.setLeft(1.0f - ballLeft);
 			ballLocation.setTop(1.0f - ballTop);
 		}
 		

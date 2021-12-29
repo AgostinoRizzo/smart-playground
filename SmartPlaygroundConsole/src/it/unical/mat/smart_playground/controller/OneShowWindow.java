@@ -3,6 +3,8 @@
  */
 package it.unical.mat.smart_playground.controller;
 
+import javafx.stage.WindowEvent;
+
 /**
  * @author Agostino
  *
@@ -32,9 +34,9 @@ public abstract class OneShowWindow extends Window
 	}
 	
 	@Override
-	protected void onClose()
+	protected void onClose( final WindowEvent event )
 	{
-		super.onClose();
+		super.onClose(event);
 		isShown = false;
 	}
 }

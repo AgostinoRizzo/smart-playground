@@ -144,6 +144,9 @@ public class EcosystemStatus
 	
 	private Integer computeValuesAverage( final List< List< Integer > > valuesLists, final int t )
 	{
+		if ( t < 0 )
+			return null;
+		
 		int v=0;
 		int c=0;
 		

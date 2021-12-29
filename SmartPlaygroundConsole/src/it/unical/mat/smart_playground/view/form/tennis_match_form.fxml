@@ -68,7 +68,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </GridPane>
-            <Button defaultButton="true" mnemonicParsing="false" onAction="#playMatch" text="Play Match">
+            <Button fx:id="playMatchButton" defaultButton="true" mnemonicParsing="false" onAction="#playMatch" text="Play Match">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

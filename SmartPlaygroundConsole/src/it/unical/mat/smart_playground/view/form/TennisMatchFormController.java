@@ -3,6 +3,8 @@
  */
 package it.unical.mat.smart_playground.view.form;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import it.unical.mat.smart_playground.controller.LayoutController;
@@ -11,6 +13,9 @@ import it.unical.mat.smart_playground.network.GameEventCallback;
 import it.unical.mat.smart_playground.network.PlaygroundBaseCommProvider;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -30,6 +35,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	private static final int PLAYER_A = 0;
 	private static final int PLAYER_B = 1;
 	
+	@FXML private Button playMatchButton;
 	@FXML private VBox matchOptionsBox;
 	@FXML private ChoiceBox<String> matchSetsOptions;
 	@FXML private ChoiceBox<String> setGamesOptions;
@@ -56,7 +62,8 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	
 	@Override
 	public void onInitialize(Window win)
-	{
+	{		
+		playMatchButton.setText("Play Match");
 		matchStatusBox.setVisible(false);
 		matchOptionsBox.setVisible(true);
 		
@@ -73,13 +80,20 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	@Override
 	public void onFinalize()
 	{
-		PlaygroundBaseCommProvider.getInstance().removeGameEventCallback();
+		System.out.println("Sending game finalization...");
+		
+		final JsonObject gameReset = new JsonObject();
+		gameReset.addProperty("type", "game_reset");
+		
+		final PlaygroundBaseCommProvider playgrandBaseCommProvider = PlaygroundBaseCommProvider.getInstance();
+		playgrandBaseCommProvider.sendCommand(gameReset);
+		playgrandBaseCommProvider.removeGameEventCallback();
 	}
 	
 	@FXML private void playMatch()
 	{
-		final int matchSetsBestOf = matchSetsOptions.getSelectionModel().getSelectedIndex() + 1;
-		final int setGamesBestOf  = setGamesOptions.getSelectionModel().getSelectedIndex() + 1;
+		final int matchSetsBestOf = (matchSetsOptions.getSelectionModel().getSelectedIndex() * 2) + 1;
+		final int setGamesBestOf  = (setGamesOptions.getSelectionModel().getSelectedIndex() * 2) + 1;
 		final String artificialPlayerLevel = artificialPlayerLevelOptions.getSelectionModel().getSelectedItem();
 		
 		final JsonObject gameSettings = new JsonObject();
@@ -89,11 +103,13 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		gameSettings.addProperty("setGamesBestOf", setGamesBestOf);
 		gameSettings.addProperty("artificialPlayerLevel", artificialPlayerLevel);
 		
-		matchOptionsBox.setVisible(false);
-		matchStatusBox.setVisible(true);
+		playMatchButton.setText("Sending Match Request...");
+		playMatchButton.setDisable(true);
+		matchSetsOptions.setDisable(true);
+		setGamesOptions.setDisable(true);
+		artificialPlayerLevelOptions.setDisable(true);
 		
 		initScoreboardLabelsText();
-		displayInfoMessage("Waiting for match initialization...");
 		
 		PlaygroundBaseCommProvider.getInstance().sendCommand(gameSettings);
 	}
@@ -112,7 +128,24 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 				//clearInfoErrorMessage();
 				
 				final String subType = gameEvent.get("subType").getAsString();
-				if ( subType.equals("game_status_ready") )
+				
+				if ( subType.equals("game_init_approved") )
+				{
+					matchOptionsBox.setVisible(false);
+					matchStatusBox.setVisible(true);
+					
+					displayInfoMessage("Waiting for match initialization...", false);
+				}
+				else if ( subType.equals("game_init_denied") )
+				{
+					displayErrorDialog("Match initialization denied. An existing match is already playing.");
+					playMatchButton.setText("Play Match");
+					playMatchButton.setDisable(false);
+					matchSetsOptions.setDisable(false);
+					setGamesOptions.setDisable(false);
+					artificialPlayerLevelOptions.setDisable(false);
+				}
+				else if ( subType.equals("game_status_ready") )
 				{
 					final boolean isReady = gameEvent.get("isReady").getAsBoolean();
 					if ( !isReady )
@@ -126,32 +159,35 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 						if ( !isPlayerReady )
 							message.append("Player not in place.");
 						
-						displayErrorMessage(message.toString());
+						displayErrorMessage(message.toString(), true);
 					}
 				}
 				else if ( subType.equals("match_status") )
 				{
-					final int currentMatchSet            = gameEvent.get("currentMatchSet").getAsInt();
-					final int currentSetGame             = gameEvent.get("currentSetGame").getAsInt();
-					final int mainPlayerScore            = gameEvent.get("main").getAsInt();
-					final int artificialPlayerScore      = gameEvent.get("artificial").getAsInt();
-					final int totalMainPlayerScore       = gameEvent.get("totalMain").getAsInt();
-					final int totalArtificialPlayerScore = gameEvent.get("totalArtificial").getAsInt();
-					final boolean terminated             = gameEvent.get("terminated").getAsBoolean();
+					final int       currentMatchSet            = gameEvent.get("currentMatchSet").getAsInt();
+					final int       currentSetGame             = gameEvent.get("currentSetGame").getAsInt();
+					final int       totalMatchSets             = gameEvent.get("totalMatchSets").getAsInt();
+					final int       totalSetGames              = gameEvent.get("totalSetGames").getAsInt();
+					final JsonArray mainPlayerScores           = gameEvent.get("mainPlayerScores").getAsJsonArray();
+					final JsonArray artificialPlayerScores     = gameEvent.get("artificialPlayerScores").getAsJsonArray();
+					final boolean   terminated                 = gameEvent.get("terminated").getAsBoolean();
 					
-					updateScoreboardLabelsText(currentMatchSet, currentSetGame, mainPlayerScore, artificialPlayerScore, 
+					final int totalMainPlayerScore = getTotalScoreFromJsonArray(mainPlayerScores);
+					final int totalArtificialPlayerScore = getTotalScoreFromJsonArray(artificialPlayerScores);
+					
+					updateScoreboardLabelsText(totalMatchSets, totalSetGames, currentMatchSet, currentSetGame, mainPlayerScores, artificialPlayerScores, 
 												totalMainPlayerScore, totalArtificialPlayerScore);
 					if ( terminated )
 						displayInfoMessage("Match terminated. Player " + 
-									(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!");
+									(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!", true);
 				}
 				else if ( subType.equals("match_turn") )
 				{
 					final String playerTurn = gameEvent.get("turn").getAsString();
 					if ( playerTurn.equals("player_a") )
-						displayInfoMessage("Human player turn.");
+						displayInfoMessage("Human player turn.", false);
 					else if ( playerTurn.equals("player_b") )
-						displayInfoMessage("Artificial player turn.");
+						displayInfoMessage("Artificial player turn.", false);
 				}
 			}
 		});
@@ -188,19 +224,22 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		currentMatchSetLabel.setText("Current Match Set: --");
 		currentSetGameLabel.setText("Current Set Game: --");
 	}
-	private void updateScoreboardLabelsText( final int currentMatchSet, final int currentSetGame, 
-											 final int mainPlayerScore, final int artificialPlayerScore,
+	private void updateScoreboardLabelsText( final int totalMatchSets, final int totalSetGames, 
+											 final int currentMatchSet, final int currentSetGame, 
+											 final JsonArray mainPlayerScores, final JsonArray artificialPlayerScores,
 											 final int totalMainPlayerScore, final int totalArtificialPlayerScore )
 	{
-		final int currenttMatchSetIndex = currentMatchSet - 1;
-		scoreboardLabels[PLAYER_A][currenttMatchSetIndex].setText(Integer.toString(mainPlayerScore));
-		scoreboardLabels[PLAYER_B][currenttMatchSetIndex].setText(Integer.toString(artificialPlayerScore));
+		for ( int i=0; i<currentMatchSet; ++i )
+		{
+			scoreboardLabels[PLAYER_A][i].setText(Integer.toString(mainPlayerScores.get(i).getAsInt()));
+			scoreboardLabels[PLAYER_B][i].setText(Integer.toString(artificialPlayerScores.get(i).getAsInt()));
+		}
 		
 		scoreboardLabels[PLAYER_A][5].setText(Integer.toString(totalMainPlayerScore));
 		scoreboardLabels[PLAYER_B][5].setText(Integer.toString(totalArtificialPlayerScore));
 		
-		currentMatchSetLabel.setText("Current Match Set: " + Integer.toString(currentMatchSet));
-		currentSetGameLabel.setText("Current Set Game: " + Integer.toString(currentSetGame));
+		currentMatchSetLabel.setText("Current Match Set: " + currentMatchSet + " of " + totalMatchSets);
+		currentSetGameLabel.setText("Current Set Game: " + currentSetGame + " of " + totalSetGames);
 	}
 	
 	private static void initChoiceBox( final ChoiceBox<String> chioceBox, final String[] options )
@@ -209,18 +248,42 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		chioceBox.getSelectionModel().selectFirst();
 	}
 	
-	private void displayInfoMessage( final String message )
+	private void displayInfoMessage( final String message, final boolean displayAlert )
 	{
 		infoErrorMessageLabel.setText(message);
 		infoErrorMessageLabel.setTextFill( Paint.valueOf("#0f68a3") );
+		
+		if ( displayAlert )
+			displayDialog(AlertType.INFORMATION, message);
 	}
-	private void displayErrorMessage( final String message )
+	private void displayErrorMessage( final String message, final boolean displayAlert )
 	{
 		infoErrorMessageLabel.setText(message);
 		infoErrorMessageLabel.setTextFill( Paint.valueOf("#a40e0e") );
+		
+		if ( displayAlert )
+			displayDialog(AlertType.WARNING, message);
 	}
 	private void clearInfoErrorMessage()
 	{
 		infoErrorMessageLabel.setText("");
+	}
+	
+	private void displayDialog( final AlertType type, final String message )
+	{
+		final Alert messageAlert = new Alert(type, message);
+		messageAlert.showAndWait();
+	}
+	private void displayErrorDialog( final String message )
+	{
+		displayDialog(AlertType.ERROR, message);
+	}
+	
+	private static int getTotalScoreFromJsonArray( final JsonArray scores )
+	{
+		int totalScore = 0;
+		for ( final JsonElement elem : scores )
+			totalScore += elem.getAsInt();
+		return totalScore;
 	}
 }

@@ -76,16 +76,22 @@ public class PlaygroundStatus
 	
 	public void updateTemperatureStatus( final Integer currentTemp )
 	{
+		if ( currentTemp == null )
+			return;
 		temperature = currentTemp;
 		notifyStatusChange(PlaygroundStatusTopic.TEMP_STATUS);
 	}
 	public void updateHumidityStatus( final Integer currentHumi )
 	{
+		if ( currentHumi == null )
+			return;
 		humidity = currentHumi;
 		notifyStatusChange(PlaygroundStatusTopic.HUMI_STATUS);
 	}
 	public void updateBrightnessStatus( final Integer currentBright )
 	{
+		if ( currentBright == null )
+			return;
 		brightness = currentBright;
 		notifyStatusChange(PlaygroundStatusTopic.BRIGHTNESS_STATUS);
 	}
