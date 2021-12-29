@@ -173,6 +173,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
                 final short minDirDelta = Short.parseShort(prop.getProperty("min_dir_delta"));
 
                 final TrackingSettings settings = new TrackingSettings( minLocDelta, minDirDelta );
+                BallTracker.updateTrackingSettings(settings);
             }
             catch ( NumberFormatException nfe ) {}
             finally { istream.close(); }

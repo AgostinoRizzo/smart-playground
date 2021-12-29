@@ -3,7 +3,8 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="#ff000000"
-             tools:context="it.unical.mat.smart_playground.balltracker.SettingsActivity">
+             tools:context="it.unical.mat.smart_playground.balltracker.SettingsActivity"
+             android:paddingTop="20pt">
 
     <TableLayout
         android:layout_width="fill_parent"
