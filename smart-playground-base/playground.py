@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import logging
 from threading import Condition, Thread, RLock, Event
 import socket
 import services
@@ -230,6 +231,7 @@ class BallTrackerMotionController(Thread):
                 self.playgroundBaseStatus.update_abs_player_orientation(orientation)
             elif ptype == BallTrackerMotionController.PACKET_TYPE_ORIENTATION_SYNC:
                 self.playgroundBaseStatus.sync_player_orientation(orientation)
+                logging.info("Player orientaton SYNC.")
         elif databuff_length == 5 and ptype == BallTrackerMotionController.PACKET_TYPE_ORIENTATION_UNKNOWN:
             self.playgroundBaseStatus.set_unknown_player_orientation()
         

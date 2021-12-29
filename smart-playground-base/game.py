@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from threading import Event, RLock, Condition, Thread
-import random, time
+import random, time, ctypes
 import playground, smart_objects, wiimote_configs
 
 class ArtificialTennisPlayer:
@@ -34,6 +34,8 @@ class GameManager(Thread):
 
         self.ballLocationChangedCond = Condition(self.lock)
         self.statusReadyForPlayingCond = Condition(self.lock)
+
+        self.resetEvent = Event()
         
         self.playgroundBaseStatus = playgroundBaseStatus
         self.networkCommunicator = networkCommunicator
@@ -74,16 +76,23 @@ class GameManager(Thread):
 
     def run(self):
         self.manageMatch()
+        print("Run exit")
+    
+    def stopRunning(self):
+        self.resetEvent.set()
+        with self.lock:
+            self.ballLocationChangedCond.notify_all()
+            self.statusReadyForPlayingCond.notify_all()
     
     def manageMatch(self):
         
         currentMatchSet = currentSetGame = 1
-        mainPlayerScore = artificialPlayerScore = 0
-        totalMainPlayerScore = totalArtificialPlayerScore = 0
+        mainPlayerScores = [0] * self.matchSets
+        artificialPlayerScores = [0] * self.matchSets
         
         isServing = True
 
-        while True:
+        while not self.resetEvent.is_set():
             
             terminated = currentMatchSet > self.matchSets
             if terminated:
@@ -94,13 +103,11 @@ class GameManager(Thread):
 
             # send current match status/scores
             matchStatus = {'dataType': 'GAME_EVENT', 'subType' : 'match_status', 'currentMatchSet' : currentMatchSet, 'currentSetGame' : currentSetGame, \
-                             'main' : mainPlayerScore, 'artificial' : artificialPlayerScore, \
-                             'totalMain' : totalMainPlayerScore, 'totalArtificial' : totalArtificialPlayerScore,
-                             'terminated' : terminated}
+                            'totalMatchSets' : self.matchSets, 'totalSetGames': self.setGames, \
+                            'mainPlayerScores' : mainPlayerScores, 'artificialPlayerScores' : artificialPlayerScores, \
+                            'terminated' : terminated}
             self.networkCommunicator.sendData(matchStatus)
 
-            if currentSetGame == 0:
-                mainPlayerScore = artificialPlayerScore = 0
             if terminated:
                 break
             
@@ -113,15 +120,15 @@ class GameManager(Thread):
                 self.networkCommunicator.sendData(statusReadyManifest)
                 self.__waitForStatusReadyForPlaying()
             
-            while True:
+            while not self.resetEvent.is_set():
+
                 # enable main racket swing
                 self.__enableMainRacketSwing()
                 self.networkCommunicator.sendData(self.__getMatchTurnInfo(GameManager.PLAYER_A))
-                
+
                 # wait for ball on opposite (artificial player) field side
                 if not self.__waitForArtificialPlayerCanHit(isServing):  ############ here main player net
-                    artificialPlayerScore += 1
-                    totalArtificialPlayerScore += 1
+                    artificialPlayerScores[currentMatchSet - 1] += 1
                     break # exit because ball on main player net
                 isServing = False
 
@@ -131,18 +138,20 @@ class GameManager(Thread):
 
                 # wait for ball on opposite (main player) field side
                 if not self.__waitForMainPlayerCanHit():  ############ here artificial player net
-                    mainPlayerScore += 1
-                    totalMainPlayerScore += 1
+                    mainPlayerScores[currentMatchSet - 1] += 1
                     break # exit because ball on artificial player net
-        
+            
+            smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
+
             # go to next game/set
             currentSetGame += 1
             isServing = True
             if currentSetGame > self.setGames:
-                currentSetGame = 0
+                currentSetGame = 1
                 currentMatchSet += 1
-    
-    
+
+        smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
+
     def __enableMainRacketSwing(self):
         with self.lock:
             self.mainRacketEnabled = True
@@ -155,18 +164,18 @@ class GameManager(Thread):
             return statusReadyManifest
     def __waitForStatusReadyForPlaying(self):
         with self.lock:
-            while not self.__isBallReady() or not self.__isPlayerReady():
+            while not self.resetEvent.is_set() and (not self.__isBallReady() or not self.__isPlayerReady()):
                 self.statusReadyForPlayingCond.wait()
     def __isBallReady(self) -> bool:
         return self.__isBallLocationKnown() and self.__isBallOrientationKnown() and \
-                self.ballLocation.left >= 0.5 and \
+                self.ballLocation.left >= 0.5 and self.ballLocation.left < 0.9 and \
                 self.ballOrientation <= 270+10 and self.ballOrientation >= 270-10
     def __isPlayerReady(self) -> bool:
         return self.__isPlayerOrientationKnown() and self.playerOrientation <= 10 or self.playerOrientation >= 350
     
     def __waitForArtificialPlayerCanHit(self, isServing) -> bool:
         with self.lock:
-            while True:
+            while not self.resetEvent.is_set():
                 if not self.__isBallLocationKnown():
                     self.ballLocationChangedCond.wait()
                 elif not isServing and self.ballLocation.left > 0.9:  # main (human) player's net
@@ -175,9 +184,10 @@ class GameManager(Thread):
                     self.ballLocationChangedCond.wait()
                 else:
                     return True
+            return False
     def __waitForMainPlayerCanHit(self) -> bool:
         with self.lock:
-            while True:
+            while not self.resetEvent.is_set():
                 if not self.__isBallLocationKnown():
                     self.ballLocationChangedCond.wait()
                 elif self.ballLocation.left < 0.1:  # artificial player's net
@@ -186,6 +196,7 @@ class GameManager(Thread):
                     self.ballLocationChangedCond.wait()
                 else:
                     return True
+            return False
     
     def __isBallLocationKnown(self) -> bool:
         return self.ballLocation.left >= 0.0 and self.ballLocation.top >= 0.0
@@ -211,8 +222,28 @@ def initializeGame(jsonGameSettings, networkCommunicator):
     assert(playground.playgroundBaseStatus is not None and \
         smart_objects.SmartObjectsMediator.get_current_instance() is not None)
     with globalLock:
-        gameManager = GameManager(jsonGameSettings, playground.playgroundBaseStatus, networkCommunicator)
-        gameManager.start()
+        if gameManager is None:
+            gameManager = GameManager(jsonGameSettings, playground.playgroundBaseStatus, networkCommunicator)
+            gameManager.start()
+            networkCommunicator.sendData({'dataType': 'GAME_EVENT', 'subType' : 'game_init_approved'})
+        else:
+            networkCommunicator.sendData({'dataType': 'GAME_EVENT', 'subType' : 'game_init_denied'})
+
+# this method is called when the game is reset.
+def resetGame():
+    global gameManager
+    global globalLock
+    assert(playground.playgroundBaseStatus is not None and \
+        smart_objects.SmartObjectsMediator.get_current_instance() is not None)
+    with globalLock:
+        if gameManager is not None:
+            gameManager.stopRunning()
+            print("Joining...")
+            gameManager.join()
+            gameManager = None
+            print("Game is reset.")
+        smart_objects.SmartObjectsMediator.get_current_instance().onGameReset()
+        
 
 
 def onBallLocationUpdate(newLocation:playground.PointLocation):

@@ -80,6 +80,8 @@ class ConsoleCommandReader(Thread):
                     smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_fans(int(cmdJson['pattern']))
                 elif cmdJson['type'] == 'game_init':
                     game.initializeGame(cmdJson, self.networkCommunicator)
+                elif cmdJson['type'] == 'game_reset':
+                    game.resetGame()
             except Exception as e:
                 print("ConsoleCommandReader closed: " + str(e))
                 break
