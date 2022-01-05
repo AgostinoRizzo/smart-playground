@@ -33,14 +33,14 @@ def main():
     """ 
     smart ball - serial communication setup with tinyos base station
     """
-    smart_ball = SmartBall()
+    smart_ball = None #SmartBall() !!!!!!!!!!!!!!!!!!!!!!!!!
     
     """
     smart racket - bluetooth connection setup with nintendo wiimote
     """
     smart_racket = SmartRacket()
     smart_racket.animation()
-
+    
     """
     smart objects mediator
     """

@@ -1,25 +1,25 @@
 """" sounds and light environment management """
 
-from pygame import init
-from pygame.mixer import pre_init, Sound
+#!!!from pygame import init
+#!!!from pygame.mixer import pre_init, Sound
 import resources
 import time
 
-pre_init(buffer=1024)
-init()
+#!!!pre_init(buffer=1024)
+#!!!init()
 
-racket_swing_sound = Sound(resources.RACKET_SWING_SOUND_FILENAME)
-racket_hit_sound = Sound(resources.RACKET_HIT_SOUND_FILENAME)
-ball_hit_sound = Sound(resources.BALL_HIT_SOUND_FILENAME)
+#!!!racket_swing_sound = Sound(resources.RACKET_SWING_SOUND_FILENAME)
+#!!!racket_hit_sound = Sound(resources.RACKET_HIT_SOUND_FILENAME)
+#!!!ball_hit_sound = Sound(resources.BALL_HIT_SOUND_FILENAME)
 
 def play_racket_swing_sound():
-    racket_swing_sound.play()
+    pass #!!!racket_swing_sound.play()
     
 def play_racket_hit_sound():
-    racket_hit_sound.play()
+    pass #!!!racket_hit_sound.play()
 
 def play_ball_hit_sound():
-    ball_hit_sound.play()
+    pass #!!!ball_hit_sound.play()
 
 if __name__ == '__main__':
     play_racket_swing_sound()

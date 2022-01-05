@@ -3,7 +3,7 @@ from enum import Enum
 from threading import Lock, RLock
 
 from pytinyos import tos
-import tinyos_serial
+#!!!!!!!!!!!!!!!import tinyos_serial
 from util_logging import Logger
 import wiimote
 import wiimote_configs
@@ -238,7 +238,7 @@ class SmartRacket(SmartObject):
 
         Logger.default().config('Connected to: ' + str(self.wm_addr))
 
-        self.swing_start = time.time()
+        self.tennis_swing_start = time.time()
         self.buttons_changed_callback = None
         self.swing_effect = False
 
@@ -316,6 +316,70 @@ class SmartRacketStatusSample:
                 len(self.accZValues) >= SmartRacketStatusSample.CAPACITY)
 
 
+class GolfSwingDetector:
+    """
+    A golf swing is recognized when a down-up-down oscillation
+    of the x axis is detected w.r.t SWING_ACCELX_REFS and within MIN_SWING_TIME seconds.
+    A golf swing always starts when club is pointed down w.r.t the y axis.
+    """
+    SWING_ACCELX_REFS = [470, 530, 470]
+    SWING_ACCELX_REFS_MARGIN = 10
+    MIN_SWING_TIME = 0.5
+    LIGHT_ACCEL_SWING_THRESHOLD = 800
+    MEDIUM_ACCEL_SWING_THRESHOLD = 900
+    
+    def __init__(self) -> None:
+        self.swingAccelXRefsIndex = 0
+        self.swingStarted = False
+        self.swingDetected = False
+        self.maxAccelXValue = -1
+
+    def onNewAccelValues(self, xyz, racketButtons):
+        if not racketButtons['B']:
+            self.swingStarted = False
+            self.__resetSwingAccelXRefs()
+            return
+
+        ACCEL_X = xyz[wiimote_configs.ACC_X]
+        ACCEL_Y = xyz[wiimote_configs.ACC_Y]
+
+        absPointingDownThreshold = wiimote_configs.WIIMOTE_ACC_CENTER_VALUE + wiimote_configs.WIIMOTE_ACC_GOLF_POINTING_DOWN_THRESHOLD
+
+        if self.swingStarted or ACCEL_Y >= absPointingDownThreshold:
+            
+            if not self.swingStarted:
+                self.swingStarted = True
+                self.maxAccelXValue = ACCEL_X
+
+            if self.maxAccelXValue >= 0 and ACCEL_X > self.maxAccelXValue:
+                self.maxAccelXValue = ACCEL_X
+
+            smallDiff  = abs(self.SWING_ACCELX_REFS[self.swingAccelXRefsIndex] - ACCEL_X)
+            
+            if smallDiff  <= self.SWING_ACCELX_REFS_MARGIN:
+                if self.swingAccelXRefsIndex == 0:
+                    self.swingStartTime = time.time()
+                self.swingAccelXRefsIndex += 1
+            
+            if self.swingAccelXRefsIndex >= len(self.SWING_ACCELX_REFS):
+                if time.time() - self.swingStartTime >= self.MIN_SWING_TIME: 
+                    self.__onSwing(self.maxAccelXValue)
+                self.swingStarted = False
+                self.__resetSwingAccelXRefs()
+            
+        else:
+            self.__resetSwingAccelXRefs()
+
+    def __resetSwingAccelXRefs(self):
+        self.swingAccelXRefsIndex = 0
+        self.swingDetected = False
+    
+    def __onSwing(self, maxAccel):
+        if maxAccel < self.LIGHT_ACCEL_SWING_THRESHOLD: print("Light swing: %d" % maxAccel)
+        elif maxAccel < self.MEDIUM_ACCEL_SWING_THRESHOLD: print("Medium swing: %d" % maxAccel)
+        else: print("Big swing %d" % maxAccel)
+
+
 def on_smart_ball_collision():
     SmartObjectsMediator.get_current_instance().on_smart_ball_collision()
 
@@ -359,23 +423,26 @@ class SmartObjectsMediator:
 
         self.running = True
 
-        self.smart_ball = smart_ball
-        self.smart_field = SmartField()
+        #!!!!!!!!!!!!!self.smart_ball = smart_ball
+        #!!!!!!!!!!!!!self.smart_field = SmartField()
         self.main_smart_racket = main_smart_racket
 
-        self.smart_ball.register_on_collision_callback(on_smart_ball_collision)
-        self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
-        self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
-        self.smart_ball.register_on_field_wind_status_callback(self.on_field_wind_status)
+        self.golfSwingDetector = GolfSwingDetector()
+
+        #!!!!!!!!!!!!!self.smart_ball.register_on_collision_callback(on_smart_ball_collision)
+        #!!!!!!!!!!!!!self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
+        #!!!!!!!!!!!!!self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
+        #!!!!!!!!!!!!!self.smart_ball.register_on_field_wind_status_callback(self.on_field_wind_status)
         self.main_smart_racket.register_buttons_changed_callback(on_main_racket_buttons_changed)
         self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
 
     def run(self):
-        while self.running:
-            self.smart_ball.listen()
+        time.sleep(100) #!!!!!!!!!!!!!
+        #!!!!!!!!!!!!!while self.running:
+            #!!!!!!!!!!!!!self.smart_ball.listen()
 
     def finalize(self):
-        self.smart_ball.stop()
+        pass #!!!!!!!!!!!!!self.smart_ball.stop()
 
     @staticmethod
     def on_smart_ball_collision():
@@ -430,31 +497,8 @@ class SmartObjectsMediator:
 
 
     def on_main_racket_accs_changed(self, xyz):
-        # print("ACC: ", xyz)
-        swing_dir = None
-
-        if xyz[wiimote_configs.ACC_Z] >= \
-                wiimote_configs.WIIMOTE_ACC_CENTER_VALUE + wiimote_configs.WIIMOTE_ACC_SWING_THRESHOLD:
-            swing_dir = wiimote_configs.LEFT_SWING
-        elif xyz[wiimote_configs.ACC_Z] <= \
-                wiimote_configs.WIIMOTE_ACC_CENTER_VALUE - wiimote_configs.WIIMOTE_ACC_SWING_THRESHOLD:
-            swing_dir = wiimote_configs.RIGHT_SWING
-
-        if swing_dir is not None:
-            swing_end = time.time()
-            if swing_end - self.main_smart_racket.swing_start >= wiimote_configs.WIIMOTE_ACC_SWING_INVERVAL:
-                self.main_smart_racket.swing_start = time.time()
-
-                Logger.default().debug("SWING! [" + str(swing_dir) + "]")
-                
-                """
-                the main racket swing has only effect during gameplay
-                """
-                if game.canMainRacketSwing():
-                    environment.play_racket_hit_sound()
-                    self.main_smart_racket.rumble(0.1)
-
-                    self.smart_ball.hit(swing_dir, self.main_smart_racket.swing_effect)
+        #self.__detectTennisSwing(xyz)
+        self.golfSwingDetector.onNewAccelValues(xyz, self.main_smart_racket.get_buttons())
 
         # update status sample
         if self.main_smart_racket.status_sample.append_new_values(xyz) and \
@@ -472,3 +516,29 @@ class SmartObjectsMediator:
 
     def onGameReset(self):
         self.smart_ball.stop()
+    
+    def __detectTennisSwing(self, xyz):
+        swing_dir = None
+
+        if xyz[wiimote_configs.ACC_Z] >= \
+                wiimote_configs.WIIMOTE_ACC_CENTER_VALUE + wiimote_configs.WIIMOTE_ACC_TENNIS_SWING_THRESHOLD:
+            swing_dir = wiimote_configs.LEFT_SWING
+        elif xyz[wiimote_configs.ACC_Z] <= \
+                wiimote_configs.WIIMOTE_ACC_CENTER_VALUE - wiimote_configs.WIIMOTE_ACC_TENNIS_SWING_THRESHOLD:
+            swing_dir = wiimote_configs.RIGHT_SWING
+
+        if swing_dir is not None:
+            swing_end = time.time()
+            if swing_end - self.main_smart_racket.tennis_swing_start >= wiimote_configs.WIIMOTE_ACC_TENNIS_SWING_INVERVAL:
+                self.main_smart_racket.tennis_swing_start = time.time()
+
+                Logger.default().debug("SWING! [" + str(swing_dir) + "]")
+                
+                """
+                the main racket swing has only effect during gameplay
+                """
+                if game.canMainRacketSwing():
+                    environment.play_racket_hit_sound()
+                    self.main_smart_racket.rumble(0.1)
+
+                    self.smart_ball.hit(swing_dir, self.main_smart_racket.swing_effect)
