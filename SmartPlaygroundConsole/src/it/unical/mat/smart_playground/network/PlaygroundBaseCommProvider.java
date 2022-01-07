@@ -22,6 +22,8 @@ import it.unical.mat.smart_playground.model.ecosystem.SmartGamePlatformStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartFieldStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.util.JSONUtil;
@@ -138,6 +140,7 @@ public class PlaygroundBaseCommProvider extends Thread
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.FIELD_WIND_STATUS ) )           handleFieldWindStatus(event);
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, event.get("accs_values").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.GAME_EVENT ) )                  handleGameEvent(event);
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.ENVSOUND ) )                    handleEnvironmentSoundPlay(event);
 	}
 	
 	private void handleSmartBallStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
@@ -230,6 +233,8 @@ public class PlaygroundBaseCommProvider extends Thread
 		
 		System.out.println("Wind Status: " + windOn);
 		PlaygroundStatus.getInstance().updateWindStatus(windStatus);
+		
+		EnvironmentSoundPlayer.getInstance().onWindStatusChanged(windOn);
 	}
 	
 	private void handleGameEvent( final JsonObject gameEvent )
@@ -237,6 +242,12 @@ public class PlaygroundBaseCommProvider extends Thread
 		if ( gameEventCallback != null )
 			gameEventCallback.onGameEvent(gameEvent);
 	}
+	
+	private void handleEnvironmentSoundPlay( final JsonObject soundEvent )
+	{
+		final EnvironmentSoundType soundToPlay = EnvironmentSoundType.parse(soundEvent.get("sound").getAsString());
+		EnvironmentSoundPlayer.getInstance().playSound(soundToPlay);
+	} 
 	
 	// TODO: test function
 	public static void testOnEcosystemStatus( final PlaygroundBaseCommCallback callback )

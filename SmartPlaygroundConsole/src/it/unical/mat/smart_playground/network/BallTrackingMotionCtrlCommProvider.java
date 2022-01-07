@@ -12,6 +12,8 @@ import java.nio.ByteBuffer;
 import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
 
 /**
  * @author Agostino
@@ -126,6 +128,8 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 				final int totalSteps = rcvByteBuffer.getInt();
 				playerStatus.updateTotalSteps(totalSteps);
 				onPlayerStatusChanged();
+				
+				EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.STEP);
 			}
 			else
 			{

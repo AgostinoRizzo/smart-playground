@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.network.NetDiscoveryCallback;
@@ -82,6 +84,10 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		APPLICATION_MANAGER.initialize();
 		APPLICATION_MANAGER.addNetworkDiscoveryCallback(this);
 		APPLICATION_MANAGER.addPlaygroundBaseCommCallbacks(this);
+		
+		// initialize the environment sound player
+		EnvironmentSoundPlayer.getInstance();
+		
 		// TODO (uncomment): APPLICATION_MANAGER.initialize();
 
 		//EcosystemEventProvider.testOnEcosystemStatus(this);
@@ -257,6 +263,8 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		if ( rootLayoutController != null )
 			rootLayoutController.enablePlayGamesAction();
+		
+		EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.CONFIRM);
 	}
 	
 	@Override

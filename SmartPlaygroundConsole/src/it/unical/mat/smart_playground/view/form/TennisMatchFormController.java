@@ -9,6 +9,8 @@ import com.google.gson.JsonObject;
 
 import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
+import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
 import it.unical.mat.smart_playground.network.GameEventCallback;
 import it.unical.mat.smart_playground.network.PlaygroundBaseCommProvider;
 import javafx.application.Platform;
@@ -34,6 +36,8 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	
 	private static final int PLAYER_A = 0;
 	private static final int PLAYER_B = 1;
+	
+	private static final EnvironmentSoundPlayer ENVIRONMENT_SOUND_PLAYER = EnvironmentSoundPlayer.getInstance();
 	
 	@FXML private Button playMatchButton;
 	@FXML private VBox matchOptionsBox;
@@ -161,6 +165,8 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 						
 						displayErrorMessage(message.toString(), true);
 					}
+					else
+						ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
 				}
 				else if ( subType.equals("match_status") )
 				{
@@ -177,9 +183,14 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 					
 					updateScoreboardLabelsText(totalMatchSets, totalSetGames, currentMatchSet, currentSetGame, mainPlayerScores, artificialPlayerScores, 
 												totalMainPlayerScore, totalArtificialPlayerScore);
+					
+					ENVIRONMENT_SOUND_PLAYER.onTennisGameScoreUpdate();
 					if ( terminated )
+					{
 						displayInfoMessage("Match terminated. Player " + 
 									(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!", true);
+						ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.TENNIS_FINISH);
+					}
 				}
 				else if ( subType.equals("match_turn") )
 				{
@@ -264,11 +275,12 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 		if ( displayAlert )
 			displayDialog(AlertType.WARNING, message);
 	}
+	/*
 	private void clearInfoErrorMessage()
 	{
 		infoErrorMessageLabel.setText("");
 	}
-	
+	*/
 	private void displayDialog( final AlertType type, final String message )
 	{
 		final Alert messageAlert = new Alert(type, message);
