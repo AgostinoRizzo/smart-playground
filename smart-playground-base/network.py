@@ -79,7 +79,8 @@ class ConsoleCommandReader(Thread):
                 elif cmdJson['type'] == 'fans_cmd':
                     smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_fans(int(cmdJson['pattern']))
                 elif cmdJson['type'] == 'game_init':
-                    game.initializeGame(cmdJson, self.networkCommunicator)
+                    if cmdJson['gameType'] == 'tennis': game.initializeGame(game.TENNIS_GAME_TYPE, cmdJson, self.networkCommunicator)
+                    elif cmdJson['gameType'] == 'golf': game.initializeGame(game.GOLF_GAME_TYPE, cmdJson, self.networkCommunicator)
                 elif cmdJson['type'] == 'game_reset':
                     game.resetGame()
             except Exception as e:
