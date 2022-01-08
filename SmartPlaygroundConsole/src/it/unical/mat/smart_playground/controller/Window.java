@@ -61,6 +61,11 @@ public abstract class Window
 		return new Scene( loader.load() );
 	}
 	
+	protected LayoutController getLayoutController()
+	{
+		return layoutController;
+	}
+	
 	protected abstract String getRootLayoutFxmlFilename();
 	
 	private static FXMLLoader createLoader( final String fxmlFilename )

@@ -36,6 +36,7 @@ public class EnvironmentSoundPlayer
 	
 	private static final String CONFIRM_SOUND_FILENAME          = "./res/sounds/confirm.wav";
 	private static final String CHOOSE_SOUND_FILENAME           = "./res/sounds/choose.wav";
+	private static final String SUB_CHOOSE_SOUND_FILENAME       = "./res/sounds/sub_choose.wav";
 	private static final String CLAP_SOUND_FILENAME             = "./res/sounds/clap.wav";
 	private static final String WIND_SOUND_FILENAME             = "./res/sounds/wind.wav";
 	private static final String STEP_SOUND_FILENAME             = "./res/sounds/step_?.wav";
@@ -72,6 +73,7 @@ public class EnvironmentSoundPlayer
 			
 			createSoundClip(EnvironmentSoundType.CONFIRM,     CONFIRM_SOUND_FILENAME);
 			createSoundClip(EnvironmentSoundType.CHOOSE,      CHOOSE_SOUND_FILENAME);
+			createSoundClip(EnvironmentSoundType.SUB_CHOOSE,  SUB_CHOOSE_SOUND_FILENAME);
 			createSoundClip(EnvironmentSoundType.CLAP,        CLAP_SOUND_FILENAME);
 			createSoundClip(EnvironmentSoundType.WIND,        WIND_SOUND_FILENAME, true);
 			

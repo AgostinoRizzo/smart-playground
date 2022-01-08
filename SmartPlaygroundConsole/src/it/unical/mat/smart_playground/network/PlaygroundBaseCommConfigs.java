@@ -19,6 +19,9 @@ public class PlaygroundBaseCommConfigs
 	public static final String FIELD_WIND_STATUS = "WIND_STATUS";
 	public static final String GAME_EVENT = "GAME_EVENT";
 	public static final String ENVSOUND = "ENV_SOUND";
+	public static final String TOOL_CHANGED = "TOOL_CHANGED";
+	public static final String TOOL_SETTING_CHANGED = "TOOL_SETTING_CHANGED";
+	public static final String TOOL_ACTION = "TOOL_ACTION";
 	
 	public static final int SMART_OBJECTS_STATUS_COUNT = 4;
 	public static final String SMART_GAME_PLATFORM_ID     = "SGP";

@@ -3,13 +3,13 @@ package it.unical.mat.smart_playground.controller;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import it.unical.mat.smart_playground.controller.playing.PlayerTool;
+import it.unical.mat.smart_playground.controller.playing.PlayerToolNotificationWindow;
 import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartRacketType;
 import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
 import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
-import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
-import it.unical.mat.smart_playground.model.playground.WindStatus;
 import it.unical.mat.smart_playground.network.NetDiscoveryCallback;
 import it.unical.mat.smart_playground.network.NetDiscoveryClient;
 import it.unical.mat.smart_playground.network.NetService;
@@ -31,7 +31,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -87,6 +86,9 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		// initialize the environment sound player
 		EnvironmentSoundPlayer.getInstance();
+		
+		// initialize the player tool notification window
+		PlayerToolNotificationWindow.getInstance();
 		
 		// TODO (uncomment): APPLICATION_MANAGER.initialize();
 
@@ -253,6 +255,8 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		if ( rootLayoutController.getActionPopup().getCurrentActionType() != ActionType.USER_ACK )
 			return;
 		
+		EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.CONFIRM);
+		
 		final ActionPopup actionPopup = rootLayoutController.getActionPopup();
 		actionPopup.clearContent();
 		actionPopup.hideContent();
@@ -263,8 +267,6 @@ public class MainApplication extends Application implements NetDiscoveryCallback
 		
 		if ( rootLayoutController != null )
 			rootLayoutController.enablePlayGamesAction();
-		
-		EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.CONFIRM);
 	}
 	
 	@Override

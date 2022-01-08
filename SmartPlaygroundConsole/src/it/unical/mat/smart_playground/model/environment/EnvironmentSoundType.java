@@ -25,6 +25,7 @@ public enum EnvironmentSoundType
 	
 	CONFIRM,
 	CHOOSE,
+	SUB_CHOOSE,
 	CLAP,
 	WIND,
 	STEP;
@@ -46,6 +47,7 @@ public enum EnvironmentSoundType
 		
 		if ( str.equals("confirm") )          return EnvironmentSoundType.CONFIRM;
 		if ( str.equals("choose") )           return EnvironmentSoundType.CHOOSE;
+		if ( str.equals("sub_choose") )       return EnvironmentSoundType.SUB_CHOOSE;
 		if ( str.equals("clap") )             return EnvironmentSoundType.CLAP;
 		if ( str.equals("wind") )             return EnvironmentSoundType.WIND;
 		if ( str.equals("step") )             return EnvironmentSoundType.STEP;

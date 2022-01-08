@@ -15,6 +15,8 @@ import java.util.List;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import it.unical.mat.smart_playground.controller.playing.PlayerTool;
+import it.unical.mat.smart_playground.controller.playing.PlayerToolNotificationWindow;
 import it.unical.mat.smart_playground.model.ecosystem.EcosystemStatus;
 import it.unical.mat.smart_playground.model.ecosystem.MotionControllerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
@@ -141,6 +143,9 @@ public class PlaygroundBaseCommProvider extends Thread
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.MAIN_SMART_RACKET_STATUS ) )    handleSmartRacketStatus(SmartRacketType.MAIN, event.get("accs_values").getAsJsonArray());
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.GAME_EVENT ) )                  handleGameEvent(event);
 		else if ( dataType.equals( PlaygroundBaseCommConfigs.ENVSOUND ) )                    handleEnvironmentSoundPlay(event);
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.TOOL_CHANGED ) )                handleToolChangedEvent(event);
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.TOOL_SETTING_CHANGED ) )        handleToolSettingChangedEvent(event);
+		else if ( dataType.equals( PlaygroundBaseCommConfigs.TOOL_ACTION ) )                 handleToolActionEvent(event);
 	}
 	
 	private void handleSmartBallStatus( final JsonArray sensorsDataSample ) throws NumberFormatException, IOException
@@ -247,7 +252,38 @@ public class PlaygroundBaseCommProvider extends Thread
 	{
 		final EnvironmentSoundType soundToPlay = EnvironmentSoundType.parse(soundEvent.get("sound").getAsString());
 		EnvironmentSoundPlayer.getInstance().playSound(soundToPlay);
-	} 
+	}
+	
+	private void handleToolChangedEvent( final JsonObject toolChangedEvent )
+	{
+		PlayerToolNotificationWindow.getInstance().onPlayerToolChanged
+			(PlayerTool.parse(toolChangedEvent.get("new_tool").getAsString()));
+		EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.CHOOSE);
+	}
+	
+	private void handleToolSettingChangedEvent( final JsonObject toolSettingChangedEvent )
+	{
+		if ( toolSettingChangedEvent.get("tool").getAsString().equals("club") )
+		{
+			// TODO: notify info to the GolfMatchFormController 
+			final String newSetting = toolSettingChangedEvent.get("setting").getAsString();
+			if ( newSetting.equals("attempt") )
+				System.out.println("Tool setting changed: attempt");
+			else if ( newSetting.equals("stroke") )
+				System.out.println("Tool setting changed: stroke");
+			EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.SUB_CHOOSE);
+		}
+	}
+	
+	private void handleToolActionEvent( final JsonObject toolActionEvent )
+	{
+		if ( toolActionEvent.get("tool").getAsString().equals("club") )
+		{
+			// TODO: notify info to the GolfMatchFormController 
+			final String actionType = toolActionEvent.get("action_type").getAsString();
+			System.out.println("Club action: " + actionType);
+		}
+	}
 	
 	// TODO: test function
 	public static void testOnEcosystemStatus( final PlaygroundBaseCommCallback callback )
