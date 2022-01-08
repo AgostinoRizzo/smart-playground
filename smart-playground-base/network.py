@@ -206,6 +206,22 @@ class EcosystemEventProvider:
             self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'off'} )
         else:
             self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'on', 'dir': dir } )
+    
+    def send_new_game_tool(self, newTool):
+        if newTool == smart_objects.GameToolsBag.RACKET: self.netcomm.sendData( { 'dataType': 'TOOL_CHANGED', 'new_tool': 'racket'} )
+        elif newTool == smart_objects.GameToolsBag.CLUB: self.netcomm.sendData( { 'dataType': 'TOOL_CHANGED', 'new_tool': 'club'} )
+    
+    def send_new_club_setting(self, isAnAttempt):
+        if isAnAttempt: self.netcomm.sendData( { 'dataType': 'TOOL_SETTING_CHANGED', 'tool': 'club', 'setting': 'attempt'} )
+        else: self.netcomm.sendData( { 'dataType': 'TOOL_SETTING_CHANGED', 'tool': 'club', 'setting': 'stroke'} )
+    
+    def send_golf_club_action(self, swingType):
+        if swingType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'light_swing'} )
+        elif swingType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'medium_swing'} )
+        elif swingType == smart_objects.GolfClubSwingDetector.BIG_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'big_swing'} )
 
     @staticmethod
     def handle_data_request(data):

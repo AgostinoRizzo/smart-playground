@@ -353,9 +353,19 @@ class GolfClubSwingDetector:
     SWING_ACCELX_REFS = [470, 530, 470]
     SWING_ACCELX_REFS_MARGIN = 10
     MIN_SWING_TIME = 0.5
-    LIGHT_ACCEL_SWING_THRESHOLD = 800
+    LIGHT_ACCEL_SWING_THRESHOLD = 700
     MEDIUM_ACCEL_SWING_THRESHOLD = 900
+
+    LIGHT_SWING_TYPE = 0
+    MEDIUM_SWING_TYPE = 1
+    BIG_SWING_TYPE = 2
     
+    @staticmethod
+    def getSwingType(maxAccel):
+        if maxAccel < GolfClubSwingDetector.LIGHT_ACCEL_SWING_THRESHOLD: return GolfClubSwingDetector.LIGHT_SWING_TYPE
+        if maxAccel < GolfClubSwingDetector.MEDIUM_ACCEL_SWING_THRESHOLD: return GolfClubSwingDetector.MEDIUM_SWING_TYPE
+        return GolfClubSwingDetector.BIG_SWING_TYPE
+
     def __init__(self, smartObjectMediator) -> None:
         self.swingAccelXRefsIndex = 0
         self.swingStarted = False
@@ -365,9 +375,9 @@ class GolfClubSwingDetector:
         self.smartObjectMediator = smartObjectMediator
         self.isAnAttempt = True
 
-    def onSettingsToggle(self):
+    def onSettingToggle(self):
         self.isAnAttempt = not self.isAnAttempt
-        # TODO: send info about the new setting
+        return self.isAnAttempt
 
     def onNewAccelValues(self, xyz, clubButtons):
         if not clubButtons['B']:
@@ -412,6 +422,25 @@ class GolfClubSwingDetector:
     def __onSwing(self, maxAccel):
         if self.isAnAttempt: self.smartObjectMediator.onGolfClubAttemptCallback(maxAccel)
         else: self.smartObjectMediator.onGolfClubSwingCallback(maxAccel)
+
+
+class GameToolsBag:
+    RACKET = 0
+    CLUB = 1
+
+    def __init__(self) -> None:
+        self.currentTool = GameToolsBag.RACKET
+        self.lock = RLock()
+    
+    def changeTool(self):
+        with self.lock:
+            if self.currentTool == GameToolsBag.RACKET: self.currentTool = GameToolsBag.CLUB
+            else: self.currentTool = GameToolsBag.RACKET
+            return self.currentTool
+     
+    def getCurrentTool(self):
+        with self.lock:
+            return self.currentTool
 
 
 def on_smart_ball_collision():
@@ -464,6 +493,8 @@ class SmartObjectsMediator:
         self.tennisSwingDetector = TennisRacketSwingDetector(self)
         self.golfSwingDetector = GolfClubSwingDetector(self)
 
+        self.gameToolsBag = GameToolsBag()
+
         #!!!!!!!!!!!!!self.smart_ball.register_on_collision_callback(on_smart_ball_collision)
         #!!!!!!!!!!!!!self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
         #!!!!!!!!!!!!!self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
@@ -498,30 +529,41 @@ class SmartObjectsMediator:
     def on_main_racket_buttons_changed(self, buttons):
         main_racket_buttons = self.main_smart_racket.get_buttons()
         for btn in buttons:
+
             btn_id = btn[0]
             btn_status = btn[1]
             self.main_smart_racket.set_button(btn_id, btn_status)
-            if btn_id == 'B':
-                self.main_smart_racket.swing_effect = bool(btn_status)
-            if btn_id == 'Home':
-                self.running = False
-            if btn_id == 'Down':
-                environment.play_sound(environment.BALL_BOUNCE_SOUND)
-                self.smart_ball.hit(0, False)
+
+            # user confirm (ack) command
             if (btn_id == 'A' or btn_id == 'B') and main_racket_buttons['A'] and main_racket_buttons['B']:
-                print('A+B')
                 network.EcosystemEventProvider.get_instance().notify_user_ack()
             
-            if ( btn_id == 'Right' and btn_status ):
-                network.EcosystemEventProvider.get_instance().send_field_wind_status(10)
-            elif ( btn_id == 'Left' and btn_status ):
-                network.EcosystemEventProvider.get_instance().send_field_wind_status(None)
-
+            # change tool command (racket, club)
+            if ( (btn_id == 'Up' or btn_id == 'Down') and btn_status ):
+                newTool = self.gameToolsBag.changeTool()
+                network.EcosystemEventProvider.get_instance().send_new_game_tool(newTool)
+            
+            # change tool setting command (club: attempt, stroke)
+            if ( (btn_id == 'Right' or btn_id == 'Left') and btn_status ):
+                if self.gameToolsBag.getCurrentTool() == GameToolsBag.CLUB:
+                    isAnAttempt = self.golfSwingDetector.onSettingToggle()
+                    network.EcosystemEventProvider.get_instance().send_new_club_setting(isAnAttempt)
+            
+            # tennis racket swing effect on/off command
+            if btn_id == 'B':
+                self.main_smart_racket.swing_effect = bool(btn_status)
+            
+            # smart ball stop command
+            if btn_id == 'Home':
+                self.smart_ball.stop()
 
     def on_main_racket_accs_changed(self, xyz):
-        # detect tennis/golf swing
-        self.tennisSwingDetector.onNewAccelValues(xyz)
-        self.golfSwingDetector.onNewAccelValues(xyz, self.main_smart_racket.get_buttons())
+        # detect tennis/golf swing based on the current game tool
+        currentTool = self.gameToolsBag.getCurrentTool()
+        if currentTool == GameToolsBag.RACKET:
+            self.tennisSwingDetector.onNewAccelValues(xyz)
+        elif currentTool == GameToolsBag.CLUB:
+            self.golfSwingDetector.onNewAccelValues(xyz, self.main_smart_racket.get_buttons())
 
         # update status sample
         if self.main_smart_racket.status_sample.append_new_values(xyz) and \
@@ -545,15 +587,12 @@ class SmartObjectsMediator:
             self.smart_ball.hit(swing_dir, swing_effect)
         else:
             environment.play_sound(environment.RACKET_SWING_SOUND)
-        # TODO: manage collition with golf swing
     
     """
     This callback is called whenever a new golf swing is detected
     """
     def onGolfClubSwingCallback(self, max_accel):
         self.__onGolfClubEvent(max_accel)
-        # TODO: add club swing attempt if not canGolfSwing()
-        # TODO: manage collition with tennis swing
     
     """
     This callback is called whenever a new golf attempt (with not actual action) is detected
@@ -573,16 +612,15 @@ class SmartObjectsMediator:
     
     def __onGolfClubEvent(self, max_accel, is_an_attempt=False):
         soundToPLay = environment.CLUB_ATTEMPT_SOUND if is_an_attempt else environment.CLUB_SWING_SOUND
-
-        if max_accel < GolfClubSwingDetector.LIGHT_ACCEL_SWING_THRESHOLD:
+        swingType = GolfClubSwingDetector.getSwingType(max_accel)
+        
+        if swingType == GolfClubSwingDetector.LIGHT_SWING_TYPE:
             if not is_an_attempt: soundToPLay = environment.CLUB_SWING_LIGHT_SOUND
             print("Light swing: %d" % max_accel)
-        elif max_accel < GolfClubSwingDetector.MEDIUM_ACCEL_SWING_THRESHOLD:
+        elif swingType == GolfClubSwingDetector.MEDIUM_SWING_TYPE:
             print("Medium swing: %d" % max_accel)
         else:
             print("Big swing %d" % max_accel)
         
         environment.play_sound(soundToPLay)
-
-    
-    
+        network.EcosystemEventProvider.get_instance().send_golf_club_action(swingType)
