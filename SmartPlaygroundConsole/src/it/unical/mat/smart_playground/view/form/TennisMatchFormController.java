@@ -129,79 +129,90 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 			@Override
 			public void run()
 			{
-				//clearInfoErrorMessage();
-				
-				final String subType = gameEvent.get("subType").getAsString();
-				
-				if ( subType.equals("game_init_approved") )
-				{
-					matchOptionsBox.setVisible(false);
-					matchStatusBox.setVisible(true);
-					
-					displayInfoMessage("Waiting for match initialization...", false);
-				}
-				else if ( subType.equals("game_init_denied") )
-				{
-					displayErrorDialog("Match initialization denied. An existing match is already playing.");
-					playMatchButton.setText("Play Match");
-					playMatchButton.setDisable(false);
-					matchSetsOptions.setDisable(false);
-					setGamesOptions.setDisable(false);
-					artificialPlayerLevelOptions.setDisable(false);
-				}
-				else if ( subType.equals("game_status_ready") )
-				{
-					final boolean isReady = gameEvent.get("isReady").getAsBoolean();
-					if ( !isReady )
-					{
-						final boolean isBallReady = gameEvent.get("ballReady").getAsBoolean();
-						final boolean isPlayerReady = gameEvent.get("playerReady").getAsBoolean();
-						final StringBuilder message = new StringBuilder();
-						
-						if ( !isBallReady )
-							message.append("Smart Ball not in place. ");
-						if ( !isPlayerReady )
-							message.append("Player not in place.");
-						
-						displayErrorMessage(message.toString(), true);
-					}
-					else
-						ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
-				}
-				else if ( subType.equals("match_status") )
-				{
-					final int       currentMatchSet            = gameEvent.get("currentMatchSet").getAsInt();
-					final int       currentSetGame             = gameEvent.get("currentSetGame").getAsInt();
-					final int       totalMatchSets             = gameEvent.get("totalMatchSets").getAsInt();
-					final int       totalSetGames              = gameEvent.get("totalSetGames").getAsInt();
-					final JsonArray mainPlayerScores           = gameEvent.get("mainPlayerScores").getAsJsonArray();
-					final JsonArray artificialPlayerScores     = gameEvent.get("artificialPlayerScores").getAsJsonArray();
-					final boolean   terminated                 = gameEvent.get("terminated").getAsBoolean();
-					
-					final int totalMainPlayerScore = getTotalScoreFromJsonArray(mainPlayerScores);
-					final int totalArtificialPlayerScore = getTotalScoreFromJsonArray(artificialPlayerScores);
-					
-					updateScoreboardLabelsText(totalMatchSets, totalSetGames, currentMatchSet, currentSetGame, mainPlayerScores, artificialPlayerScores, 
-												totalMainPlayerScore, totalArtificialPlayerScore);
-					
-					ENVIRONMENT_SOUND_PLAYER.onTennisGameScoreUpdate();
-					if ( terminated )
-					{
-						displayInfoMessage("Match terminated. Player " + 
-									(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!", true);
-						ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.TENNIS_FINISH);
-					}
-				}
-				else if ( subType.equals("match_turn") )
-				{
-					final String playerTurn = gameEvent.get("turn").getAsString();
-					if ( playerTurn.equals("player_a") )
-						displayInfoMessage("Human player turn.", false);
-					else if ( playerTurn.equals("player_b") )
-						displayInfoMessage("Artificial player turn.", false);
-				}
+				__onGameEvent(gameEvent);
 			}
 		});
+	}
+	
+	@Override
+	public void onToolSettingChangedEvent(JsonObject event) {}
+	@Override
+	public void onToolActionEvent(JsonObject event) {}
+	
+	private void __onGameEvent( final JsonObject gameEvent )
+	{
+		//clearInfoErrorMessage();
+		
+		final String subType = gameEvent.get("subType").getAsString();
+		
+		if ( subType.equals("game_init_approved") )
+		{
+			matchOptionsBox.setVisible(false);
+			matchStatusBox.setVisible(true);
+			
+			displayInfoMessage("Waiting for match initialization...", false);
+		}
+		else if ( subType.equals("game_init_denied") )
+		{
+			displayErrorDialog("Match initialization denied. An existing match is already playing.");
+			playMatchButton.setText("Play Match");
+			playMatchButton.setDisable(false);
+			matchSetsOptions.setDisable(false);
+			setGamesOptions.setDisable(false);
+			artificialPlayerLevelOptions.setDisable(false);
+		}
+		else if ( subType.equals("game_status_ready") )
+		{
+			final boolean isReady = gameEvent.get("isReady").getAsBoolean();
+			if ( !isReady )
+			{
+				final boolean isBallReady = gameEvent.get("ballReady").getAsBoolean();
+				final boolean isPlayerReady = gameEvent.get("playerReady").getAsBoolean();
+				final StringBuilder message = new StringBuilder();
+				
+				if ( !isBallReady )
+					message.append("Smart Ball not in place. ");
+				if ( !isPlayerReady )
+					message.append("Player not in place.");
+				
+				displayErrorMessage(message.toString(), true);
+			}
+			else
+				ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
+		}
+		else if ( subType.equals("match_status") )
+		{
+			final int       currentMatchSet            = gameEvent.get("currentMatchSet").getAsInt();
+			final int       currentSetGame             = gameEvent.get("currentSetGame").getAsInt();
+			final int       totalMatchSets             = gameEvent.get("totalMatchSets").getAsInt();
+			final int       totalSetGames              = gameEvent.get("totalSetGames").getAsInt();
+			final JsonArray mainPlayerScores           = gameEvent.get("mainPlayerScores").getAsJsonArray();
+			final JsonArray artificialPlayerScores     = gameEvent.get("artificialPlayerScores").getAsJsonArray();
+			final boolean   terminated                 = gameEvent.get("terminated").getAsBoolean();
+			
+			final int totalMainPlayerScore = getTotalScoreFromJsonArray(mainPlayerScores);
+			final int totalArtificialPlayerScore = getTotalScoreFromJsonArray(artificialPlayerScores);
+			
+			updateScoreboardLabelsText(totalMatchSets, totalSetGames, currentMatchSet, currentSetGame, mainPlayerScores, artificialPlayerScores, 
+										totalMainPlayerScore, totalArtificialPlayerScore);
+			
+			ENVIRONMENT_SOUND_PLAYER.onTennisGameScoreUpdate();
+			if ( terminated )
+			{
+				displayInfoMessage("Match terminated. Player " + 
+							(totalMainPlayerScore > totalArtificialPlayerScore ? "A (human)" : "B (artificial)") + " wins!", true);
+				ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.TENNIS_FINISH);
+			}
+		}
+		else if ( subType.equals("match_turn") )
+		{
+			final String playerTurn = gameEvent.get("turn").getAsString();
+			if ( playerTurn.equals("player_a") )
+				displayInfoMessage("Human player turn.", false);
+			else if ( playerTurn.equals("player_b") )
+				displayInfoMessage("Artificial player turn.", false);
+			ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
+		}
 	}
 	
 	private void initScoreboardLabels()

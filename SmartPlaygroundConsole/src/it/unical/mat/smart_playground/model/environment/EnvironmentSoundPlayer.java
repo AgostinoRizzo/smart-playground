@@ -107,6 +107,13 @@ public class EnvironmentSoundPlayer
 		playSound(EnvironmentSoundType.CLAP);
 	}
 	
+	public void onGolfGameHole()
+	{
+		playSound(EnvironmentSoundType.BALL_IN_HOLE);
+		new DelayedSoundTrigger(EnvironmentSoundType.GAME_WIN, 1500).start();
+		new DelayedSoundTrigger(EnvironmentSoundType.CLAP,     1500).start();
+	}
+	
 	public void onWindStatusChanged( final boolean windOn )
 	{
 		if ( windOn ) playSound(EnvironmentSoundType.WIND);

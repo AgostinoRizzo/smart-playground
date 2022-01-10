@@ -12,4 +12,6 @@ import com.google.gson.JsonObject;
 public interface GameEventCallback
 {
 	public void onGameEvent( final JsonObject event );
+	public void onToolSettingChangedEvent( final JsonObject event );
+	public void onToolActionEvent( final JsonObject event );
 }

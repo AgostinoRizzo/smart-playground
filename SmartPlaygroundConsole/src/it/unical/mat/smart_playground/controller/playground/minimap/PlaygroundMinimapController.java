@@ -71,6 +71,8 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	private PlaySmartGolfController parentController = null;
 	
+	private boolean canLocateHole = true;
+	
 	private static final PlaygroundStatus PLAYGROUND_STATUS = PlaygroundStatus.getInstance();
 	private static final MinimapWindLinesAnimator MINIMAP_WIND_LINES_ANIMATOR = MinimapWindLinesAnimator.getInstance();
 	private static final ImageFactory IMAGE_FACTORY = ImageFactory.getInstance();
@@ -136,6 +138,11 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	public void setParentController( final PlaySmartGolfController parentController )
 	{
 		this.parentController = parentController;
+	}
+	
+	public void setCanLocateHole( final boolean canLocate )
+	{
+		canLocateHole = canLocate;
 	}
 	
 	private void onBallStatusChanged( final SmartBallStatus newBallStatus )
@@ -221,6 +228,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	
 	@FXML private void handleFieldAreaClick( final MouseEvent event )
 	{
+		if ( !canLocateHole )
+			return;
+		
 		final double areaWidth = fieldAreaPane.getWidth(), areaHeight = fieldAreaPane.getHeight();
 		final double x = event.getX(), y = event.getY();
 		final double percX = x / areaWidth, percY = y / areaHeight;
@@ -235,7 +245,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 										y - golfHoleImage.getHeight() + 10 + 20);
 			
 			if ( parentController != null )
-				parentController.onGolfHoleLocated(percX, percY);
+				parentController.onGolfHoleLocated(percX, percY, this);
 		}
 	}
 	

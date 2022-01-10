@@ -4,6 +4,7 @@
 package it.unical.mat.smart_playground.controller.playing;
 
 import it.unical.mat.smart_playground.controller.Window;
+import it.unical.mat.smart_playground.controller.playground.minimap.PlaygroundMinimapController;
 import it.unical.mat.smart_playground.view.form.GolfMatchFormController;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -32,9 +33,9 @@ public class PlaySmartGolfController extends PlaySmartGameController
 		golfMatchFormController.onFinalize();
 	}
 	
-	public void onGolfHoleLocated( final double percX, final double percY )
+	public void onGolfHoleLocated( final double percX, final double percY, final PlaygroundMinimapController playgroundMinimapController )
 	{
 		playgroundController.locateGolfHole((float) percX, (float) percY);
-		golfMatchFormController.onGolfHoleLocated(percX, percY);
+		golfMatchFormController.onGolfHoleLocated(percX, percY, playgroundMinimapController);
 	}
 }

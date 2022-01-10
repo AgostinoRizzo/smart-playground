@@ -263,26 +263,14 @@ public class PlaygroundBaseCommProvider extends Thread
 	
 	private void handleToolSettingChangedEvent( final JsonObject toolSettingChangedEvent )
 	{
-		if ( toolSettingChangedEvent.get("tool").getAsString().equals("club") )
-		{
-			// TODO: notify info to the GolfMatchFormController 
-			final String newSetting = toolSettingChangedEvent.get("setting").getAsString();
-			if ( newSetting.equals("attempt") )
-				System.out.println("Tool setting changed: attempt");
-			else if ( newSetting.equals("stroke") )
-				System.out.println("Tool setting changed: stroke");
-			EnvironmentSoundPlayer.getInstance().playSound(EnvironmentSoundType.SUB_CHOOSE);
-		}
+		if ( gameEventCallback != null )
+			gameEventCallback.onToolSettingChangedEvent(toolSettingChangedEvent);
 	}
 	
 	private void handleToolActionEvent( final JsonObject toolActionEvent )
 	{
-		if ( toolActionEvent.get("tool").getAsString().equals("club") )
-		{
-			// TODO: notify info to the GolfMatchFormController 
-			final String actionType = toolActionEvent.get("action_type").getAsString();
-			System.out.println("Club action: " + actionType);
-		}
+		if ( gameEventCallback != null )
+			gameEventCallback.onToolActionEvent(toolActionEvent);
 	}
 	
 	// TODO: test function
