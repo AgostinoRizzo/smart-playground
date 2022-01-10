@@ -516,11 +516,13 @@ class SmartObjectsMediator:
         self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
 
     def run(self):
-        while self.running:
-            self.smart_ball.listen()
+        time.sleep(10000)
+        #!!!!!!!!!!!!!!!while self.running:
+            #!!!!!!!!!!!!!!!self.smart_ball.listen()
 
     def finalize(self):
-        self.smart_ball.stop()
+        pass
+        #!!!!!!!!!!!!!!!self.smart_ball.stop()
 
     @staticmethod
     def on_smart_ball_collision():

@@ -248,9 +248,15 @@ class GolfGameManager(GameManager):
             self.ballCollided = True
             self.environmentChangedCond.notify_all()
     
+    def stopRunning(self):
+        self.resetEvent.set()
+        with self.lock:
+            self.environmentChangedCond.notify_all()
+            self.clubStrokeDoneCond.notify_all()
+    
     def manageMatch(self):
         
-        terminated = False
+        isTerminated = False
         gameOutcome = ''
         currentStroke = 1
 
@@ -258,49 +264,62 @@ class GolfGameManager(GameManager):
             
             # send current match status/scores
             matchStatus = {'dataType': 'GAME_EVENT', 'subType' : 'match_status', 'currentStroke' : currentStroke, \
-                           'terminated' : terminated, 'gameOutcome': gameOutcome}
+                           'terminated' : isTerminated, 'gameOutcome': gameOutcome}
             self.networkCommunicator.sendData(matchStatus)
 
-            if terminated:
+            if isTerminated:
                 break
             
             time.sleep(2)
 
-            # (for the forse stroke) assert ball position to be proper for playing
+            # (for the firse stroke) assert ball position to be proper for playing
             if currentStroke == 1:
-                isReadyManifest = self.__isBallReadyForFirstStroke()
-                while not isReadyManifest['isReady']:
-                    self.networkCommunicator.sendData(isReadyManifest)
-                    self.environmentChangedCond.wait()
+                notReadyManifestSent = False
+                with self.lock:
                     isReadyManifest = self.__isBallReadyForFirstStroke()
+                    while not self.resetEvent.is_set() and not isReadyManifest['isReady']:
+                        if not notReadyManifestSent: self.networkCommunicator.sendData(isReadyManifest); notReadyManifestSent = True
+                        self.environmentChangedCond.wait()
+                        isReadyManifest = self.__isBallReadyForFirstStroke()
+                    if isReadyManifest['isReady']:
+                        self.networkCommunicator.sendData(isReadyManifest)
 
             self.__enableClubSwing()
             self.networkCommunicator.sendData(self.__getMatchTurnInfo())
 
             # player can play (club swing/stroke): wait for a club stroke
-            while self.canClubSwing: self.clubStrokeDoneCond.wait()
+            with self.lock:
+                while not self.resetEvent.is_set() and self.clubEnabled: self.clubStrokeDoneCond.wait()
+            
+            # send match action (stroke)
+            matchAction = {'dataType': 'GAME_EVENT', 'subType' : 'match_action', 'action' : 'stroke'}
+            self.networkCommunicator.sendData(matchAction)
 
             # ball is moving: wait for a ball stop timeout or ball collition or ball in hole
-            maxBallMovingTime = self.__getMaxBallMovingTime()
-            ballStopTime = time.time() + maxBallMovingTime
-            while not self.ballCollided and not self.__isBallInHole():
-                currentTime = time.time()
-                if currentTime >= ballStopTime: break
-                self.environmentChangedCond.wait(timeout=ballStopTime - currentTime)
+            with self.lock:
+                maxBallMovingTime = self.__getMaxBallMovingTime()
+                ballStopTime = time.time() + maxBallMovingTime
+                while not self.resetEvent.is_set() and not self.ballCollided and not self.__isBallInHole():
+                    currentTime = time.time()
+                    if currentTime >= ballStopTime: break
+                    self.environmentChangedCond.wait(timeout=ballStopTime - currentTime)
             
             # stop the ball anyway
             smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
 
             # ball is collided, game stops
-            if self.ballCollided:
-                terminated = True
-                gameOutcome = 'collision'
-            # ball in hole, game stops
-            elif self.__isBallInHole():
-                terminated = True
-                gameOutcome = 'in_hole'
-            # ball stopped, game continues
-            else: currentStroke += 1
+            with self.lock:
+                if self.ballCollided:
+                    isTerminated = True
+                    gameOutcome = 'collision'
+                # ball in hole, game stops
+                elif self.__isBallInHole():
+                    isTerminated = self.terminated = True
+                    gameOutcome = 'in_hole'
+                # ball stopped, game continues
+                else: currentStroke += 1
+        
+        smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
     
     def __enableClubSwing(self):
         with self.lock:
@@ -311,16 +330,16 @@ class GolfGameManager(GameManager):
                   self.ballLocation.left > 0.5 + GolfGameManager.FIRST_STROKE_BALL_PADDING and \
                   self.ballLocation.left < 1.0 - GolfGameManager.FIRST_STROKE_BALL_PADDING and \
                   self.ballLocation.top  >       GolfGameManager.FIRST_STROKE_BALL_PADDING and \
-                  self.ballLocation.left < 1.0 - GolfGameManager.FIRST_STROKE_BALL_PADDING
+                  self.ballLocation.top  < 1.0 - GolfGameManager.FIRST_STROKE_BALL_PADDING
         return {'dataType': 'GAME_EVENT', 'subType' : 'ball_location_ready', 'isReady' : isReady}
     
     def __getMatchTurnInfo(self):
         return {'dataType': 'GAME_EVENT', 'subType' : 'match_turn', 'turn' : 'club_swing'}
     
     def __getMaxBallMovingTime(self):
-        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE: return 0.5
-        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE: return 1.0
-        return 2.0
+        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE: return 5.0#0.5
+        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE: return 10.0#1.0
+        return 15.0#2.0
     
     def __isBallInHole(self) -> bool:
         return self._isBallLocationKnown() and \
