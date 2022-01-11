@@ -31,6 +31,7 @@ class PlaygroundBaseStatus:
         self.ballOrientation = -1
         self.absPlayerOrientation = -1.0
         self.playerOrientationAnchor = 0
+        self.windDirection = None
         self.lock = RLock()
     
     def update_ball_location(self, left, top):
@@ -70,6 +71,10 @@ class PlaygroundBaseStatus:
             self.absPlayerOrientation = -1.0
             game.onPlayerOrientationUpdateUpdate(self.get_relative_player_orientation())
     
+    def updateFieldWindStatus(self, windDir):
+        with self.lock:
+            self.windDirection = windDir
+
     def get_ball_location(self) -> PointLocation:
         with self.lock:
             if self.__check_ball_status():
@@ -129,6 +134,20 @@ class PlaygroundBaseStatus:
                 ascii_status += ' '.join(status[i]) + "\n"
             return ascii_status
     
+    def getBallSwingEffectDirection(self):
+        """ assume interval 0-359 """
+        with self.lock:
+
+            if self.windDirection is None or not self.__check_ball_status(): return 0
+            if self.ballOrientation == self.windDirection: return 0
+
+            relativeWindDirection = (self.windDirection - self.ballOrientation) % 360
+
+            if relativeWindDirection >=  45 and relativeWindDirection <= 135: return  1
+            if relativeWindDirection >= 225 and relativeWindDirection <= 315: return -1
+            return 0
+            
+
     def __check_ball_status(self) -> bool:
         return self.ballLocation.left >= 0.0 and self.ballLocation.top >= 0.0 and self.ballOrientation >= 0.0
 
@@ -252,4 +271,24 @@ def initialize():
 def finalize():
     global ballTrackerMotionCrtl
     ballTrackerMotionCrtl.finalize()
-        
+
+def updateFieldWindStatus(windDir):
+    playgroundBaseStatus.updateFieldWindStatus(__sanitizeWindDirection(windDir))
+
+def getBallSwingEffectDirection():
+    return playgroundBaseStatus.getBallSwingEffectDirection()
+
+def __sanitizeWindDirection(direction):
+    if direction is None: return None
+    
+    if direction < 0: direction = 0
+    elif direction > 4095: direction = 4095
+	
+    # map direction degrees from 0-4095 to 0-269
+    direction = direction*269/4095 - 120.0
+
+    # adjust direction
+    direction -= 90
+    if direction < 0: direction = 359 + direction
+    
+    return direction

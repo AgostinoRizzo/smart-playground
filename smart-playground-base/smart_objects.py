@@ -8,6 +8,7 @@ from util_logging import Logger
 import wiimote
 import wiimote_configs
 import environment
+import playground
 import network
 import game
 
@@ -138,9 +139,13 @@ class SmartBall(SmartObject):
 
                 tinyos_serial.tos_am_serial_write(self.tos_racket_swing_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
     
-    def clubStrokeHit(self):
+    def clubStrokeHit(self, swingDirection):
         with self.lock:
-            self.tos_club_start_msg.value_a = self.tos_club_start_msg.value_b = int(0)  # value_a/b not used (angle effect = 0)
+            print("Club stroke with swing direction: " + str(swingDirection))
+            self.tos_club_start_msg.value_a = self.tos_club_start_msg.value_b = int(0)
+            if swingDirection is not None:
+                self.tos_club_start_msg.value_a = int(swingDirection)
+                self.tos_club_start_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
             tinyos_serial.tos_am_serial_write(self.tos_club_start_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
 
     def stop(self):
@@ -511,14 +516,14 @@ class SmartObjectsMediator:
         self.smart_ball.register_on_collision_callback(on_smart_ball_collision)
         self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
         self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
-        self.smart_ball.register_on_field_wind_status_callback(self.on_field_wind_status)
+        self.smart_ball.register_on_field_wind_status_callback(SmartObjectsMediator.on_field_wind_status)
         self.main_smart_racket.register_buttons_changed_callback(on_main_racket_buttons_changed)
         self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
 
     def run(self):
-        time.sleep(10000)
-        #!!!!!!!!!!!!!!!while self.running:
-            #!!!!!!!!!!!!!!!self.smart_ball.listen()
+        #time.sleep(10000)
+        while self.running:
+            self.smart_ball.listen()
 
     def finalize(self):
         pass
@@ -540,6 +545,7 @@ class SmartObjectsMediator:
     @staticmethod
     def on_field_wind_status(dir):
         network.EcosystemEventProvider.get_instance().send_field_wind_status(dir)
+        playground.updateFieldWindStatus(dir)
 
     def on_main_racket_buttons_changed(self, buttons):
         main_racket_buttons = self.main_smart_racket.get_buttons()
@@ -634,8 +640,14 @@ class SmartObjectsMediator:
             if swingType == GolfClubSwingDetector.LIGHT_SWING_TYPE: soundToPLay = environment.CLUB_SWING_LIGHT_SOUND
             else: soundToPLay = environment.CLUB_SWING_SOUND
 
-            # make a club stroke based on swing type
-            self.smart_ball.clubStrokeHit()
+            effectDirectionValue = playground.getBallSwingEffectDirection()
+            swingDirection = None
+
+            if effectDirectionValue > 0: swingDirection = wiimote_configs.RIGHT_SWING
+            elif effectDirectionValue < 0: swingDirection = wiimote_configs.LEFT_SWING
+
+            # make a club stroke based on [wind] swing direction effect
+            self.smart_ball.clubStrokeHit(swingDirection)
         
         environment.play_sound(soundToPLay)
         network.EcosystemEventProvider.get_instance().send_golf_club_action(swingType)

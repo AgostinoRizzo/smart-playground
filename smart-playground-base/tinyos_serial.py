@@ -20,7 +20,7 @@ FIELD_WIND_STATUS_ON_MSG_CODE = 51
 FIELDWIND_STATUS_OFF_MSG_CODE = 50
 
 
-#!!!!!!!!!!!!!!!tos_am = tos.AM()
+tos_am = tos.AM()
 tos_am_serial_lock = Lock()
 
 def tos_am_serial_read(read_timeout):
