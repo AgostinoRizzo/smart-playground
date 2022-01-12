@@ -103,6 +103,9 @@ class SmartBall(SmartObject):
         self.tos_club_start_msg = tinyos_serial.StartMsg()
         self.tos_club_start_msg.code = int(tinyos_serial.BASE_STATION_MSG_CLUB_START_CODE)
 
+        self.tos_rotate_msg = tinyos_serial.StartMsg()
+        self.tos_rotate_msg.code = int(tinyos_serial.BASE_STATION_MSG_ROTATE_CODE)
+
         self.tos_stop_msg = tinyos_serial.StopMsg()
         self.tos_stop_msg.code = int(tinyos_serial.BASE_STATION_MSG_STOP_CODE)
 
@@ -147,6 +150,13 @@ class SmartBall(SmartObject):
                 self.tos_club_start_msg.value_a = int(swingDirection)
                 self.tos_club_start_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
             tinyos_serial.tos_am_serial_write(self.tos_club_start_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
+
+    def rotate(self, side):
+        with self.lock:
+            print("Ball rotate: " + str(side))
+            self.tos_rotate_msg.value_a = int(side)
+            self.tos_rotate_msg.value_b = int(0)
+            tinyos_serial.tos_am_serial_write(self.tos_rotate_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
 
     def stop(self):
         with self.lock:
@@ -571,8 +581,13 @@ class SmartObjectsMediator:
                     network.EcosystemEventProvider.get_instance().send_new_club_setting(isAnAttempt)
             
             # tennis racket swing effect on/off command
-            if btn_id == 'B':
+            if btn_id == 'B' and not main_racket_buttons['A']:
                 self.main_smart_racket.swing_effect = bool(btn_status)
+            
+            # golf ball direction sync on/off
+            if btn_id == 'A' and not main_racket_buttons['B']:
+                if btn_status: game.enableGolfBallDirectionSync()
+                else: game.disableGolfBallDirectionSync()
             
             # smart ball stop command
             if btn_id == 'Home':
@@ -627,6 +642,9 @@ class SmartObjectsMediator:
     
     def onSmartBallStop(self):
         self.smart_ball.stop()
+    
+    def onSmartBallRotate(self, side):
+        self.smart_ball.rotate(side)
 
     def onGameReset(self):
         self.smart_ball.stop()

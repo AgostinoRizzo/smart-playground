@@ -220,6 +220,59 @@ class TennisGameManager(GameManager):
         return info
 
 
+class GolfBallDirectionSynchronizer(Thread):
+    MAX_SYNC_INTERVAL = 1.0
+    MED_SYNC_INTERVAL = 0.5
+    MIN_SYNC_INTERVAL = 0.3
+    ORIENTATION_SYNC_MARGIN = 20  # +20 degrees right, -20 degrees left
+
+    def __init__(self, golfGameManager):
+        Thread.__init__(self)
+        self.setDaemon(True)
+
+        self.golfGameManager = golfGameManager
+        self.lock = RLock()
+        self.enableCond = Condition(self.lock)
+        self.disableCond = Condition(self.lock)
+        self.resetEvent = Event()
+        self.enabled = False
+    
+    def enable(self):
+        with self.lock:
+            self.enabled = True
+            self.enableCond.notify_all()
+
+    def disable(self):
+        with self.lock:
+            self.enabled = False
+            self.disableCond.notify_all()
+    
+    def stopRunning(self):
+        self.resetEvent.set()
+        with self.lock:
+            self.enableCond.notify_all()
+    
+    def run(self) -> None:
+        self.lock.acquire()
+        while True:
+            self.__waitForEnabled()
+
+            if self.resetEvent.is_set():
+                break
+            
+            waitingTimeForNextSync = self.golfGameManager.synchronizeBallDirection()
+            if waitingTimeForNextSync < 0:  self.enabled = False
+            else:
+                self.lock.release()
+                time.sleep(waitingTimeForNextSync)
+                self.lock.acquire()
+        self.lock.release()
+    
+    def __waitForEnabled(self):
+        while not self.enabled and not self.resetEvent.is_set():
+            self.enableCond.wait()
+
+
 class GolfGameManager(GameManager):
     FIRST_STROKE_BALL_PADDING = 0.2
     LOCATION_COORDS_COINCIDENCE_DELTA = 0.2
@@ -235,6 +288,9 @@ class GolfGameManager(GameManager):
         # location of the target hole
         self.holeLocation = playground.PointLocation(jsonGameSettings['hole']['left'], jsonGameSettings['hole']['left'])
 
+        self.ballDirectionSynchronizer = GolfBallDirectionSynchronizer(self)
+        self.ballDirectionSynchronizer.start()
+
     def canClubSwing(self, swingType) -> bool:
         with self.lock:
             answ = self.clubEnabled and not self.terminated
@@ -248,8 +304,54 @@ class GolfGameManager(GameManager):
             self.ballCollided = True
             self.environmentChangedCond.notify_all()
     
+    def enableGolfBallDirectionSync(self):
+        self.ballDirectionSynchronizer.enable()
+
+    def disableGolfBallDirectionSync(self):
+        self.ballDirectionSynchronizer.disable()
+    
+    """ this method is called by the synchronizer when it's time to synch
+        the ball direction compared to the player's. Returns the waiting time
+        for the next sync expressed in seconds. A < 0 time means that no more
+        syncs are needed hence to disable the synchronizer.
+    """
+    def synchronizeBallDirection(self) -> float:
+        with self.lock:
+            
+            if not self.clubEnabled:
+                return -1
+            
+            # stop the ball anyway
+            smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
+
+            if not self._isBallOrientationKnown() or not self._isBallOrientationKnown() or not self._isPlayerOrientationKnown():
+                return -1  # no more syncs needed
+            if self.ballOrientation == self.playerOrientation:
+                return -1  # no more syncs needed
+
+            relativeBallorientation = (self.ballOrientation - self.playerOrientation) % 360
+
+            if relativeBallorientation <= GolfBallDirectionSynchronizer.ORIENTATION_SYNC_MARGIN or\
+                relativeBallorientation >= 359 - GolfBallDirectionSynchronizer.ORIENTATION_SYNC_MARGIN:
+                return -1  # no more syncs needed
+
+            if relativeBallorientation >= 180:
+                print('BALL: turn right')
+                smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallRotate(1)
+                if relativeBallorientation <= 270: return GolfBallDirectionSynchronizer.MAX_SYNC_INTERVAL
+                if relativeBallorientation <= 315: return GolfBallDirectionSynchronizer.MED_SYNC_INTERVAL
+                return GolfBallDirectionSynchronizer.MIN_SYNC_INTERVAL
+            else: 
+                print('BALL: turn left')
+                smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallRotate(0)
+                if relativeBallorientation >= 90: return GolfBallDirectionSynchronizer.MAX_SYNC_INTERVAL
+                if relativeBallorientation >= 45: return GolfBallDirectionSynchronizer.MED_SYNC_INTERVAL
+                return GolfBallDirectionSynchronizer.MIN_SYNC_INTERVAL
+    
     def stopRunning(self):
         self.resetEvent.set()
+        self.ballDirectionSynchronizer.stopRunning()
+        self.ballDirectionSynchronizer.join()
         with self.lock:
             self.environmentChangedCond.notify_all()
             self.clubStrokeDoneCond.notify_all()
@@ -437,3 +539,17 @@ def onGolfBallCollision():
     with globalLock:
         if gameManager is not None and type(gameManager) == GolfGameManager:
             gameManager.onBallCollision()
+
+def enableGolfBallDirectionSync():
+    global gameManager
+    global globalLock
+    with globalLock:
+        if gameManager is not None and type(gameManager) == GolfGameManager:
+            gameManager.enableGolfBallDirectionSync()
+
+def disableGolfBallDirectionSync():
+    global gameManager
+    global globalLock
+    with globalLock:
+        if gameManager is not None and type(gameManager) == GolfGameManager:
+            gameManager.disableGolfBallDirectionSync()
