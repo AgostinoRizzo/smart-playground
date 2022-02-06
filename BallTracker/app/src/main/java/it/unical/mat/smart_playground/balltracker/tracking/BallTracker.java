@@ -85,6 +85,11 @@ public class BallTracker
         return ballStatus;
     }
 
+    public BallTrackingCommunicator getBallTrackingCommunicator()
+    {
+        return ballTrackingCommunicator;
+    }
+
     public void updatePlatformFrameSize( final int width , final int height )
     {
         if ( platformFrameSize != null )

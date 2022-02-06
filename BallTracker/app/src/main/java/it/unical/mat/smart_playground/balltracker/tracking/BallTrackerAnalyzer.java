@@ -64,6 +64,12 @@ public class BallTrackerAnalyzer extends SyncCameraFrameAnalyzer
         return rgbaInputFrame;
     }
 
+    @Override
+    protected void syncOnPause()
+    {
+        BallTracker.getInstance().getBallTrackingCommunicator().sendUnknownBallTrackingStatus();
+    }
+
     private void analyzeMarker( final Marker marker )
     {
         final BallTracker ballTracker = BallTracker.getInstance();

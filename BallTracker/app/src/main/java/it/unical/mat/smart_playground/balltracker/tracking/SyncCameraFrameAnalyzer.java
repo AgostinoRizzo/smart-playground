@@ -21,5 +21,14 @@ public abstract class SyncCameraFrameAnalyzer implements CameraFrameAnalyzer
         finally { lock.unlock(); }
     }
 
+    @Override
+    public void onPause()
+    {
+        lock.lock();
+        syncOnPause();
+        lock.unlock();
+    }
+
     protected abstract Mat syncAnalyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame);
+    protected abstract void syncOnPause();
 }

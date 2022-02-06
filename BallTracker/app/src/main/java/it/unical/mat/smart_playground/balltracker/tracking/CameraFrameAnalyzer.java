@@ -9,4 +9,5 @@ import org.opencv.core.Mat;
 public interface CameraFrameAnalyzer
 {
     public Mat analyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame);
+    public void onPause();
 }
