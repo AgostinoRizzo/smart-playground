@@ -38,8 +38,8 @@ typedef uint8_t pwmstatus_t;
 #define IO_PWM_LEFT_MOTOR_PIN		IO.Port23	// pin 3 (6-pin expansion connector)
 
 #define PWM_MOTOR_INTERVAL			10		    // expressed in milliseconds
-#define PWM_NORMAL_SPEED_VALUE		0.5			// PWM percentage
-#define PWM_HIGHER_SPEED_VALUE		0.6			// PWM percentage
+#define PWM_NORMAL_SPEED_VALUE		0.6			// PWM percentage
+#define PWM_HIGHER_SPEED_VALUE		0.7			// PWM percentage
 
 #define PWM_NORMAL_SPEED_SET_INTERVAL		(PWM_MOTOR_INTERVAL * PWM_NORMAL_SPEED_VALUE)
 #define PWM_NORMAL_SPEED_CLEAR_INTERVAL		(PWM_MOTOR_INTERVAL * (1.0 - PWM_NORMAL_SPEED_VALUE))

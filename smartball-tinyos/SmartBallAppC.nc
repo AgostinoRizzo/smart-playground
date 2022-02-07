@@ -14,10 +14,6 @@ implementation
 	components MainC;
 	components LedsC;
 	
-	components new TimerMilliC() as TrajectorAdjTimer;
-	components new TimerMilliC() as BouncingTimer;
-	components new TimerMilliC() as BouncingTimerII;
-	
 	components LineDetectionManagerC;
 	components MotorsManagerC;
 	components CommunicationManagerC;
@@ -25,9 +21,6 @@ implementation
 	
 	SmartBallC.Boot              -> MainC;
 	SmartBallC.Leds              -> LedsC;
-	SmartBallC.TrajectorAdjTimer -> TrajectorAdjTimer;
-	SmartBallC.BouncingTimer    -> BouncingTimer;
-	SmartBallC.BouncingTimerII   -> BouncingTimerII;
 	
 	SmartBallC.DetectLine        -> LineDetectionManagerC.DetectLine;
 	SmartBallC.Drive             -> MotorsManagerC.Drive;

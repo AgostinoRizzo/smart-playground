@@ -13,6 +13,9 @@
 #include "Communication.h"
 #include "Sensing.h"
 
+#define TRUE	1
+#define FALSE	0
+
 module SmartBallC
 {
 	uses interface Boot;
@@ -22,13 +25,9 @@ module SmartBallC
 	uses interface Drive;
 	uses interface Communicate;
 	uses interface Sense;
-	
-	uses interface Timer<TMilli> as TrajectorAdjTimer;
-	uses interface Timer<TMilli> as BouncingTimer;
-	uses interface Timer<TMilli> as BouncingTimerII;
 }
 implementation
-{
+{	
 	state_t             curr_state = READY;
 	uint32_t            bouncing_start_time = 0;
 	uint32_t            bouncing_end_time = 0;
@@ -87,7 +86,7 @@ implementation
 			call Drive.reset();
 			curr_state = READY;
 		}
-		else
+		else if ( curr_state == BOUNCING )
 			stop_flag = TRUE;
 	}
 	
@@ -110,60 +109,16 @@ implementation
 				call Drive.stop();
 				call Drive.reset();
 				curr_state = READY;
+				
+				call Leds.led0On();
 			}
 			else
 			{
 				call Drive.go_straight();
 				curr_state = RUNNING;
+				
+				call Leds.led0Off();
 			}
-		}
-	}
-	
-	event void TrajectorAdjTimer.fired()
-	{
-		if ( stop_flag )
-		{
-			stop_flag = FALSE;
-			call Drive.stop();
-			call Drive.reset();
-			curr_state = READY;
-		}
-		else
-		{
-			call Drive.go_straight();
-			curr_state = RUNNING;
-		}
-	}
-	event void BouncingTimer.fired()
-	{
-		if ( stop_flag )
-		{
-			stop_flag = FALSE;
-			call Drive.stop();
-			call Drive.reset();
-			curr_state = READY;
-		}
-		else
-		{
-			call Drive.invert_direction();
-			call Drive.go_straight();
-			curr_state = RUNNING;
-		}
-	}
-	event void BouncingTimerII.fired()
-	{
-		if ( stop_flag )
-		{
-			stop_flag = FALSE;
-			call Drive.stop();
-			call Drive.reset();
-			curr_state = READY;
-		}
-		else
-		{
-			call Drive.invert_direction();
-			call Drive.go_straight();
-			curr_state = RUNNING;
 		}
 	}
 	

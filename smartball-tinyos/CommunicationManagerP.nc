@@ -86,7 +86,7 @@ implementation
 		else if ( len == sizeof(base_station_composed_msg_t) ) 
 		{
     		base_station_composed_msg_t* msg = (base_station_composed_msg_t*)payload;
-    		call Leds.led0On();
+    		
     		if ( msg->code == BASE_STATION_MSG_START_CODE )
     		{
     			int16_t direction_angle = msg->value_b;
