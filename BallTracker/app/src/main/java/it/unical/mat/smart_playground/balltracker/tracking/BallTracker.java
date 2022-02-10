@@ -25,6 +25,11 @@ public class BallTracker
 
     private static float MIN_BALL_LOCATION_DELTA_PERCENTAGE = 0.1f;
     private static short MIN_BALL_ORIENTATION_DELTA = 1;  // 0-359 degrees
+    private static long  ARUCO_DETECT_DELTA = 200;  // time in millis
+    private static int   MIN_BALL_DETECT_AREA = 1000;
+    private static int   COLOR_DETECT_SENSITIVITY = 20;
+    private static boolean USE_COLOR_BOOSTER = true;
+
     private static final Lock SETTINGS_LOCK = new ReentrantLock();
 
     private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
@@ -50,6 +55,10 @@ public class BallTracker
         SETTINGS_LOCK.lock();
         MIN_BALL_LOCATION_DELTA_PERCENTAGE = settings.getMinBallLocationDeltaPercentage();
         MIN_BALL_ORIENTATION_DELTA = settings.getMinBallOrientationDelta();
+        ARUCO_DETECT_DELTA = settings.getArucoDetectDelta();
+        MIN_BALL_DETECT_AREA = settings.getMinBallDetectArea();
+        COLOR_DETECT_SENSITIVITY = settings.getColorDetectionSensitivity();
+        USE_COLOR_BOOSTER = settings.getUseColorBooster();
         SETTINGS_LOCK.unlock();
     }
     public static TrackingSettings getTrackingSettings()
@@ -57,7 +66,7 @@ public class BallTracker
         try
         {
             SETTINGS_LOCK.lock();
-            return new TrackingSettings(MIN_BALL_LOCATION_DELTA_PERCENTAGE, MIN_BALL_ORIENTATION_DELTA);
+            return new TrackingSettings(MIN_BALL_LOCATION_DELTA_PERCENTAGE, MIN_BALL_ORIENTATION_DELTA, ARUCO_DETECT_DELTA, MIN_BALL_DETECT_AREA, COLOR_DETECT_SENSITIVITY, USE_COLOR_BOOSTER);
         }
         finally
         { SETTINGS_LOCK.unlock(); }

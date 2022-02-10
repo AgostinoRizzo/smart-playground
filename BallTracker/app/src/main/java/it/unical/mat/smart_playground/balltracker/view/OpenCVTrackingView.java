@@ -7,8 +7,8 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.List;
 
+import it.unical.mat.smart_playground.balltracker.tracking.ArucoBasedBallTrackerAnalyzer;
 import it.unical.mat.smart_playground.balltracker.tracking.BallTracker;
-import it.unical.mat.smart_playground.balltracker.tracking.BallTrackerAnalyzer;
 import it.unical.mat.smart_playground.balltracker.tracking.Marker;
 import it.unical.mat.smart_playground.balltracker.util.Vector2;
 import it.unical.mat.smart_playground.balltracker.util.Vector2Int;
@@ -50,13 +50,16 @@ public class OpenCVTrackingView implements TrackingView
 
         for ( final Marker marker : detectMarkers )
         {
-            drawMarker(marker);
-
-            if ( marker.getId() == BallTrackerAnalyzer.BALL_MARKER_ID )
+            if ( marker.getId() == Marker.BALL_MARKER_ID )
             {
-                drawOrientation(marker.getCenter(), marker.getDirection(), ballTracker.getBallStatus().getOrientation());
+                final Vector2Int center = marker.getCenter();
+                final Vector2Int direction = marker.getDirection();
+                drawMarker(marker, "X:" + center.getX() + " Y:" + center.getY());
+                if ( !direction.isZero() )
+                    drawOrientation(center, direction, ballTracker.getBallStatus().getOrientation());
                 //drawCorners(marker.getCornersCoords());
             }
+            else drawMarker(marker);
         }
 
         drawPlatformPaddings(ballTracker.getPlatformFrameSize(), ballTracker.getPlatformPaddings());
@@ -66,6 +69,13 @@ public class OpenCVTrackingView implements TrackingView
     public void drawMarker(Marker marker)
     {
         Imgproc.circle(frame, getPointFromVector2Int(marker.getCenter()), 10, MARKER_COLOR, 10);
+    }
+
+    @Override
+    public void drawMarker(Marker marker, String label)
+    {
+        drawMarker(marker);
+        Imgproc.putText(frame, label, getPointFromVector2Int(marker.getCenter()), 0, 0.5, ARROW_TEXT_COLOR, 2);
     }
 
     @Override

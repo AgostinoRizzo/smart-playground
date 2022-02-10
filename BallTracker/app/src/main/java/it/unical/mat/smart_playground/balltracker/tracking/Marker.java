@@ -1,5 +1,7 @@
 package it.unical.mat.smart_playground.balltracker.tracking;
 
+import java.util.List;
+
 import it.unical.mat.smart_playground.balltracker.util.Vector2Int;
 import it.unical.mat.smart_playground.balltracker.view.OpenCVTrackingView;
 
@@ -8,7 +10,12 @@ import it.unical.mat.smart_playground.balltracker.view.OpenCVTrackingView;
  */
 public class Marker
 {
-    private static final short X = 0, Y = 1;
+    public static final int BALL_MARKER_ID                  = 0;
+    public static final int TOP_LEFT_PLATFORM_CORNER_ID     = 1;
+    public static final int TOP_RIGHT_PLATFORM_CORNER_ID    = 2;
+    public static final int BOTTOM_LEFT_PLATFORM_CORNER_ID  = 3;
+    public static final int BOTTOM_RIGHT_PLATFORM_CORNER_ID = 4;
+    public static final short X = 0, Y = 1;
 
     private final int[][] cornersCoords;
     private final int id;
@@ -92,6 +99,36 @@ public class Marker
 
             return (short)roundedDegrees;
         }
+    }
+
+    public static boolean findMarker( final List<Marker> markers, final int markerId )
+    {
+        if ( markers == null || markers.isEmpty() )
+            return false;
+        for ( final Marker m : markers )
+            if ( m.getId() == markerId )
+                return true;
+        return false;
+    }
+    public static Marker searchMarker( final List<Marker> markers, final int markerId )
+    {
+        if ( markers == null || markers.isEmpty() )
+            return null;
+        for ( final Marker m : markers )
+            if ( m.getId() == markerId )
+                return m;
+        return null;
+    }
+    public static void removeMarker( final List<Marker> markers, final int markerId )
+    {
+        if ( markers == null || markers.isEmpty() )
+            return;
+        for ( final Marker m : markers )
+            if ( m.getId() == markerId )
+            {
+                markers.remove(m);
+                return;
+            }
     }
 
     private static <T> int[][] cloneCornersCoordsArray( final T[][] cornersCoords )

@@ -14,6 +14,7 @@ public interface TrackingView
 {
     public void drawTracking( final List<Marker> detectMarkers, final BallTracker ballTracker );
     public void drawMarker( final Marker marker );
+    public void drawMarker( final Marker marker, final String label );
     public void drawArrow( final Vector2Int origin, final Vector2Int arrowPoint );
     public void drawArrow( final Vector2Int origin, final Vector2Int arrowPoint, final String label );
     public void drawOrientation( final Vector2Int origin, final Vector2Int direction, final short orientation );

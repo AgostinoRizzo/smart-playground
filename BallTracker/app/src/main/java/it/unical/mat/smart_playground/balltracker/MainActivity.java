@@ -1,14 +1,13 @@
 package it.unical.mat.smart_playground.balltracker;
 
 import it.unical.mat.smart_playground.balltracker.tracking.BallTracker;
-import it.unical.mat.smart_playground.balltracker.tracking.BallTrackerAnalyzer;
 import it.unical.mat.smart_playground.balltracker.tracking.CameraFrameAnalyzer;
+import it.unical.mat.smart_playground.balltracker.tracking.ComposedBallTrackerAnalyzer;
 import it.unical.mat.smart_playground.balltracker.tracking.TrackingSettings;
 import it.unical.mat.smart_playground.balltracker.util.SystemUiHider;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Camera;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +17,6 @@ import android.view.WindowManager;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
@@ -44,7 +42,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
     private static MainActivity instance = null;
 
     private CameraBridgeViewBase mOpenCvCameraView;
-    private final CameraFrameAnalyzer cameraFrameAnalyzer = BallTrackerAnalyzer.getInstance();
+    private final CameraFrameAnalyzer cameraFrameAnalyzer = ComposedBallTrackerAnalyzer.getInstance();
 
     //private final Dictionary dictionary = Aruco.getPredefinedDictionary(Aruco.DICT_4X4_250);
     //private final DetectorParameters parameters = DetectorParameters.create();
@@ -106,6 +104,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
         loadProperies();
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_java_surface_view);
+        mOpenCvCameraView.setMaxFrameSize(800, 600);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
 
@@ -140,8 +139,10 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             mOpenCvCameraView.disableView();
     }
 
-    public void onCameraViewStarted(int width, int height) {
+    public void onCameraViewStarted(int width, int height)
+    {
         Log.i(TAG, "called onCameraViewStarted");
+        cameraFrameAnalyzer.onCameraStarted(width, height);
     }
 
     public void onCameraViewStopped() {
@@ -175,8 +176,14 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             {
                 final float minLocDelta = Float.parseFloat(prop.getProperty("min_loc_delta"));
                 final short minDirDelta = Short.parseShort(prop.getProperty("min_dir_delta"));
+                final long  arucoDetectDelta = Long.parseLong(prop.getProperty("aruco_detect_delta"));
+                final int   minBallDetectDelta = Integer.parseInt(prop.getProperty("min_ball_detect_area"));
+                final int   colorDetectionSensitivity = Integer.parseInt(prop.getProperty("color_detect_sensitivity"));
 
-                final TrackingSettings settings = new TrackingSettings( minLocDelta, minDirDelta );
+                final String userColorBoosterProp = prop.getProperty("use_color_booster");
+                final boolean useColorBooster = userColorBoosterProp != null && userColorBoosterProp.equals("set");
+
+                final TrackingSettings settings = new TrackingSettings( minLocDelta, minDirDelta, arucoDetectDelta, minBallDetectDelta, colorDetectionSensitivity, useColorBooster );
                 BallTracker.updateTrackingSettings(settings);
             }
             catch ( NumberFormatException nfe ) {}

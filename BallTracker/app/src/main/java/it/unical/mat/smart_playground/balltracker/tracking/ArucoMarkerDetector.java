@@ -1,15 +1,10 @@
 package it.unical.mat.smart_playground.balltracker.tracking;
 
-import android.util.Log;
-
-import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.aruco.Aruco;
 import org.opencv.aruco.DetectorParameters;
 import org.opencv.aruco.Dictionary;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
-import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -18,22 +13,23 @@ import java.util.List;
 /**
  * Created by utente on 04/10/2020.
  */
-public class MarkerDetector
+public class ArucoMarkerDetector
 {
     private static final int ARUCO_MARKER_DICT = Aruco.DICT_4X4_250;
-    private static MarkerDetector instance = null;
+    private static final int[] DETECTABLE_ARUCO_IDS = { 0, 1, 2, 3, 4 };
+    private static ArucoMarkerDetector instance = null;
 
     private final Dictionary dictionary;
     private final DetectorParameters parameters;
 
-    public static MarkerDetector getInstance()
+    public static ArucoMarkerDetector getInstance()
     {
         if ( instance == null )
-            instance = new MarkerDetector();
+            instance = new ArucoMarkerDetector();
         return instance;
     }
 
-    private MarkerDetector()
+    private ArucoMarkerDetector()
     {
         dictionary = Aruco.getPredefinedDictionary(ARUCO_MARKER_DICT);
         parameters = DetectorParameters.create();
@@ -69,7 +65,8 @@ public class MarkerDetector
                         cornerCoords[j] = convertPrimitiveCoordsArray(corner.get(0, j));
 
                     final int cornerId = idsArray[i];
-                    detectedMarkers.add( new Marker(cornerCoords, cornerId) );
+                    if ( isDetectableId(cornerId) )
+                        detectedMarkers.add( new Marker(cornerCoords, cornerId) );
                     ++i;
                 }
             }
@@ -85,5 +82,13 @@ public class MarkerDetector
         for ( int i=0; i<coords.length; ++i )
             ans[i] = coords[i];
         return ans;
+    }
+
+    private static boolean isDetectableId( final int id )
+    {
+        for ( int i=0; i<DETECTABLE_ARUCO_IDS.length; ++i )
+            if ( id == DETECTABLE_ARUCO_IDS[i] )
+                return true;
+        return false;
     }
 }
