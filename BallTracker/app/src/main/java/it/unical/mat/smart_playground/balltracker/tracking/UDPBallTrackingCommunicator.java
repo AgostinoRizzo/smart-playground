@@ -159,17 +159,22 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
             netIface = interfaces.nextElement();
             if ( netIface.isUp() && !netIface.isLoopback() )
             {
-                final List<InetAddress> destinationAddrs = new ArrayList<>();
+                List<InetAddress> destinationAddrs = null;
                 final List<InterfaceAddress> ifaceAddrs = netIface.getInterfaceAddresses();
 
                 for ( final InterfaceAddress addr : ifaceAddrs )
                 {
                     final InetAddress broadcast = addr.getBroadcast();
                     if ( broadcast != null )
+                    {
+                        if ( destinationAddrs == null )
+                            destinationAddrs = new ArrayList<>();
                         destinationAddrs.add(broadcast);
+                    }
                 }
 
-                return destinationAddrs;
+                if ( destinationAddrs != null && !destinationAddrs.isEmpty() )
+                    return destinationAddrs;
             }
         }
         return null;

@@ -2,6 +2,8 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             android:focusable="true"
+             android:focusableInTouchMode="true"
              android:background="#ff000000"
              tools:context="it.unical.mat.smart_playground.balltracker.SettingsActivity"
              android:paddingTop="20pt">

@@ -111,10 +111,10 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     public void onStopTrackingTouch(SeekBar seekBar) {}
 
     private void updateMinBallDetectionAreaTextView( final int seekBarProgress )
-    { minBallDetectionAreaTextView.setText(Integer.toString((int) (BALL_DETECT_AREA_UPPER_BOUND * (seekBarProgress/100.0)))); }
+    { minBallDetectionAreaTextView.setText(Integer.toString(getMinBallDetectionAreaFromProgress(seekBarProgress))); }
 
     private void updateColorDetectionSensitivityTextView(final int seekBarProgress)
-    { minBallDetectionAreaTextView.setText(Integer.toString((int) (COLOR_DETECTION_SENSITIVITY_UPPER_BOUND * (seekBarProgress/100.0)))); }
+    { colorDetectionSensitivityTextView.setText(Integer.toString(getColorDetectionSensitivityFromProgress(seekBarProgress))); }
 
     public void onSaveSettings()
     {
@@ -141,6 +141,12 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         useColorBoosterCheckBox.setChecked(true);
     }
 
+    public static int getMinBallDetectionAreaFromProgress( final int progress )
+    { return (int) (BALL_DETECT_AREA_UPPER_BOUND * (progress/100.0)); }
+
+    public static int getColorDetectionSensitivityFromProgress( final int progress )
+    { return (int) (COLOR_DETECTION_SENSITIVITY_UPPER_BOUND * (progress/100.0)); }
+
     private void loadSettings()
     {
         InputStream istream = null;
@@ -164,9 +170,9 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
 
             try
             {
-                final int minBallDetectDelta = Integer.parseInt(prop.getProperty("min_ball_detect_area"));
-                updateMinBallDetectionAreaTextView(minBallDetectDelta);
-                minBallDetectionAreaSeekBar.setProgress(minBallDetectDelta);
+                final int minBallDetectAreaProgress = Integer.parseInt(prop.getProperty("min_ball_detect_area"));
+                updateMinBallDetectionAreaTextView(minBallDetectAreaProgress);
+                minBallDetectionAreaSeekBar.setProgress(minBallDetectAreaProgress);
             }
             catch ( NumberFormatException nfe ) {}
 

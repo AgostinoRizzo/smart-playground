@@ -177,13 +177,13 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
                 final float minLocDelta = Float.parseFloat(prop.getProperty("min_loc_delta"));
                 final short minDirDelta = Short.parseShort(prop.getProperty("min_dir_delta"));
                 final long  arucoDetectDelta = Long.parseLong(prop.getProperty("aruco_detect_delta"));
-                final int   minBallDetectDelta = Integer.parseInt(prop.getProperty("min_ball_detect_area"));
-                final int   colorDetectionSensitivity = Integer.parseInt(prop.getProperty("color_detect_sensitivity"));
+                final int   minBallDetectArea = SettingsActivity.getMinBallDetectionAreaFromProgress(Integer.parseInt(prop.getProperty("min_ball_detect_area")));
+                final int   colorDetectionSensitivity = SettingsActivity.getColorDetectionSensitivityFromProgress(Integer.parseInt(prop.getProperty("color_detect_sensitivity")));
 
                 final String userColorBoosterProp = prop.getProperty("use_color_booster");
                 final boolean useColorBooster = userColorBoosterProp != null && userColorBoosterProp.equals("set");
 
-                final TrackingSettings settings = new TrackingSettings( minLocDelta, minDirDelta, arucoDetectDelta, minBallDetectDelta, colorDetectionSensitivity, useColorBooster );
+                final TrackingSettings settings = new TrackingSettings( minLocDelta, minDirDelta, arucoDetectDelta, minBallDetectArea, colorDetectionSensitivity, useColorBooster );
                 BallTracker.updateTrackingSettings(settings);
             }
             catch ( NumberFormatException nfe ) {}
