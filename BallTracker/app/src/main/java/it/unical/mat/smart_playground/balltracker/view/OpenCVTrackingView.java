@@ -5,6 +5,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import it.unical.mat.smart_playground.balltracker.tracking.ArucoBasedBallTrackerAnalyzer;
@@ -25,6 +26,7 @@ public class OpenCVTrackingView implements TrackingView
     public static final Scalar PADDING_COLOR     = new Scalar(0, 255, 0);
 
     private static OpenCVTrackingView instance = null;
+    private final DecimalFormat decimalFormat = new DecimalFormat();
     private Mat frame = null;
 
     public static OpenCVTrackingView getInstance()
@@ -34,8 +36,7 @@ public class OpenCVTrackingView implements TrackingView
         return instance;
     }
 
-    private OpenCVTrackingView()
-    {}
+    private OpenCVTrackingView() { decimalFormat.setMaximumFractionDigits(2); }
 
     public void setFrame( final Mat frame )
     {
@@ -52,11 +53,11 @@ public class OpenCVTrackingView implements TrackingView
         {
             if ( marker.getId() == Marker.BALL_MARKER_ID )
             {
-                final Vector2Int center = marker.getCenter();
+                final Vector2<Float> relativeCenterCoords = marker.getRelativeCenterCoords();
                 final Vector2Int direction = marker.getDirection();
-                drawMarker(marker, "X:" + center.getX() + " Y:" + center.getY());
+                drawMarker(marker, "X:" + decimalFormat.format(relativeCenterCoords.getX()) + " Y:" + decimalFormat.format(relativeCenterCoords.getY()));
                 if ( !direction.isZero() )
-                    drawOrientation(center, direction, ballTracker.getBallStatus().getOrientation());
+                    drawOrientation(marker.getCenter(), direction, ballTracker.getBallStatus().getOrientation());
                 //drawCorners(marker.getCornersCoords());
             }
             else drawMarker(marker);

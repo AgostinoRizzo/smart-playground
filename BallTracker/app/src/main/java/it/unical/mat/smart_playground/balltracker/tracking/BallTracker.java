@@ -118,6 +118,7 @@ public class BallTracker
                                                     markerCenter.getX() - platformPaddings[PADDING_LEFT_INDEX]),
                                 getStandardBallCoord(platformFrameSize.getY() - platformPaddings[PADDING_TOP_INDEX] - platformPaddings[PADDING_BOTTOM_INDEX],
                                                     markerCenter.getY() - platformPaddings[PADDING_TOP_INDEX]));
+        marker.setRelativeCenterCoords(newBallLocation);
 
         // compute new ball orientation.
         short newBallOrientation = -1;

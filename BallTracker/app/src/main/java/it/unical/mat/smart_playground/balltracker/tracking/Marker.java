@@ -2,6 +2,7 @@ package it.unical.mat.smart_playground.balltracker.tracking;
 
 import java.util.List;
 
+import it.unical.mat.smart_playground.balltracker.util.Vector2;
 import it.unical.mat.smart_playground.balltracker.util.Vector2Int;
 import it.unical.mat.smart_playground.balltracker.view.OpenCVTrackingView;
 
@@ -19,6 +20,7 @@ public class Marker
 
     private final int[][] cornersCoords;
     private final int id;
+    private Vector2<Float> relativeCenterCoords = new Vector2<>(.5f, .5f);
 
     public Marker( final Integer[][] cornersCoords, final int id )
     {
@@ -100,6 +102,10 @@ public class Marker
             return (short)roundedDegrees;
         }
     }
+
+    public Vector2<Float> getRelativeCenterCoords() { return relativeCenterCoords; }
+
+    public void setRelativeCenterCoords(Vector2<Float> relativeCoords) { this.relativeCenterCoords.set(relativeCoords); }
 
     public static boolean findMarker( final List<Marker> markers, final int markerId )
     {
