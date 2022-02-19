@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -20,6 +21,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UDPMotionCommunicator extends Thread implements MotionCommunicator
 {
+    public static final String[] DESTINATION_ADDRESS_NAMES = { "192.168.1.200", "192.168.1.11" };
+
     private static final short SOCKET_PORT = 3000;
 
     private static final byte ORIENTATION_UPDATE  = 1;
@@ -39,7 +42,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
     {
         setDaemon(true);
         createUDPSocket();
-        start();System.out.println("CONTRUCTOR!!!!!!!!!!!!!!!!");
+        start();
     }
 
     @Override
@@ -143,7 +146,7 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
     }
 
     private boolean createUDPSocket()
-    {System.out.println("ON SOCKET CREATE");
+    {
         if ( destinationAddrs != null && !destinationAddrs.isEmpty() && udpSocket != null )
             return true;
         try
@@ -153,10 +156,10 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
                 return false;
 
             udpSocket = new DatagramSocket();
-            udpSocket.setBroadcast(true); System.out.println("SOCKET PROPERLY CREATED");
+            udpSocket.setBroadcast(true);
             return true;
         }
-        catch (SocketException e) { System.out.println("SOCKET EXCEPTION");udpSocket = null; return false; }
+        catch (SocketException e) { udpSocket = null; return false; }
     }
 
     private boolean sendBufferData()
@@ -169,13 +172,29 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
         for ( final InetAddress destAddr : destinationAddrs )
         {
             final DatagramPacket dataPacket = new DatagramPacket(bufferData, bufferData.length, destAddr, SOCKET_PORT);
-            try {  udpSocket.send(dataPacket); ++sequenceNumber;System.out.println("SEND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); }
+            try {  udpSocket.send(dataPacket); }
             catch (IOException e) {}
         }
+
+        ++sequenceNumber;
 
         return true;
     }
 
+    private static List<InetAddress> getDestinationAddrs() throws SocketException
+    {
+        List<InetAddress> destinationAddrs = new ArrayList<>();
+        for ( final String addrName : DESTINATION_ADDRESS_NAMES )
+            try
+            {
+                final InetAddress inetAddr = InetAddress.getByName(addrName);
+                destinationAddrs.add(inetAddr);
+            }
+            catch (UnknownHostException e) {}
+        return destinationAddrs;
+    }
+
+    /*
     private static List<InetAddress> getDestinationAddrs() throws SocketException
     {
         final List<InetAddress> destinationAddrs = new ArrayList<>();
@@ -202,4 +221,5 @@ public class UDPMotionCommunicator extends Thread implements MotionCommunicator
 
         return destinationAddrs;
     }
+    */
 }
