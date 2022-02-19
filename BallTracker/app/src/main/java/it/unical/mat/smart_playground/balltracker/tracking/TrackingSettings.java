@@ -5,6 +5,7 @@ package it.unical.mat.smart_playground.balltracker.tracking;
  */
 public class TrackingSettings
 {
+    private final int   maxFps;
     private final float minLocDelta;
     private final short minDirDelta;
     private final long  arucoDetectDelta;
@@ -12,8 +13,9 @@ public class TrackingSettings
     private final int   colorDetectionSensitivity;
     private final boolean useColorBooster;
 
-    public TrackingSettings( final float minLocDelta, final short minDirDelta, final long arucoDetectDelta, final int minBallDetectArea, final int colorDetectionSensitivity, final boolean useColorBooster )
+    public TrackingSettings( final int maxFps, final float minLocDelta, final short minDirDelta, final long arucoDetectDelta, final int minBallDetectArea, final int colorDetectionSensitivity, final boolean useColorBooster )
     {
+        this.maxFps = maxFps;
         this.minLocDelta = minLocDelta;
         this.minDirDelta = minDirDelta;
         this.arucoDetectDelta = arucoDetectDelta;
@@ -26,6 +28,10 @@ public class TrackingSettings
     {
         return minLocDelta;
     }
+
+    public int getMaxFps() { return maxFps; }
+
+    public long getMinAnalyzeFrameDelta() { return 1000 / maxFps; }
 
     public short getMinBallOrientationDelta()
     {

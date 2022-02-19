@@ -13,6 +13,11 @@ public class Vector2Int extends Vector2<Integer>
         super(x, y);
     }
 
+    public Vector2Int( final Vector2Int other )
+    {
+        super(other.x, other.y);
+    }
+
     public Vector2Int not()
     {
         return new Vector2Int(-x, -y);

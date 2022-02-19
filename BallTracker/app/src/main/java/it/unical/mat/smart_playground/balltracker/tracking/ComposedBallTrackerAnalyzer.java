@@ -12,12 +12,14 @@ import it.unical.mat.smart_playground.balltracker.view.OpenCVTrackingView;
  */
 public class ComposedBallTrackerAnalyzer extends SyncCameraFrameAnalyzer
 {
+    private static final long MIN_ANALYZE_FRAME_DELTA = 30;
     private static final long MARKER_BASED_ANALYZER_DELTA_TIME = 200;
 
     private static ComposedBallTrackerAnalyzer instance = null;
 
     private final BackgroundArucoBasedBallTrackerAnalyzer arucoBasedAnalyzer = BackgroundArucoBasedBallTrackerAnalyzer.getInstance();
     private final ColorBasedBallTrackerAnalyzer coloredBasedAnalyzer = new ColorBasedBallTrackerAnalyzer();
+    private long lastAnalyzeFrameTime = System.currentTimeMillis();
     private long lastArucoBasedAnalyzerTime = System.currentTimeMillis();
 
     public static ComposedBallTrackerAnalyzer getInstance()
@@ -40,13 +42,21 @@ public class ComposedBallTrackerAnalyzer extends SyncCameraFrameAnalyzer
     @Override
     protected Mat syncAnalyzeFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame)
     {
+        final Mat rgbaInputFrame = inputFrame.rgba();
+        final TrackingSettings trackingSettings = BallTracker.getTrackingSettings();
+
+        long now = System.currentTimeMillis();
+        final long elapsed = now - lastAnalyzeFrameTime;
+        if ( elapsed < trackingSettings.getMinAnalyzeFrameDelta() )
+            return rgbaInputFrame;
+        lastAnalyzeFrameTime = now;
+
         List<Marker> detectedMarkers = null;
         final boolean useTrackingBooster = BallTracker.getTrackingSettings().getUseColorBooster();
 
         if ( useTrackingBooster )
         {
-            final TrackingSettings trackingSettings = BallTracker.getTrackingSettings();
-            final long now = System.currentTimeMillis();
+            now = System.currentTimeMillis();
 
             coloredBasedAnalyzer.analyzeFrame(inputFrame);
             detectedMarkers = coloredBasedAnalyzer.getDetectedMarkers();
@@ -83,10 +93,6 @@ public class ComposedBallTrackerAnalyzer extends SyncCameraFrameAnalyzer
             detectedMarkers = arucoBasedAnalyzer.waitForDetectedMarkers();
         }
 
-        final Mat rgbaInputFrame = inputFrame.rgba();
-        if ( detectedMarkers == null || detectedMarkers.isEmpty() )
-            return rgbaInputFrame;
-
         final BallTracker ballTracker = BallTracker.getInstance();
         final boolean smartBallMarkerDetected = Marker.findMarker(detectedMarkers, Marker.BALL_MARKER_ID);
 
@@ -95,6 +101,9 @@ public class ComposedBallTrackerAnalyzer extends SyncCameraFrameAnalyzer
 
         if ( !smartBallMarkerDetected )
             ballTracker.onNoBallMarkerDetected();
+
+        if ( detectedMarkers == null || detectedMarkers.isEmpty() )
+            return rgbaInputFrame;
 
         final OpenCVTrackingView trackingView = OpenCVTrackingView.getInstance();
         trackingView.setFrame(rgbaInputFrame);

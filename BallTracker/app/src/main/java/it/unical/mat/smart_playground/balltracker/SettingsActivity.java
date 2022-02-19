@@ -1,5 +1,6 @@
 package it.unical.mat.smart_playground.balltracker;
 
+import it.unical.mat.smart_playground.balltracker.tracking.UDPBallTrackingCommunicator;
 import it.unical.mat.smart_playground.balltracker.util.SystemUiHider;
 
 import android.app.Activity;
@@ -33,6 +34,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     private static final int BALL_DETECT_AREA_UPPER_BOUND = 5000;
     private static final int COLOR_DETECTION_SENSITIVITY_UPPER_BOUND = 50;
 
+    private EditText maxFpsTextEdit;
     private EditText minLocDeltaTextEdit;
     private EditText minOrientDeltaTextEdit;
     private EditText arucoDetectionDeltaTextEdit;
@@ -44,6 +46,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     private SeekBar  colorDetectionSensitivitySeekBar;
 
     private CheckBox useColorBoosterCheckBox;
+
+    private TextView destAddressNamesTextView;
 
     private Button saveSettingsButton;
     private ImageButton resetSettingsButton;
@@ -59,6 +63,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        maxFpsTextEdit = (EditText) findViewById(R.id.maxFpsTextEdit);
         minLocDeltaTextEdit = (EditText) findViewById(R.id.minLocDeltaTextEdit);
         minOrientDeltaTextEdit = (EditText) findViewById(R.id.minOrientDeltaTextEdit);
         arucoDetectionDeltaTextEdit = (EditText) findViewById(R.id.arucoDetectionDeltaTextEdit);
@@ -70,6 +75,8 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         colorDetectionSensitivitySeekBar = (SeekBar) findViewById(R.id.colorDetectionSensitivitySeekBar);
 
         useColorBoosterCheckBox = (CheckBox) findViewById(R.id.useColorBoosterCheckBox);
+
+        destAddressNamesTextView = (TextView) findViewById(R.id.destAddressNamesTextView);
 
         infoTextview = (TextView) findViewById(R.id.infoTextview);
 
@@ -86,6 +93,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         resetSettingsButton.setOnClickListener(this);
 
         loadSettings();
+        showDestAddrNames();
     }
 
     @Override
@@ -128,6 +136,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
 
     public void onResetSettings()
     {
+        maxFpsTextEdit.setText("20");
         minLocDeltaTextEdit.setText("0.0001");
         minOrientDeltaTextEdit.setText("1");
         arucoDetectionDeltaTextEdit.setText("200");
@@ -139,6 +148,14 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
         colorDetectionSensitivitySeekBar.setProgress(40);
 
         useColorBoosterCheckBox.setChecked(true);
+    }
+
+    private void showDestAddrNames()
+    {
+        final StringBuilder text = new StringBuilder("Dst addr names: ");
+        for ( int i=0; i<UDPBallTrackingCommunicator.DESTINATION_ADDRESS_NAMES.length; ++i )
+            text.append( (i > 0 ? ", " : "") + UDPBallTrackingCommunicator.DESTINATION_ADDRESS_NAMES[i]);
+        destAddressNamesTextView.setText(text.toString());
     }
 
     public static int getMinBallDetectionAreaFromProgress( final int progress )
@@ -164,6 +181,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
             prop.load(istream);
             istream.close();
 
+            maxFpsTextEdit.setText(prop.getProperty("max_fps"));
             minLocDeltaTextEdit.setText(prop.getProperty("min_loc_delta"));
             minOrientDeltaTextEdit.setText(prop.getProperty("min_dir_delta"));
             arucoDetectionDeltaTextEdit.setText(prop.getProperty("aruco_detect_delta"));
@@ -197,6 +215,7 @@ public class SettingsActivity extends Activity implements View.OnClickListener, 
     {
         try
         {
+            prop.setProperty("max_fps", maxFpsTextEdit.getText().toString());
             prop.setProperty("min_loc_delta", minLocDeltaTextEdit.getText().toString());
             prop.setProperty("min_dir_delta", minOrientDeltaTextEdit.getText().toString());
             prop.setProperty("aruco_detect_delta", arucoDetectionDeltaTextEdit.getText().toString());

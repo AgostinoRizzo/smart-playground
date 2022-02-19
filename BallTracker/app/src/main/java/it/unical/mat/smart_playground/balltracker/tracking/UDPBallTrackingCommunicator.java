@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -19,6 +20,8 @@ import it.unical.mat.smart_playground.balltracker.util.Vector2;
  */
 public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 {
+    public static final String[] DESTINATION_ADDRESS_NAMES = { "192.168.1.200", "192.168.1.11" };
+
     private static final short SOCKET_PORT = 3000;
     private static UDPBallTrackingCommunicator instance = null;
 
@@ -143,13 +146,29 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         for ( final InetAddress destAddr : destinationAddrs )
         {
             final DatagramPacket dataPacket = new DatagramPacket(bufferData, bufferData.length, destAddr, SOCKET_PORT);
-            try {  udpSocket.send(dataPacket); ++sequenceNumber; }
+            try {  udpSocket.send(dataPacket); }
             catch (IOException e) {}
         }
+
+        ++sequenceNumber;
 
         return true;
     }
 
+    private static List<InetAddress> getDestinationAddrs() throws SocketException
+    {
+        List<InetAddress> destinationAddrs = new ArrayList<>();
+        for ( final String addrName : DESTINATION_ADDRESS_NAMES )
+            try
+            {
+                final InetAddress inetAddr = InetAddress.getByName(addrName);
+                destinationAddrs.add(inetAddr);
+            }
+            catch (UnknownHostException e) {}
+        return destinationAddrs;
+    }
+
+    /*
     private static List<InetAddress> getDestinationAddrs() throws SocketException
     {
         final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
@@ -179,4 +198,5 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         }
         return null;
     }
+    */
 }

@@ -23,7 +23,8 @@ public class BallTracker
     private static final short WIDTH = 0;
     private static final short HEIGHT = 1;
 
-    private static float MIN_BALL_LOCATION_DELTA_PERCENTAGE = 0.1f;
+    private static int   MAX_FPS = 20;
+    private static float MIN_BALL_LOCATION_DELTA_PERCENTAGE = 0.0001f;
     private static short MIN_BALL_ORIENTATION_DELTA = 1;  // 0-359 degrees
     private static long  ARUCO_DETECT_DELTA = 200;  // time in millis
     private static int   MIN_BALL_DETECT_AREA = 1000;
@@ -53,6 +54,7 @@ public class BallTracker
     public static void updateTrackingSettings(final TrackingSettings settings)
     {
         SETTINGS_LOCK.lock();
+        MAX_FPS = settings.getMaxFps();
         MIN_BALL_LOCATION_DELTA_PERCENTAGE = settings.getMinBallLocationDeltaPercentage();
         MIN_BALL_ORIENTATION_DELTA = settings.getMinBallOrientationDelta();
         ARUCO_DETECT_DELTA = settings.getArucoDetectDelta();
@@ -66,7 +68,7 @@ public class BallTracker
         try
         {
             SETTINGS_LOCK.lock();
-            return new TrackingSettings(MIN_BALL_LOCATION_DELTA_PERCENTAGE, MIN_BALL_ORIENTATION_DELTA, ARUCO_DETECT_DELTA, MIN_BALL_DETECT_AREA, COLOR_DETECT_SENSITIVITY, USE_COLOR_BOOSTER);
+            return new TrackingSettings(MAX_FPS, MIN_BALL_LOCATION_DELTA_PERCENTAGE, MIN_BALL_ORIENTATION_DELTA, ARUCO_DETECT_DELTA, MIN_BALL_DETECT_AREA, COLOR_DETECT_SENSITIVITY, USE_COLOR_BOOSTER);
         }
         finally
         { SETTINGS_LOCK.unlock(); }
@@ -107,10 +109,10 @@ public class BallTracker
     }
 
     public void onBallMarkerDetected( final Marker marker )
-    {
+    {System.out.println("BALL DETECTED");
         if ( platformFrameSize == null )
             return;
-
+        System.out.println("PLATFORM SIZE NOT NULL");
         // compute new ball location.
         final Vector2<Integer> markerCenter = marker.getCenter();
         final Vector2<Float> newBallLocation =
@@ -149,6 +151,9 @@ public class BallTracker
             ballStatus.setOrientation(newBallOrientation);
             ballTrackingCommunicator.sendBallTrackingOrientation(ballStatus);
         }
+
+        if ( !onLocationUpdate )
+            System.out.println("NO LOCATION UPDATE");
 
         TRACKING_COMM_STATS.getUnknownBallStatusFlag().onClear();
     }

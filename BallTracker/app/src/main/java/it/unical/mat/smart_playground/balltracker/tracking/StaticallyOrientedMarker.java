@@ -7,7 +7,7 @@ import it.unical.mat.smart_playground.balltracker.util.Vector2Int;
  */
 public class StaticallyOrientedMarker extends Marker
 {
-    private Vector2Int direction = new Vector2Int(0, 0);
+    private Vector2Int direction = new Vector2Int(Vector2Int.X.not());
 
     public StaticallyOrientedMarker( final Integer[][] cornersCoords, final int id )
     { super(cornersCoords, id); }
