@@ -2,10 +2,12 @@
 
 import logging
 from threading import Condition, Thread, RLock, Event
+from util_logging import Logger
 import socket
 import services
 import struct
 import game
+import time
 
 
 
@@ -18,6 +20,9 @@ class PointLocation:
     def set(self, other:"PointLocation"):
         self.left = other.left
         self.top = other.top
+    
+    def isEqualsTo(self, other:"PointLocation") -> bool:
+        return self.left == other.left and self.top == other.top
 
 
 class PlaygroundBaseStatus:
@@ -161,6 +166,8 @@ class BallTrackerMotionController(Thread):
     PACKET_TYPE_ORIENTATION_UPDATE  = 1
     PACKET_TYPE_ORIENTATION_SYNC    = 2
     PACKET_TYPE_ORIENTATION_UNKNOWN = 3
+
+    MAX_SEQDATA_RESET_NUMBER = 50
     
     def __init__(self, playgroundBaseStatus:PlaygroundBaseStatus):
         Thread.__init__(self)
@@ -174,6 +181,9 @@ class BallTrackerMotionController(Thread):
         
         self.balltrack_seqdata_number = 0
         self.motionctrl_seqdata_number = 0
+
+        self.is_balltrack_seqdata_number_reset = False
+        self.is_motionctrl_seqdata_number_reset = False
     
     def finalize(self):
         self.stopEvent.set()
@@ -181,12 +191,10 @@ class BallTrackerMotionController(Thread):
         self.dataSocket.close()
     
     def run(self):
-        
         while not self.stopEvent.is_set():
             try:
                 databuff, _ = self.dataSocket.recvfrom(BallTrackerMotionController.MAX_DATA_BUFFER_SIZE)
-                self.__on_data(databuff)
-                    
+                self.__on_data(databuff)   
             except socket.timeout:
                 pass
     
@@ -197,7 +205,7 @@ class BallTrackerMotionController(Thread):
         if databuff_length not in BallTrackerMotionController.STATUS_DATA_BUFFER_SIZES:
             return
         
-        if databuff_length == 4 or databuff_length == 6 or databuff_length == 14:
+        if databuff_length == 4 or databuff_length == 6 or databuff_length == 12 or databuff_length == 14:
             self.__on_balltrack_data(databuff, databuff_length)
         elif databuff_length == 5 or databuff_length == 9:
             self.__on_motionctrl_data(databuff, databuff_length)
@@ -208,8 +216,15 @@ class BallTrackerMotionController(Thread):
         seqnumber, = struct.unpack_from('>i', databuff, buff_offset)
         buff_offset += 4
         
-        if seqnumber <= self.balltrack_seqdata_number:
-            return
+        if seqnumber <= BallTrackerMotionController.MAX_SEQDATA_RESET_NUMBER:
+            self.balltrack_seqdata_number = 0
+            if not self.is_balltrack_seqdata_number_reset:
+                Logger.default().info("Ball Tracking Seqnumb RESET.")
+                self.is_balltrack_seqdata_number_reset = True
+        else:
+            self.is_balltrack_seqdata_number_reset = False
+            if seqnumber <= self.balltrack_seqdata_number:
+                return
         
         if databuff_length >= 12:
             
@@ -236,8 +251,15 @@ class BallTrackerMotionController(Thread):
         seqnumber, = struct.unpack_from('>i', databuff, buff_offset)
         buff_offset += 4
         
-        if seqnumber <= self.motionctrl_seqdata_number:
-            return
+        if seqnumber <= BallTrackerMotionController.MAX_SEQDATA_RESET_NUMBER:
+            self.motionctrl_seqdata_number = 0
+            if not self.is_motionctrl_seqdata_number_reset:
+                Logger.default().info("Motion Ctrl Seqnumb RESET.")
+                self.is_motionctrl_seqdata_number_reset = True
+        else:
+            self.is_motionctrl_seqdata_number_reset = False
+            if seqnumber <= self.motionctrl_seqdata_number:
+                return
         
         ptype = struct.unpack_from('>b', databuff, buff_offset)[0]
         buff_offset += 1
@@ -250,7 +272,7 @@ class BallTrackerMotionController(Thread):
                 self.playgroundBaseStatus.update_abs_player_orientation(orientation)
             elif ptype == BallTrackerMotionController.PACKET_TYPE_ORIENTATION_SYNC:
                 self.playgroundBaseStatus.sync_player_orientation(orientation)
-                logging.info("Player orientaton SYNC.")
+                Logger.default().info("Player orientaton SYNC.")
         elif databuff_length == 5 and ptype == BallTrackerMotionController.PACKET_TYPE_ORIENTATION_UNKNOWN:
             self.playgroundBaseStatus.set_unknown_player_orientation()
         
@@ -273,10 +295,16 @@ def finalize():
     ballTrackerMotionCrtl.finalize()
 
 def updateFieldWindStatus(windDir):
+    global playgroundBaseStatus
     playgroundBaseStatus.updateFieldWindStatus(__sanitizeWindDirection(windDir))
 
 def getBallSwingEffectDirection():
+    global playgroundBaseStatus
     return playgroundBaseStatus.getBallSwingEffectDirection()
+
+def getBallLocation():
+    global playgroundBaseStatus
+    return playgroundBaseStatus.get_ball_location()
 
 def __sanitizeWindDirection(direction):
     if direction is None: return None

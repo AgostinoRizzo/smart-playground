@@ -30,8 +30,7 @@ def tos_am_serial_read(read_timeout):
 
 def tos_am_serial_write(msg: tos.Packet, comm_code):
     with tos_am_serial_lock:
-        print(str(type(msg)))
-        #!!!!!!!!!!!!!!!tos_am.write(msg, comm_code)
+        tos_am.write(msg, comm_code)
 
 
 class StartMsg(tos.Packet):
@@ -42,6 +41,12 @@ class StartMsg(tos.Packet):
 
 
 class SwingMsg(tos.Packet):
+    def __init__(self, packet=None):
+        tos.Packet.__init__(self,
+                            [('code', 'int', 1), ('value_a',  'int', 1), ('value_b',  'int', 1)],
+                            packet)
+
+class RotateMsg(tos.Packet):
     def __init__(self, packet=None):
         tos.Packet.__init__(self,
                             [('code', 'int', 1), ('value_a',  'int', 1), ('value_b',  'int', 1)],

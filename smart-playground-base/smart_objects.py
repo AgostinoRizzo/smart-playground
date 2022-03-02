@@ -75,17 +75,29 @@ class SmartField(SmartObject):
 
         Logger.default().config('smartfield - tinyos serial communication messages setup')
     
-    def set_lights(self, pattern):
-        self.__set_command(1 + pattern)
+    def set_lights(self, pattern):               
+        self.__set_command(1 + self.__getPatternBasedOnBallLocation(pattern))
     
     def set_fans(self, pattern):
-        self.__set_command(7 + pattern)
+        self.__set_command(7 + self.__getPatternBasedOnBallLocation(pattern))
     
     def __set_command(self, cmd):  # clockwise order
-        print("Sending command: " + str(cmd))
+        #print("Sending command: " + str(cmd))
         self.tos_field_commands_msg.cmd = cmd
         tinyos_serial.tos_am_serial_write(self.tos_field_commands_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
-
+    
+    def __getPatternBasedOnBallLocation(self, currentPattern):
+        if currentPattern != 5:
+            return currentPattern
+        ballLocation = playground.getBallLocation()
+        if ballLocation is None:
+            return currentPattern
+        if ballLocation.left > 0.5:  # front side
+            if ballLocation.top < 0.5: return 4  # front-right side
+            else: return 1  # front-left side
+        else:  # back side
+            if ballLocation.top < 0.5: return 3  # back-right side
+            else: return 2  # back-left side
 
 
 class SmartBall(SmartObject):
@@ -103,7 +115,7 @@ class SmartBall(SmartObject):
         self.tos_club_start_msg = tinyos_serial.StartMsg()
         self.tos_club_start_msg.code = int(tinyos_serial.BASE_STATION_MSG_CLUB_START_CODE)
 
-        self.tos_rotate_msg = tinyos_serial.StartMsg()
+        self.tos_rotate_msg = tinyos_serial.RotateMsg()
         self.tos_rotate_msg.code = int(tinyos_serial.BASE_STATION_MSG_ROTATE_CODE)
 
         self.tos_stop_msg = tinyos_serial.StopMsg()
@@ -128,7 +140,7 @@ class SmartBall(SmartObject):
                 if swing_effect:
                     self.tos_racket_start_msg.value_a = int(swing_direction)
                     self.tos_racket_start_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
-
+                print("RACKET_SWING (a, b): " + str(self.tos_racket_start_msg.value_a) + ", " + str(self.tos_racket_start_msg.value_b))
                 tinyos_serial.tos_am_serial_write(self.tos_racket_start_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
 
                 self.status = SmartBallStatus.RUNNING
@@ -139,7 +151,7 @@ class SmartBall(SmartObject):
                 if swing_effect:
                     self.tos_racket_swing_msg.value_a = int(swing_direction)
                     self.tos_racket_swing_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
-
+                print("RACKET_SWING (a, b): " + str(self.tos_racket_swing_msg.value_a) + ", " + str(self.tos_racket_swing_msg.value_b))
                 tinyos_serial.tos_am_serial_write(self.tos_racket_swing_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
     
     def clubStrokeHit(self, swingDirection):
@@ -152,6 +164,10 @@ class SmartBall(SmartObject):
             tinyos_serial.tos_am_serial_write(self.tos_club_start_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
 
     def rotate(self, side):
+        """
+        side == 0 => turn left
+        side == 1 => turn right
+        """
         with self.lock:
             print("Ball rotate: " + str(side))
             self.tos_rotate_msg.value_a = int(side)
@@ -536,8 +552,7 @@ class SmartObjectsMediator:
             self.smart_ball.listen()
 
     def finalize(self):
-        pass
-        #!!!!!!!!!!!!!!!self.smart_ball.stop()
+        self.smart_ball.stop()
 
     @staticmethod
     def on_smart_ball_collision():
@@ -591,7 +606,7 @@ class SmartObjectsMediator:
             
             # smart ball stop command
             if btn_id == 'Home':
-                self.smart_ball.stop()
+                self.smart_ball.stop()                
 
     def on_main_racket_accs_changed(self, xyz):
         # detect tennis/golf swing based on the current game tool

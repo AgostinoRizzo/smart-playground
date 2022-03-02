@@ -2,7 +2,7 @@
 
 from threading import Event, RLock, Condition, Thread
 import random, time, ctypes
-import playground, smart_objects, wiimote_configs
+import playground, smart_objects, wiimote_configs, artifact
 
 
 class ArtificialTennisPlayer:
@@ -11,6 +11,7 @@ class ArtificialTennisPlayer:
     
     def manageSwing(self):
         if self.__canSwing():
+            artifact.racketSwing()
             smart_objects.SmartObjectsMediator.get_current_instance().onArtificialPlayerBallSwing(self.__getSwingDir())
             print("ARTIFICIAL PLAYER SWING.")
     
@@ -44,10 +45,11 @@ class GameManager(Thread):
 
         self.terminated = False
     
-    def onBallLocationUpdate(self, newLocation):
+    def onBallLocationUpdate(self, newLocation) -> bool:
         with self.lock:
             self.ballLocation.set(newLocation)
             self.environmentChangedCond.notify_all()
+            return self._isBallLocationKnown()
     
     def onBallOrientationUpdate(self, newOrientation):
         with self.lock:
@@ -84,6 +86,8 @@ class TennisGameManager(GameManager):
     PLAYER_A = 0
     PLAYER_B = 1
 
+    BALL_NET_PADDING = 0.1
+
     def __init__(self, jsonGameSettings, playgroundBaseStatus : playground.PlaygroundBaseStatus, networkCommunicator):
         super().__init__(playgroundBaseStatus, networkCommunicator)
 
@@ -93,10 +97,20 @@ class TennisGameManager(GameManager):
         self.matchSets = jsonGameSettings['matchSetsBestOf']  # number of total sets
         self.setGames = jsonGameSettings['setGamesBestOf']  # number of games per set
 
+    def onBallLocationUpdate(self, newLocation):
+        if super().onBallLocationUpdate(newLocation):  # the method returns true for a known location
+            ballProximity = newLocation.left
+            ballSide = newLocation.top
+            artifact.racketFollow(ballProximity, ballSide)
+        else:
+            artifact.racketRelax()
+
     def canMainRacketSwing(self) -> bool:
         with self.lock:
             answ = self.mainRacketEnabled and not self.terminated
             self.mainRacketEnabled = False
+            if answ:
+                artifact.onOppositeRacketSwing()
             return answ
     
     def manageMatch(self):
@@ -104,8 +118,6 @@ class TennisGameManager(GameManager):
         currentMatchSet = currentSetGame = 1
         mainPlayerScores = [0] * self.matchSets
         artificialPlayerScores = [0] * self.matchSets
-        
-        isServing = True
 
         while not self.resetEvent.is_set():
             
@@ -135,32 +147,32 @@ class TennisGameManager(GameManager):
                 self.networkCommunicator.sendData(statusReadyManifest)
                 self.__waitForStatusReadyForPlaying()
             
+            currentTurn = TennisGameManager.PLAYER_A
+            artifact.onGameInit()
+
             while not self.resetEvent.is_set():
+                with self.lock:
 
-                # enable main racket swing
-                self.__enableMainRacketSwing()
-                self.networkCommunicator.sendData(self.__getMatchTurnInfo(TennisGameManager.PLAYER_A))
+                    if self.__ballOnMainPlayerNet(): artificialPlayerScores[currentMatchSet - 1] += 1; print("BALL ON MAIN PLAYER NET"); break
+                    elif self.__ballOnArtificialPlayerNet(): mainPlayerScores[currentMatchSet - 1] += 1; print("BALL ON ARTIFICIAL PLAYER NET"); break
 
-                # wait for ball on opposite (artificial player) field side
-                if not self.__waitForArtificialPlayerCanHit(isServing):  ############ here main player net
-                    artificialPlayerScores[currentMatchSet - 1] += 1
-                    break # exit because ball on main player net
-                isServing = False
-
-                # hit the ball based on artificial player level
-                self.networkCommunicator.sendData(self.__getMatchTurnInfo(TennisGameManager.PLAYER_B))
-                self.artificialPlayer.manageSwing()
-
-                # wait for ball on opposite (main player) field side
-                if not self.__waitForMainPlayerCanHit():  ############ here artificial player net
-                    mainPlayerScores[currentMatchSet - 1] += 1
-                    break # exit because ball on artificial player net
+                    if currentTurn == TennisGameManager.PLAYER_A and self.__canMainPlayerHit():
+                        # enable main racket swing
+                        self.__enableMainRacketSwing()
+                        self.networkCommunicator.sendData(self.__getMatchTurnInfo(TennisGameManager.PLAYER_A))
+                        currentTurn = TennisGameManager.PLAYER_B
+                    elif currentTurn == TennisGameManager.PLAYER_B and self.__canArtificialPlayerHit():
+                        # hit the ball based on artificial player level
+                        self.networkCommunicator.sendData(self.__getMatchTurnInfo(TennisGameManager.PLAYER_B))
+                        self.artificialPlayer.manageSwing()
+                        currentTurn = TennisGameManager.PLAYER_A
+                    
+                    self.environmentChangedCond.wait()
             
             smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
 
             # go to next game/set
             currentSetGame += 1
-            isServing = True
             if currentSetGame > self.setGames:
                 currentSetGame = 1
                 currentMatchSet += 1
@@ -177,46 +189,37 @@ class TennisGameManager(GameManager):
                 'ballReady' : self.__isBallReady(), 'playerReady' : self.__isPlayerReady()}
             statusReadyManifest['isReady'] = statusReadyManifest['ballReady'] and statusReadyManifest['playerReady']
             return statusReadyManifest
+    
     def __waitForStatusReadyForPlaying(self):
         with self.lock:
             while not self.resetEvent.is_set() and (not self.__isBallReady() or not self.__isPlayerReady()):
                 self.environmentChangedCond.wait()
+    
     def __isBallReady(self) -> bool:
         return self._isBallLocationKnown() and self._isBallOrientationKnown() and \
-                self.ballLocation.left >= 0.5 and self.ballLocation.left < 0.9 and \
+                self.ballLocation.left >= 0.5 and self.ballLocation.left < 1.0 - TennisGameManager.BALL_NET_PADDING - 0.05 and \
                 self.ballOrientation <= 270+10 and self.ballOrientation >= 270-10
-    def __isPlayerReady(self) -> bool:
-        return self._isPlayerOrientationKnown() and self.playerOrientation <= 10 or self.playerOrientation >= 350
     
-    def __waitForArtificialPlayerCanHit(self, isServing) -> bool:
-        with self.lock:
-            while not self.resetEvent.is_set():
-                if not self.__isBallLocationKnown():
-                    self.environmentChangedCond.wait()
-                elif not isServing and self.ballLocation.left > 0.9:  # main (human) player's net
-                    return False
-                elif self.ballLocation.left > 0.3:
-                    self.environmentChangedCond.wait()
-                else:
-                    return True
-            return False
-    def __waitForMainPlayerCanHit(self) -> bool:
-        with self.lock:
-            while not self.resetEvent.is_set():
-                if not self.__isBallLocationKnown():
-                    self.environmentChangedCond.wait()
-                elif self.ballLocation.left < 0.1:  # artificial player's net
-                    return False
-                elif self.ballLocation.left < 0.5:
-                    self.environmentChangedCond.wait()
-                else:
-                    return True
-            return False
+    def __isPlayerReady(self) -> bool:
+        return True #TODO remove comment   self._isPlayerOrientationKnown() and self.playerOrientation <= 10 or self.playerOrientation >= 350
+    
+    def __ballOnMainPlayerNet(self) -> bool:
+        return self._isBallLocationKnown() and self.ballLocation.left > 1.0 - TennisGameManager.BALL_NET_PADDING
+    
+    def __ballOnArtificialPlayerNet(self) -> bool:
+        return self._isBallLocationKnown() and self.ballLocation.left < TennisGameManager.BALL_NET_PADDING
+    
+    def __canMainPlayerHit(self):
+        return self._isBallLocationKnown() and self.ballLocation.left > 0.5
+    
+    def __canArtificialPlayerHit(self):
+        return self._isBallLocationKnown() and self.ballLocation.left < 0.3  # previous was 0.4
+    
     
     def __getMatchTurnInfo(self, turn):
         info = {'dataType': 'GAME_EVENT', 'subType' : 'match_turn', 'turn' : ''}
-        if turn == GameManager.PLAYER_A: info['turn'] = 'player_a'
-        elif turn == GameManager.PLAYER_B: info['turn'] = 'player_b'
+        if turn == TennisGameManager.PLAYER_A: info['turn'] = 'player_a'
+        elif turn == TennisGameManager.PLAYER_B: info['turn'] = 'player_b'
         return info
 
 
@@ -274,8 +277,8 @@ class GolfBallDirectionSynchronizer(Thread):
 
 
 class GolfGameManager(GameManager):
-    FIRST_STROKE_BALL_PADDING = 0.2
-    LOCATION_COORDS_COINCIDENCE_DELTA = 0.2
+    FIRST_STROKE_BALL_PADDING = 0.1
+    LOCATION_COORDS_COINCIDENCE_DELTA = 0.1  # previous was 0.2
 
     def __init__(self, jsonGameSettings, playgroundBaseStatus : playground.PlaygroundBaseStatus, networkCommunicator):
         super().__init__(playgroundBaseStatus, networkCommunicator)
@@ -285,12 +288,19 @@ class GolfGameManager(GameManager):
         self.clubStrokeType = None
         self.ballCollided = False
 
+        self.previousBallLocation = playground.PointLocation(-1.0, -1.0)
+
         # location of the target hole
-        self.holeLocation = playground.PointLocation(jsonGameSettings['hole']['left'], jsonGameSettings['hole']['left'])
+        self.holeLocation = playground.PointLocation(jsonGameSettings['hole']['left'], jsonGameSettings['hole']['top'])
 
         self.ballDirectionSynchronizer = GolfBallDirectionSynchronizer(self)
         self.ballDirectionSynchronizer.start()
 
+    def onBallLocationUpdate(self, newLocation) -> bool:
+        with self.lock:
+            self.previousBallLocation.set(self.ballLocation)
+            return super().onBallLocationUpdate(newLocation)           
+    
     def canClubSwing(self, swingType) -> bool:
         with self.lock:
             answ = self.clubEnabled and not self.terminated
@@ -324,7 +334,7 @@ class GolfGameManager(GameManager):
             # stop the ball anyway
             smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
 
-            if not self._isBallOrientationKnown() or not self._isBallOrientationKnown() or not self._isPlayerOrientationKnown():
+            if not self._isBallOrientationKnown() or not self._isBallLocationKnown() or not self._isPlayerOrientationKnown():
                 return -1  # no more syncs needed
             if self.ballOrientation == self.playerOrientation:
                 return -1  # no more syncs needed
@@ -409,8 +419,8 @@ class GolfGameManager(GameManager):
             # stop the ball anyway
             smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
 
-            # ball is collided, game stops
             with self.lock:
+                # ball is collided, game stops
                 if self.ballCollided:
                     isTerminated = True
                     gameOutcome = 'collision'
@@ -439,15 +449,41 @@ class GolfGameManager(GameManager):
         return {'dataType': 'GAME_EVENT', 'subType' : 'match_turn', 'turn' : 'club_swing'}
     
     def __getMaxBallMovingTime(self):
-        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE: return 5.0#0.5
-        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE: return 10.0#1.0
-        return 15.0#2.0
+        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE: return 0.5
+        if self.clubStrokeType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE: return 1.0
+        return 2.0
     
     def __isBallInHole(self) -> bool:
-        return self._isBallLocationKnown() and \
-               abs(self.ballLocation.left - self.holeLocation.left) <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA and \
-               abs(self.ballLocation.top  - self.holeLocation.top)  <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA 
+        if not self._isBallLocationKnown():
+            return False
+        if self.__pointInHole(self.ballLocation):
+            return True
+        
+        previousBallLocationKnown = self.previousBallLocation.left >= 0.0 and self.previousBallLocation.top >= 0.0
+        if previousBallLocationKnown:
+            
+            if self.ballLocation.isEqualsTo(self.previousBallLocation):
+                return False
+            
+            totalSteps = 4
 
+            leftDelta = abs(self.ballLocation.left - self.previousBallLocation.left) / 4
+            topDelta = abs(self.ballLocation.top - self.previousBallLocation.top) / 4
+            leftInc = 1 if self.previousBallLocation.left < self.ballLocation.left else -1
+            topInc = 1 if self.previousBallLocation.top < self.ballLocation.top else -1
+
+            middlePoint = playground.PointLocation(self.previousBallLocation.left, self.previousBallLocation.top)
+            for _ in range(totalSteps):
+                middlePoint.left += leftDelta * leftInc
+                middlePoint.top += topDelta * topInc
+                if self.__pointInHole(middlePoint):
+                    return True
+        return False
+    
+    def __pointInHole(self, point: playground.PointLocation) -> bool:
+        print("Point in hole check -  POINT(%f, %f) to HOLE(%f, %f)" % (point.left, point.top, self.holeLocation.left, self.holeLocation.top))
+        return abs(point.left - self.holeLocation.left) <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA and \
+               abs(point.top  - self.holeLocation.top)  <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA
 
 
 TENNIS_GAME_TYPE = 0

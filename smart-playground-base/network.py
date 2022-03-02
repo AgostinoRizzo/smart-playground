@@ -9,6 +9,7 @@ from threading import Thread, RLock, Condition
 import collections
 import smart_objects
 import game
+import time
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -175,6 +176,8 @@ class EcosystemEventProvider:
         self.netcomm = NetworkCommunicator(services.NET_EVENT_PROVIDER_PORT)
         self.netcomm.start()
         logging.debug('Ecosystem Event Provider - Network Communicator created.')
+
+        self.lastRacketStatusSampleSendTime = time.time()
     
     def notify_user_ack(self):
         self.netcomm.sendData( { 'dataType': services.USER_ACK_CODE } )
