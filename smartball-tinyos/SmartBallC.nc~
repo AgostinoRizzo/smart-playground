@@ -72,7 +72,7 @@ implementation
 	}
 	event void Communicate.on_swing( int16_t direction_angle )
 	{
-		if ( curr_state != RUNNING && curr_state != BOUNCING )
+		if ( curr_state != RUNNING )
 			return;
 		
 		call Drive.invert_direction();

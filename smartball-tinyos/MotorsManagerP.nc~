@@ -24,7 +24,7 @@ module MotorsManagerP
 	uses interface HplMsp430GeneralIO as PWM_RIGHT_MOTOR;
 	uses interface HplMsp430GeneralIO as PWM_LEFT_MOTOR;
 	
-	uses interface Timer<TMicro> as PwmRightMotorSpeedTimer;
+	uses interface Timer<TMilli> as PwmRightMotorSpeedTimer;
 	uses interface Timer<TMilli> as PwmLeftMotorSpeedTimer;
 }
 implementation

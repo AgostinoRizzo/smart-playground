@@ -30,7 +30,7 @@ interface Communicate
 	// manage swing bouncing
 	event void on_swing( int16_t direction_angle );
 	
-	// manage rotation ( side == 0 => turn left; side == 1 => turn right)
+	// manage rotation
 	event void on_rotate( int16_t rotation_side );
 	
 	// stop running

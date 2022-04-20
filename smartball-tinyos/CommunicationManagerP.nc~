@@ -105,7 +105,11 @@ implementation
     		}
     		else if ( msg->code ==  BASE_STATION_MSG_ROTATE_CODE )
     		{
-    			signal Communicate.on_rotate( msg->value_a );
+    			int16_t rotation_side = msg->value_a;
+    			if ( msg->value_a > 0 )
+    				direction_angle = -direction_angle;
+    			
+    			signal Communicate.on_swing( direction_angle );
     		}
 		}
       	return bufPtr;

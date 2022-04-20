@@ -9,7 +9,6 @@
 #define BASE_STATION_MSG_STOP_CODE           2
 #define BASE_STATION_MSG_START_CODE          3
 #define BASE_STATION_MSG_SWING_CODE          4
-#define BASE_STATION_MSG_ROTATE_CODE         5
 
 #define SWING_RIGHT_DIR    0
 #define SWING_LEFT_DIR     1
