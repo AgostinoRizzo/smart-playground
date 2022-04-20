@@ -8,6 +8,7 @@ $ pip3 install gpiozero
 to enable pigpio pin factory:
 sudo pigpiod
 """
+
 from threading import Condition, RLock, Thread
 from time import sleep
 from gpiozero import Servo

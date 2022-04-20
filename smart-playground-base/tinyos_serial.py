@@ -21,14 +21,24 @@ FIELD_WIND_STATUS_ON_MSG_CODE = 51
 FIELDWIND_STATUS_OFF_MSG_CODE = 50
 
 
-tos_am = tos.AM()
-tos_am_serial_lock = Lock()
+tos_am = None
+tos_am_serial_lock = None
+
+def tos_am_init():
+    global tos_am
+    global tos_am_serial_lock
+    tos_am = tos.AM()
+    tos_am_serial_lock = Lock()
 
 def tos_am_serial_read(read_timeout):
+    if tos_am is None:
+        return
     with tos_am_serial_lock:
         return tos_am.read(timeout=read_timeout)
 
 def tos_am_serial_write(msg: tos.Packet, comm_code):
+    if tos_am is None:
+        return
     with tos_am_serial_lock:
         tos_am.write(msg, comm_code)
 

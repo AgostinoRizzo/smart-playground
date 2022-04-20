@@ -543,8 +543,10 @@ class SmartObjectsMediator:
         self.smart_ball.register_on_smartball_sensors_sample_callback(on_smart_ball_sensors_sample)
         self.smart_ball.register_on_smartfield_sensors_sample_callback(on_smart_field_sensors_sample)
         self.smart_ball.register_on_field_wind_status_callback(SmartObjectsMediator.on_field_wind_status)
-        self.main_smart_racket.register_buttons_changed_callback(on_main_racket_buttons_changed)
-        self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
+        
+        if main_smart_racket is not None:
+            self.main_smart_racket.register_buttons_changed_callback(on_main_racket_buttons_changed)
+            self.main_smart_racket.register_accs_changed_callback(on_main_racket_accs_changed)
 
     def run(self):
         #time.sleep(10000)
