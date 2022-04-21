@@ -24,7 +24,7 @@ module MotorsManagerP
 	uses interface HplMsp430GeneralIO as PWM_RIGHT_MOTOR;
 	uses interface HplMsp430GeneralIO as PWM_LEFT_MOTOR;
 	
-	uses interface Timer<TMicro> as PwmRightMotorSpeedTimer;
+	uses interface Timer<TMilli> as PwmRightMotorSpeedTimer;
 	uses interface Timer<TMilli> as PwmLeftMotorSpeedTimer;
 }
 implementation
@@ -100,29 +100,24 @@ implementation
 	
 	void setBoostEffect( motor_t motor )
 	{
-		atomic
-		{ motor_boost[motor] = TRUE; }
+		motor_boost[motor] = TRUE;
 	}
 	
 	void clearAllBoostEffects()
 	{
-		atomic
-		{
-			motor_boost[RIGHT_MOTOR] = FALSE;
-			motor_boost[LEFT_MOTOR]  = FALSE;
-		}
+		motor_boost[RIGHT_MOTOR] = FALSE;
+		motor_boost[LEFT_MOTOR]  = FALSE;
 	}
 	
 	uint16_t getPwmInterval( motor_t motor, pwmstatus_t pwm_motor_status )
 	{
 		uint16_t interval;
-		atomic
-		{
-			if ( motor_boost[motor] )  // on motor boosting
-				interval = pwm_motor_status == PWM_STATUS_SET ? PWM_HIGHER_SPEED_SET_INTERVAL : PWM_HIGHER_SPEED_CLEAR_INTERVAL;
-			else                       // on normal motor speed
-				interval = pwm_motor_status == PWM_STATUS_SET ? PWM_NORMAL_SPEED_SET_INTERVAL : PWM_NORMAL_SPEED_CLEAR_INTERVAL;
-		}
+		
+		if ( motor_boost[motor] )  // on motor boosting
+			interval = pwm_motor_status == PWM_STATUS_SET ? PWM_HIGHER_SPEED_SET_INTERVAL : PWM_HIGHER_SPEED_CLEAR_INTERVAL;
+		else                       // on normal motor speed
+			interval = pwm_motor_status == PWM_STATUS_SET ? PWM_NORMAL_SPEED_SET_INTERVAL : PWM_NORMAL_SPEED_CLEAR_INTERVAL;
+		
 		return interval;
 	}
 	
@@ -161,13 +156,10 @@ implementation
 	
 	command void Drive.go_straight_with_effect( goeffect_t effect )
 	{
-		direction_t dir;
 		clearAllBoostEffects();
 		go_straight_proc();
 		
-		atomic { dir = curr_dir; }
-		
-		if ( dir == FORWARD )
+		if ( curr_dir == FORWARD )
 			( effect == GO_EFFECT_RIGHT )
 				? setBoostEffect(LEFT_MOTOR) : setBoostEffect(RIGHT_MOTOR);
 		else
@@ -221,23 +213,18 @@ implementation
 	
 	command void Drive.set_direction( direction_t dir )
 	{
-		atomic { curr_dir=dir; }
+		curr_dir=dir;
 	}
 	command void Drive.invert_direction()
 	{
-		atomic
-		{
-			if ( curr_dir==FORWARD )
-				curr_dir=BACKWARD;
-			else
-				curr_dir=FORWARD;
-		}
+		if ( curr_dir==FORWARD )
+			curr_dir=BACKWARD;
+		else
+			curr_dir=FORWARD;
 	}
 	command direction_t Drive.get_direction()
 	{
-		direction_t dir;
-		atomic { dir = curr_dir; }
-		return dir;
+		return curr_dir;
 	}
 	
 	event void PwmRightMotorSpeedTimer.fired()
