@@ -12,12 +12,12 @@ import javax.sound.sampled.Clip;
 public class SingleSoundClip implements SoundClip
 {
 	private Clip originClip;
-	private boolean loop;
+	private boolean loop, muted;
 	
 	public SingleSoundClip( final Clip origin )
 	{
 		originClip = origin;
-		loop = false;
+		loop = muted = false;
 	}
 	
 	public SingleSoundClip( final Clip origin, final boolean loop )
@@ -40,7 +40,7 @@ public class SingleSoundClip implements SoundClip
 	@Override
 	public void play()
 	{
-		if ( originClip != null )
+		if ( originClip != null && !muted )
 		{
 			originClip.stop();
 			originClip.setFramePosition(0);
@@ -59,5 +59,11 @@ public class SingleSoundClip implements SoundClip
 			originClip.stop();
 			originClip.setFramePosition(0);
 		}
+	}
+	
+	@Override
+	public void mute()
+	{
+		muted = true;
 	}
 }

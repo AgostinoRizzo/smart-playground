@@ -34,6 +34,9 @@ public class LightsFansCtrlTileController implements LayoutController
 	@FXML private Slider lightsThrSlider;
 	@FXML private Slider fansThrSlider;
 	
+	private boolean allLightsOnLock = false;
+	private boolean allFansOnLock = false;
+	
 	private static final Lock lock = new ReentrantLock();
 	private static LightsFansCtrlTileController instance = null;
 	
@@ -90,9 +93,9 @@ public class LightsFansCtrlTileController implements LayoutController
 	
 	public void onAllLightsTurnOn()  // button manager
 	{
-		if ( lightsCommand.get("pattern").getAsInt() == ALL_ON )
-			return;
-		System.out.println("Lights on");
+		//if ( lightsCommand.get("pattern").getAsInt() == ALL_ON )
+		//	return;
+		//System.out.println("Lights on");
 		lightsCommand.remove("pattern");
 		lightsCommand.addProperty("pattern", ALL_ON);
 		PlaygroundBaseCommProvider.getInstance().sendCommand(lightsCommand);
@@ -101,16 +104,16 @@ public class LightsFansCtrlTileController implements LayoutController
 	{
 		if ( lightsCommand.get("pattern").getAsInt() == ALL_OFF )
 			return;
-		System.out.println("Lights off");
+		//System.out.println("Lights off");
 		lightsCommand.remove("pattern");
 		lightsCommand.addProperty("pattern", ALL_OFF);
 		PlaygroundBaseCommProvider.getInstance().sendCommand(lightsCommand);
 	}
 	public void onAllFansTurnOn()  // button manager
 	{
-		if ( fansCommand.get("pattern").getAsInt() == ALL_ON )
-			return;
-		System.out.println("Fans on");
+		//if ( fansCommand.get("pattern").getAsInt() == ALL_ON )
+		//	return;
+		//System.out.println("Fans on");
 		fansCommand.remove("pattern");
 		fansCommand.addProperty("pattern", ALL_ON);
 		PlaygroundBaseCommProvider.getInstance().sendCommand(fansCommand);
@@ -119,10 +122,9 @@ public class LightsFansCtrlTileController implements LayoutController
 	{
 		if ( fansCommand.get("pattern").getAsInt() == ALL_OFF )
 			return;
-		System.out.println("Fans off");
+		//System.out.println("Fans off");
 		fansCommand.remove("pattern");
 		fansCommand.addProperty("pattern", ALL_OFF);
 		PlaygroundBaseCommProvider.getInstance().sendCommand(fansCommand);
 	}
-
 }

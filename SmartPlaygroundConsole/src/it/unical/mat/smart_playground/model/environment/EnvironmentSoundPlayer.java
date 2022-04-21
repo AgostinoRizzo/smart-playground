@@ -79,6 +79,8 @@ public class EnvironmentSoundPlayer
 			
 			createCirclularSoundClip(EnvironmentSoundType.STEP, STEP_SOUND_FILENAME, 4);
 			
+			muteClip(EnvironmentSoundType.TENNIS_FINISH);
+			
 			lock.unlock();
 		} 
 		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e)
@@ -110,8 +112,8 @@ public class EnvironmentSoundPlayer
 	public void onGolfGameHole()
 	{
 		playSound(EnvironmentSoundType.BALL_IN_HOLE);
-		new DelayedSoundTrigger(EnvironmentSoundType.GAME_WIN, 1500).start();
-		new DelayedSoundTrigger(EnvironmentSoundType.CLAP,     1500).start();
+		new DelayedSoundTrigger(EnvironmentSoundType.GAME_WIN, 2500).start();
+		new DelayedSoundTrigger(EnvironmentSoundType.CLAP,     2500).start();
 	}
 	
 	public void onWindStatusChanged( final boolean windOn )
@@ -158,5 +160,13 @@ public class EnvironmentSoundPlayer
 		final Clip clip = AudioSystem.getClip();
 		clip.open(audioInputStream);
 		return clip;
+	}
+	
+	private void muteClip( final EnvironmentSoundType soundType )
+	{
+		lock.lock();
+		if ( soundClipsMap.containsKey(soundType) )
+			soundClipsMap.get(soundType).mute();
+		lock.unlock();
 	}
 }

@@ -30,6 +30,8 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 	private static final byte PACKET_TYPE_ORIENTATION_UNKNOWN = 3;
 	private static final byte PACKET_TYPE_STEPS_UPDATE        = 4;
 	
+	private static final int MAX_SEQDATA_RESET_NUMBER = 50;
+	
 	private DatagramSocket socket;
 	
 	private int balltrack_seqdata_number = 0, motionctrl_seqdata_number = 0;
@@ -59,7 +61,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 		{
 			try
 			{
-				socket.receive(rcvPacket);
+				socket.receive(rcvPacket);				
 				manageReceivedDataPacket(rcvPacket);		
 			} 
 			catch (IOException e)
@@ -77,7 +79,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 		final byte[] rcvData = rcvPacket.getData();
 		final ByteBuffer rcvByteBuffer = ByteBuffer.wrap(rcvData, 0, rcvDataLength);
 		
-		if ( rcvDataLength == 4 || rcvDataLength == 6 || rcvDataLength == 14 )
+		if ( rcvDataLength == 4 || rcvDataLength == 6 || rcvDataLength == 12 || rcvDataLength == 14 )
 			manageBallTrackingReceivedData( rcvByteBuffer, rcvDataLength );
 		else if ( rcvDataLength == 5 || rcvDataLength == 9 )
 			manageMotionControllerReceivedData( rcvByteBuffer, rcvDataLength );
@@ -86,7 +88,9 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 	private void manageBallTrackingReceivedData( final ByteBuffer rcvByteBuffer, final int rcvDataLength )
 	{
 		final int seqnumber = rcvByteBuffer.getInt();
-		if ( seqnumber <= balltrack_seqdata_number )
+		if ( seqnumber <= MAX_SEQDATA_RESET_NUMBER )
+			balltrack_seqdata_number = 0;
+		else if ( seqnumber <= balltrack_seqdata_number )
 			return;
 		balltrack_seqdata_number = seqnumber;
 		
@@ -115,7 +119,9 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 	private void manageMotionControllerReceivedData( final ByteBuffer rcvByteBuffer, final int rcvDataLength )
 	{
 		final int seqnumber = rcvByteBuffer.getInt();
-		if ( seqnumber <= motionctrl_seqdata_number )
+		if ( seqnumber <= MAX_SEQDATA_RESET_NUMBER )
+			motionctrl_seqdata_number = 0;
+		else if ( seqnumber <= motionctrl_seqdata_number )
 			return;
 		motionctrl_seqdata_number = seqnumber;
 		

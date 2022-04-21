@@ -63,6 +63,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 	@FXML private Label infoErrorMessageLabel;
 	
 	private final Label[][] scoreboardLabels = new Label[2][6];
+	private boolean firstSwing = false;
 	
 	@Override
 	public void onInitialize(Window win)
@@ -196,6 +197,7 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 			updateScoreboardLabelsText(totalMatchSets, totalSetGames, currentMatchSet, currentSetGame, mainPlayerScores, artificialPlayerScores, 
 										totalMainPlayerScore, totalArtificialPlayerScore);
 			
+			firstSwing = true;
 			ENVIRONMENT_SOUND_PLAYER.onTennisGameScoreUpdate();
 			if ( terminated )
 			{
@@ -211,7 +213,12 @@ public class TennisMatchFormController implements LayoutController, GameEventCal
 				displayInfoMessage("Human player turn.", false);
 			else if ( playerTurn.equals("player_b") )
 				displayInfoMessage("Artificial player turn.", false);
-			ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
+			
+			if ( firstSwing )
+			{
+				ENVIRONMENT_SOUND_PLAYER.playSound(EnvironmentSoundType.GAME_READY);
+				firstSwing = false;
+			}
 		}
 	}
 	

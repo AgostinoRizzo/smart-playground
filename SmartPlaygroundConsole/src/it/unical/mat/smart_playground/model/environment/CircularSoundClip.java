@@ -36,6 +36,12 @@ public class CircularSoundClip implements SoundClip
 		currentSoundClip.stop();
 	}
 	
+	@Override
+	public void mute()
+	{
+		currentSoundClip.mute();
+	}
+	
 	private Clip nextClip()
 	{
 		if ( clips.isEmpty() )

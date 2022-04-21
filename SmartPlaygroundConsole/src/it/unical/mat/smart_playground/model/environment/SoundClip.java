@@ -11,4 +11,5 @@ public interface SoundClip
 {
 	public void play();
 	public void stop();
+	public void mute();
 }
