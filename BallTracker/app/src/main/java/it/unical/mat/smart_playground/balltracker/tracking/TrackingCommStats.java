@@ -10,9 +10,10 @@ public class TrackingCommStats
 
     private static TrackingCommStats instance = null;
 
-    private final KeepAliveCommStat ballLocationCommStat    = new KeepAliveCommStat(KEEP_ALIVE_TIME);
-    private final KeepAliveCommStat ballOrientationCommStat = new KeepAliveCommStat(KEEP_ALIVE_TIME);
-    private final DelayedStatusFlag unknownBallStatusFlag   = new DelayedStatusFlag(UNKNOWN_BALL_STATUS_FLAG_TIME);
+    private final KeepAliveCommStat ballLocationCommStat     = new KeepAliveCommStat(KEEP_ALIVE_TIME);
+    private final KeepAliveCommStat ballOrientationCommStat  = new KeepAliveCommStat(KEEP_ALIVE_TIME);
+    private final DelayedStatusFlag unknownBallStatusFlag    = new DelayedStatusFlag(UNKNOWN_BALL_STATUS_FLAG_TIME);
+    private final KeepAliveCommStat golfHoleLocationCommStat = new KeepAliveCommStat(KEEP_ALIVE_TIME);
 
     public static TrackingCommStats getInstance()
     {
@@ -37,5 +38,10 @@ public class TrackingCommStats
     public DelayedStatusFlag getUnknownBallStatusFlag()
     {
         return unknownBallStatusFlag;
+    }
+
+    public KeepAliveCommStat getGolfHoleLocationCommStat()
+    {
+        return golfHoleLocationCommStat;
     }
 }

@@ -158,6 +158,25 @@ public class BallTracker
         TRACKING_COMM_STATS.getUnknownBallStatusFlag().onClear();
     }
 
+    public void onGolfHoleMarkerDetected( final Marker marker )
+    {
+        if ( platformFrameSize == null )
+            return;
+
+        // compute new golf hole location.
+        final Vector2<Integer> markerCenter = marker.getCenter();
+        final Vector2<Float> newGolfHoleLocation =
+                new Vector2<>(getStandardBallCoord(platformFrameSize.getX() - platformPaddings[PADDING_LEFT_INDEX] - platformPaddings[PADDING_RIGHT_INDEX],
+                        markerCenter.getX() - platformPaddings[PADDING_LEFT_INDEX]),
+                        getStandardBallCoord(platformFrameSize.getY() - platformPaddings[PADDING_TOP_INDEX] - platformPaddings[PADDING_BOTTOM_INDEX],
+                                markerCenter.getY() - platformPaddings[PADDING_TOP_INDEX]));
+        marker.setRelativeCenterCoords(newGolfHoleLocation);
+
+        // update and send new golf hole status.
+        if ( TRACKING_COMM_STATS.getGolfHoleLocationCommStat().onKeepAlive() )
+            ballTrackingCommunicator.sendGolfHoleTrackingLocation(newGolfHoleLocation);
+    }
+
     public void onTopLeftPlatforCornerMarkerDetected( final Marker marker )
     {
         updatePlatformCornerLocation(TOP_LEFT_CORNER_INDEX, marker);

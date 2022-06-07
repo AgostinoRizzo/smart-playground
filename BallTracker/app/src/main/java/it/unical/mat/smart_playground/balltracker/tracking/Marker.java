@@ -16,6 +16,7 @@ public class Marker
     public static final int TOP_RIGHT_PLATFORM_CORNER_ID    = 2;
     public static final int BOTTOM_LEFT_PLATFORM_CORNER_ID  = 3;
     public static final int BOTTOM_RIGHT_PLATFORM_CORNER_ID = 4;
+    public static final int GOLF_HOLE_ID                    = 5;
     public static final short X = 0, Y = 1;
 
     private final int[][] cornersCoords;

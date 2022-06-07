@@ -16,7 +16,7 @@ import java.util.List;
 public class ArucoMarkerDetector
 {
     private static final int ARUCO_MARKER_DICT = Aruco.DICT_4X4_250;
-    private static final int[] DETECTABLE_ARUCO_IDS = { 0, 1, 2, 3, 4 };
+    private static final int[] DETECTABLE_ARUCO_IDS = { 0, 1, 2, 3, 4, 5 };
     private static ArucoMarkerDetector instance = null;
 
     private final Dictionary dictionary;

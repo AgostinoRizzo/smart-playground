@@ -11,4 +11,5 @@ public interface BallTrackingCommunicator
     public void sendBallTrackingOrientation( final BallStatus status );
     public void sendBallTrackingStatus( final BallStatus status );
     public void sendUnknownBallTrackingStatus();
+    public void sendGolfHoleTrackingLocation( final Vector2<Float> newGolfHoleLocation );
 }

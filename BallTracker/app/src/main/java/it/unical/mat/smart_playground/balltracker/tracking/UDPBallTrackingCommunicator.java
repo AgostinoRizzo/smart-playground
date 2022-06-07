@@ -20,7 +20,9 @@ import it.unical.mat.smart_playground.balltracker.util.Vector2;
  */
 public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 {
-    public static final String[] DESTINATION_ADDRESS_NAMES = { "192.168.1.200", "192.168.1.11" };
+    public static final String PLAYGROUND_BASE_ADDRESS_NAME    = "192.168.1.200";
+    public static final String PLAYGROUND_CONSOLE_ADDRESS_NAME = "192.168.1.11";
+    public static final String[] DESTINATION_ADDRESS_NAMES = { PLAYGROUND_BASE_ADDRESS_NAME, PLAYGROUND_CONSOLE_ADDRESS_NAME };
 
     private static final short SOCKET_PORT = 3000;
     private static UDPBallTrackingCommunicator instance = null;
@@ -33,6 +35,7 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
     private static final TrackingCommStats TRACKING_COMM_STATS = TrackingCommStats.getInstance();
     private static final KeepAliveCommStat LOCATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallLocationCommStat();
     private static final KeepAliveCommStat ORIENTATION_KEEP_ALIVE = TRACKING_COMM_STATS.getBallOrientationCommStat();
+    private static final KeepAliveCommStat GOLF_HOLE_LOC_KEEP_ALIVE = TRACKING_COMM_STATS.getGolfHoleLocationCommStat();
 
     public static UDPBallTrackingCommunicator getInstance()
     {
@@ -105,6 +108,21 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         }
     }
 
+    @Override
+    public void sendGolfHoleTrackingLocation(Vector2<Float> newGolfHoleLocation)
+    {
+        if ( createUDPSocket() )
+        {
+            buffer = ByteBuffer.allocate(13);
+            buffer.putInt(sequenceNumber);
+            buffer.put((byte)0);  // to distinguish it from ball location packet
+            addLocationToDataBuffer(newGolfHoleLocation);
+
+            if ( sendBufferData(PLAYGROUND_CONSOLE_ADDRESS_NAME) )  // send it only to the console!
+                GOLF_HOLE_LOC_KEEP_ALIVE.onComm();
+        }
+    }
+
     private boolean createUDPSocket()
     {
         if ( destinationAddrs != null && !destinationAddrs.isEmpty() && udpSocket != null )
@@ -130,13 +148,19 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
         buffer.putFloat(ballLocation.getY());
     }
 
+    private void addLocationToDataBuffer( final Vector2<Float> location )
+    {
+        buffer.putFloat(location.getX());
+        buffer.putFloat(location.getY());
+    }
+
     private void addOrientationToDataBuffer( final BallStatus status )
     {
         final short orientation = status.getOrientation();
         buffer.putShort(orientation);
     }
 
-    private boolean sendBufferData()
+    private boolean sendBufferData( final String unicastAddressName )
     {
         if ( destinationAddrs.isEmpty() || buffer == null || !buffer.hasArray() )
             return false;
@@ -145,6 +169,8 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 
         for ( final InetAddress destAddr : destinationAddrs )
         {
+            if ( unicastAddressName != null && !destAddr.getHostAddress().equals(unicastAddressName) )
+                continue;
             final DatagramPacket dataPacket = new DatagramPacket(bufferData, bufferData.length, destAddr, SOCKET_PORT);
             try {  udpSocket.send(dataPacket); }
             catch (IOException e) {}
@@ -154,6 +180,8 @@ public class UDPBallTrackingCommunicator implements BallTrackingCommunicator
 
         return true;
     }
+
+    private boolean sendBufferData() { return sendBufferData(null); }
 
     private static List<InetAddress> getDestinationAddrs() throws SocketException
     {
