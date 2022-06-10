@@ -134,6 +134,7 @@ public class ComposedBallTrackerAnalyzer extends SyncCameraFrameAnalyzer
             case Marker.TOP_RIGHT_PLATFORM_CORNER_ID: ballTracker.onTopRightPlatforCornerMarkerDetected(marker); break;
             case Marker.BOTTOM_LEFT_PLATFORM_CORNER_ID: ballTracker.onBottomLeftPlatforCornerMarkerDetected(marker); break;
             case Marker.BOTTOM_RIGHT_PLATFORM_CORNER_ID: ballTracker.onBottomRightPlatforCornerMarkerDetected(marker); break;
+            case Marker.GOLF_HOLE_ID: ballTracker.onGolfHoleMarkerDetected(marker); break;
         }
     }
 }

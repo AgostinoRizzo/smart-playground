@@ -20,6 +20,6 @@ public class KeepAliveCommStat
 
     public boolean onKeepAlive()
     {
-        return (System.currentTimeMillis() - lastCommTime) >= keepAliveTime;
+        return lastCommTime == Long.MIN_VALUE || (System.currentTimeMillis() - lastCommTime) >= keepAliveTime;
     }
 }

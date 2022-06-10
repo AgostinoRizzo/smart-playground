@@ -109,10 +109,10 @@ public class BallTracker
     }
 
     public void onBallMarkerDetected( final Marker marker )
-    {System.out.println("BALL DETECTED");
+    {
         if ( platformFrameSize == null )
             return;
-        System.out.println("PLATFORM SIZE NOT NULL");
+
         // compute new ball location.
         final Vector2<Integer> markerCenter = marker.getCenter();
         final Vector2<Float> newBallLocation =
@@ -151,9 +151,6 @@ public class BallTracker
             ballStatus.setOrientation(newBallOrientation);
             ballTrackingCommunicator.sendBallTrackingOrientation(ballStatus);
         }
-
-        if ( !onLocationUpdate )
-            System.out.println("NO LOCATION UPDATE");
 
         TRACKING_COMM_STATS.getUnknownBallStatusFlag().onClear();
     }

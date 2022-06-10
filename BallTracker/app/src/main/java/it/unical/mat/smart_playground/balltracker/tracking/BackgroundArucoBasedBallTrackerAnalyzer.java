@@ -101,17 +101,28 @@ public class BackgroundArucoBasedBallTrackerAnalyzer extends Thread implements C
             if ( detectedMarkers == null )
                 detectedMarkers = new ArrayList<>();
 
-            if ( newDetectedMarkers != null && !newDetectedMarkers.isEmpty() )
-                for ( final Marker nm : newDetectedMarkers )
+            if ( newDetectedMarkers != null )
+            {
+                if ( newDetectedMarkers.isEmpty() )
                 {
-                    final Marker m = Marker.searchMarker(detectedMarkers, nm.getId());
-                    if ( m == null ) detectedMarkers.add(nm);
-                    else
-                    {
+                    final Marker m = Marker.searchMarker(detectedMarkers, Marker.GOLF_HOLE_ID);
+                    if ( m != null )
                         detectedMarkers.remove(m);
-                        detectedMarkers.add(nm);
+                }
+                else
+                {
+                    for (final Marker nm : newDetectedMarkers)
+                    {
+                        final Marker m = Marker.searchMarker(detectedMarkers, nm.getId());
+                        if (m == null) detectedMarkers.add(nm);
+                        else
+                        {
+                            detectedMarkers.remove(m);
+                            detectedMarkers.add(nm);
+                        }
                     }
                 }
+            }
 
             inputFrameToAnalyze = null;
             detectedMarkersAvailableCond.signalAll();
