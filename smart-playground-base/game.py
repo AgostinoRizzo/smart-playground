@@ -201,7 +201,7 @@ class TennisGameManager(GameManager):
                 self.ballOrientation <= 270+10 and self.ballOrientation >= 270-10
     
     def __isPlayerReady(self) -> bool:
-        return True #TODO remove comment   self._isPlayerOrientationKnown() and self.playerOrientation <= 10 or self.playerOrientation >= 350
+        return not self._isPlayerOrientationKnown() or (self._isPlayerOrientationKnown() and (self.playerOrientation <= 10 or self.playerOrientation >= 350))
     
     def __ballOnMainPlayerNet(self) -> bool:
         return self._isBallLocationKnown() and self.ballLocation.left > 1.0 - TennisGameManager.BALL_NET_PADDING
@@ -224,10 +224,10 @@ class TennisGameManager(GameManager):
 
 
 class GolfBallDirectionSynchronizer(Thread):
-    MAX_SYNC_INTERVAL = 1.0
-    MED_SYNC_INTERVAL = 0.5
-    MIN_SYNC_INTERVAL = 0.3
-    ORIENTATION_SYNC_MARGIN = 20  # +20 degrees right, -20 degrees left
+    MAX_SYNC_INTERVAL = 0.5
+    MED_SYNC_INTERVAL = 0.1
+    MIN_SYNC_INTERVAL = 0.03
+    ORIENTATION_SYNC_MARGIN = 5  # +5 degrees right, -5 degrees left
 
     def __init__(self, golfGameManager):
         Thread.__init__(self)
@@ -268,6 +268,8 @@ class GolfBallDirectionSynchronizer(Thread):
             else:
                 self.lock.release()
                 time.sleep(waitingTimeForNextSync)
+                self.golfGameManager.stopBall()
+                time.sleep(2.0)
                 self.lock.acquire()
         self.lock.release()
     
@@ -304,6 +306,12 @@ class GolfGameManager(GameManager):
     def canClubSwing(self, swingType) -> bool:
         with self.lock:
             answ = self.clubEnabled and not self.terminated
+            
+            if self._isPlayerOrientationKnown() and self._isBallOrientationKnown():
+                relativeBallorientation = (self.ballOrientation - ((self.playerOrientation - 180) % 360)) % 360
+                if relativeBallorientation > 10 or relativeBallorientation < 350:
+                    answ = False
+            
             self.clubEnabled = False
             self.clubStrokeType = swingType
             self.clubStrokeDoneCond.notify_all()
@@ -338,25 +346,26 @@ class GolfGameManager(GameManager):
                 return -1  # no more syncs needed
             if self.ballOrientation == self.playerOrientation:
                 return -1  # no more syncs needed
-
-            relativeBallorientation = (self.ballOrientation - self.playerOrientation) % 360
+            
+            relativeBallorientation = (self.ballOrientation - ((self.playerOrientation - 180) % 360)) % 360
 
             if relativeBallorientation <= GolfBallDirectionSynchronizer.ORIENTATION_SYNC_MARGIN or\
                 relativeBallorientation >= 359 - GolfBallDirectionSynchronizer.ORIENTATION_SYNC_MARGIN:
                 return -1  # no more syncs needed
 
             if relativeBallorientation >= 180:
-                print('BALL: turn right')
                 smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallRotate(1)
                 if relativeBallorientation <= 270: return GolfBallDirectionSynchronizer.MAX_SYNC_INTERVAL
                 if relativeBallorientation <= 315: return GolfBallDirectionSynchronizer.MED_SYNC_INTERVAL
                 return GolfBallDirectionSynchronizer.MIN_SYNC_INTERVAL
             else: 
-                print('BALL: turn left')
                 smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallRotate(0)
                 if relativeBallorientation >= 90: return GolfBallDirectionSynchronizer.MAX_SYNC_INTERVAL
                 if relativeBallorientation >= 45: return GolfBallDirectionSynchronizer.MED_SYNC_INTERVAL
                 return GolfBallDirectionSynchronizer.MIN_SYNC_INTERVAL
+    def stopBall(self):
+        with self.lock:
+            smart_objects.SmartObjectsMediator.get_current_instance().onSmartBallStop()
     
     def stopRunning(self):
         self.resetEvent.set()
@@ -481,7 +490,7 @@ class GolfGameManager(GameManager):
         return False
     
     def __pointInHole(self, point: playground.PointLocation) -> bool:
-        print("Point in hole check -  POINT(%f, %f) to HOLE(%f, %f)" % (point.left, point.top, self.holeLocation.left, self.holeLocation.top))
+        #print("Point in hole check -  POINT(%f, %f) to HOLE(%f, %f)" % (point.left, point.top, self.holeLocation.left, self.holeLocation.top))
         return abs(point.left - self.holeLocation.left) <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA and \
                abs(point.top  - self.holeLocation.top)  <= GolfGameManager.LOCATION_COORDS_COINCIDENCE_DELTA
 

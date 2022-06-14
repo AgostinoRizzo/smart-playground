@@ -83,6 +83,9 @@ class SmartField(SmartObject):
     
     def __set_command(self, cmd):  # clockwise order
         #print("Sending command: " + str(cmd))
+        if cmd == 12:  # all fans on
+            Logger.default().warning('cannot turn of all fans simultaneously due to power consumption')
+            cmd = 7  # all fans off
         self.tos_field_commands_msg.cmd = cmd
         tinyos_serial.tos_am_serial_write(self.tos_field_commands_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
     
@@ -140,7 +143,7 @@ class SmartBall(SmartObject):
                 if swing_effect:
                     self.tos_racket_start_msg.value_a = int(swing_direction)
                     self.tos_racket_start_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
-                print("RACKET_SWING (a, b): " + str(self.tos_racket_start_msg.value_a) + ", " + str(self.tos_racket_start_msg.value_b))
+                #print("RACKET_SWING (a, b): " + str(self.tos_racket_start_msg.value_a) + ", " + str(self.tos_racket_start_msg.value_b))
                 tinyos_serial.tos_am_serial_write(self.tos_racket_start_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
 
                 self.status = SmartBallStatus.RUNNING
@@ -151,12 +154,12 @@ class SmartBall(SmartObject):
                 if swing_effect:
                     self.tos_racket_swing_msg.value_a = int(swing_direction)
                     self.tos_racket_swing_msg.value_b = int(RACKET_SWING_EFFECT_ANGLE)
-                print("RACKET_SWING (a, b): " + str(self.tos_racket_swing_msg.value_a) + ", " + str(self.tos_racket_swing_msg.value_b))
+                #print("RACKET_SWING (a, b): " + str(self.tos_racket_swing_msg.value_a) + ", " + str(self.tos_racket_swing_msg.value_b))
                 tinyos_serial.tos_am_serial_write(self.tos_racket_swing_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
     
     def clubStrokeHit(self, swingDirection):
         with self.lock:
-            print("Club stroke with swing direction: " + str(swingDirection))
+            #print("Club stroke with swing direction: " + str(swingDirection))
             self.tos_club_start_msg.value_a = self.tos_club_start_msg.value_b = int(0)
             if swingDirection is not None:
                 self.tos_club_start_msg.value_a = int(swingDirection)
@@ -169,7 +172,7 @@ class SmartBall(SmartObject):
         side == 1 => turn right
         """
         with self.lock:
-            print("Ball rotate: " + str(side))
+            #print("Ball rotate: " + str(side))
             self.tos_rotate_msg.value_a = int(side)
             self.tos_rotate_msg.value_b = int(0)
             tinyos_serial.tos_am_serial_write(self.tos_rotate_msg, tinyos_serial.AM_BASE_STATION_COMM_CODE)
@@ -635,9 +638,10 @@ class SmartObjectsMediator:
         """
         if game.canMainRacketSwing():
             environment.play_sound(environment.RACKET_HIT_SOUND)
-            self.main_smart_racket.rumble(0.1)
+            if self.main_smart_racket is not None:
+                self.main_smart_racket.rumble(0.1)
 
-            self.smart_ball.racketSwingHit(swing_dir, swing_effect)
+                self.smart_ball.racketSwingHit(swing_dir, swing_effect)
         else:
             environment.play_sound(environment.RACKET_SWING_SOUND)
     
