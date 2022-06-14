@@ -185,4 +185,16 @@ public class ApplicationManager implements NetDiscoveryCallback, PlaygroundBaseC
 			}
 		});
 	}
+	@Override
+	public void onNewGolfHoleLocation(float left, float top)
+	{
+		Platform.runLater( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				PlaygroundStatus.getInstance().updateGolfHoleLocation(left, top);
+			}
+		});
+	}
 }

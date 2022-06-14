@@ -3,7 +3,7 @@
  */
 package it.unical.mat.smart_playground.view.playground;
 
-import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
+import it.unical.mat.smart_playground.model.ecosystem.SmartObjectLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
@@ -27,7 +27,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	
 	private final ImageView ballImageView;
 	
-	private SmartBallLocation lastBallLocation = null;
+	private SmartObjectLocation lastBallLocation = null;
 	private int lastBallOrientation = -1;
 	
 	private int ballRotation = 0;
@@ -68,7 +68,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 	{
 		if ( newBallStatus.isKnown() )
 		{			
-			final SmartBallLocation ballLocation = newBallStatus.getLocation();
+			final SmartObjectLocation ballLocation = newBallStatus.getLocation();
 			final Vector2Int screenCoords = playgroundFieldMap.
 					getScreenCoords(ballLocation.getLeft(), ballLocation.getTop());
 			
@@ -78,7 +78,7 @@ public class PlaygroundField implements PlaygroundStatusObserver
 			if ( lastBallLocation == null || !lastBallLocation.equals(ballLocation) )
 			{
 				updateBallRotation();
-				if ( lastBallLocation == null ) lastBallLocation = new SmartBallLocation(ballLocation);
+				if ( lastBallLocation == null ) lastBallLocation = new SmartObjectLocation(ballLocation);
 				else                            lastBallLocation.set(ballLocation);
 				ballImageView.setRotate(ballRotation);
 			}

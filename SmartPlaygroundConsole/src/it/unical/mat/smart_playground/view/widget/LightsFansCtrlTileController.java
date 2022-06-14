@@ -12,7 +12,9 @@ import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
 import it.unical.mat.smart_playground.network.PlaygroundBaseCommProvider;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * @author Agostino

@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
+import it.unical.mat.smart_playground.model.ecosystem.SmartObjectLocation;
 
 /**
  * @author Agostino
@@ -21,6 +22,7 @@ public class PlaygroundStatus
 	private static PlaygroundStatus instance = null;
 	
 	private final SmartBallStatus ballStatus = new SmartBallStatus();
+	private final SmartObjectLocation golfHoleLocation = new SmartObjectLocation();
 	private final PlayerStatus playerStatus = new PlayerStatus();
 	private final WindStatus windStatus = new WindStatus();
 	private Integer temperature, humidity, brightness;
@@ -62,6 +64,17 @@ public class PlaygroundStatus
 		notifyStatusChange(PlaygroundStatusTopic.BALL_STATUS);
 	}
 	
+	public void updateGolfHoleLocation(float left, float top)
+	{
+		if ( golfHoleLocation.getMaxDelta(left, top) >= SmartObjectLocation.MIN_VISIBLE_DELTA )
+		{
+			golfHoleLocation.setLeft(left);
+			golfHoleLocation.setTop(top);
+			if ( golfHoleLocation.isKnown() )
+				notifyStatusChange(PlaygroundStatusTopic.GOLF_HOLE_LOC);
+		}
+	}
+	
 	public void updatePlayerStatus( final PlayerStatus newPlayerStatus )
 	{
 		playerStatus.set(newPlayerStatus);
@@ -99,6 +112,11 @@ public class PlaygroundStatus
 	public SmartBallStatus getBallStatus()
 	{
 		return ballStatus;
+	}
+	
+	public SmartObjectLocation getGolfHoleLocation()
+	{
+		return golfHoleLocation;
 	}
 	
 	public PlayerStatus getPlayerStatus()

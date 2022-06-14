@@ -9,7 +9,7 @@ package it.unical.mat.smart_playground.model.ecosystem;
  */
 public class SmartBallStatus extends TelosbBasedStatus
 {
-	private final SmartBallLocation location = new SmartBallLocation();
+	private final SmartObjectLocation location = new SmartObjectLocation();
 	private int orientation = -1;
 	
 	public SmartBallStatus()
@@ -20,7 +20,7 @@ public class SmartBallStatus extends TelosbBasedStatus
 		setOrientation(other.getOrientation());
 	}
 	
-	public SmartBallLocation getLocation()
+	public SmartObjectLocation getLocation()
 	{
 		return location;
 	}

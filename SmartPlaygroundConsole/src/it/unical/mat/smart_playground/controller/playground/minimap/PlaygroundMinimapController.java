@@ -7,7 +7,7 @@ import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfController;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfWindow;
-import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
+import it.unical.mat.smart_playground.model.ecosystem.SmartObjectLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
@@ -116,8 +116,9 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{
 		switch ( topic )
 		{
-		case BALL_STATUS : onBallStatusChanged(status.getBallStatus()); break;
-		case WIND_STATUS : onWindStatusChanged(status.getWindStatus()); break;
+		case BALL_STATUS   : onBallStatusChanged(status.getBallStatus()); break;
+		case WIND_STATUS   : onWindStatusChanged(status.getWindStatus()); break;
+		case GOLF_HOLE_LOC : onGolfHoleLocationChanged(status.getGolfHoleLocation());
 		case ALL :
 			onBallStatusChanged(status.getBallStatus());
 			onWindStatusChanged(status.getWindStatus()); break;
@@ -149,7 +150,7 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{
 		if ( newBallStatus.isKnown() )
 		{
-			final SmartBallLocation location = newBallStatus.getLocation();
+			final SmartObjectLocation location = newBallStatus.getLocation();
 			final int ballX = getBallImageCoord(location.getTop(), X),
 					  ballY = getBallImageCoord(1f - location.getLeft(), Y);
 			
@@ -172,6 +173,14 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	private void onWindStatusChanged( final WindStatus newWindStatus )
 	{
 		
+	}
+	
+	private void onGolfHoleLocationChanged( final SmartObjectLocation golfHoleLoc )
+	{
+		if ( !canLocateHole )
+			return;
+		final double areaWidth = fieldAreaPane.getWidth(), areaHeight = fieldAreaPane.getHeight();
+		handleSetGolfHoleClick( (1.0 - golfHoleLoc.getTop()) * areaWidth, golfHoleLoc.getLeft() * areaHeight );
 	}
 	
 	private void drawBallOrientation( final int ballX, final int ballY, final Vector2Int directionVector )
@@ -230,9 +239,12 @@ public class PlaygroundMinimapController implements LayoutController, Playground
 	{
 		if ( !canLocateHole )
 			return;
-		
+		handleSetGolfHoleClick(event.getX(), event.getY());
+	}
+	
+	private void handleSetGolfHoleClick( final double x, final double y )
+	{
 		final double areaWidth = fieldAreaPane.getWidth(), areaHeight = fieldAreaPane.getHeight();
-		final double x = event.getX(), y = event.getY();
 		final double percX = x / areaWidth, percY = y / areaHeight;
 		
 		if ( percX >= .1 && percX <= .9 && percY >= .1 && percY < .5 )

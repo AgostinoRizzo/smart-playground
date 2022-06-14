@@ -7,7 +7,7 @@ import it.unical.mat.smart_playground.controller.LayoutController;
 import it.unical.mat.smart_playground.controller.Window;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartGolfWindow;
 import it.unical.mat.smart_playground.controller.playing.PlaySmartTennisWindow;
-import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
+import it.unical.mat.smart_playground.model.ecosystem.SmartObjectLocation;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatus;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusObserver;
 import it.unical.mat.smart_playground.model.playground.PlaygroundStatusTopic;
@@ -158,7 +158,7 @@ public class PlaygroundController implements LayoutController, PlaygroundStatusO
 		if ( topic != PlaygroundStatusTopic.BALL_STATUS || lastGolfHoleLocation == null )
 			return;
 		
-		final SmartBallLocation ballLocation = status.getBallStatus().getLocation();
+		final SmartObjectLocation ballLocation = status.getBallStatus().getLocation();
 		
 		if ( ballLocation.getLeft() <= lastGolfHoleLocation[0] && ballLocation.getTop() >= lastGolfHoleLocation[1] )
 			setBallImageInFrontGolfHole();

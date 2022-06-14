@@ -14,4 +14,5 @@ public interface BallTrackingMotionCtrlCommCallback
 {
 	public void onBallStatusChanged( final SmartBallStatus newBallStatus );
 	public void onPlayerStatusChanged( final PlayerStatus newPlayerStatus );
+	public void onNewGolfHoleLocation( final float left, final float top );
 }

@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 
 import it.unical.mat.smart_playground.model.ecosystem.PlayerStatus;
-import it.unical.mat.smart_playground.model.ecosystem.SmartBallLocation;
+import it.unical.mat.smart_playground.model.ecosystem.SmartObjectLocation;
 import it.unical.mat.smart_playground.model.ecosystem.SmartBallStatus;
 import it.unical.mat.smart_playground.model.environment.EnvironmentSoundPlayer;
 import it.unical.mat.smart_playground.model.environment.EnvironmentSoundType;
@@ -23,7 +23,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 {
 	private static final int SOCKET_PORT = 3000;
 	private static final int MAX_RCV_DATA_BUFFER_SIZE = 14;
-	private static final int[] BALL_STATUS_DATA_BUFFER_SIZES = {4, 5, 6, 9, 12, 14};
+	private static final int[] BALL_STATUS_DATA_BUFFER_SIZES = {4, 5, 6, 9, 12, 13, 14};
 	
 	private static final byte PACKET_TYPE_ORIENTATION_UPDATE  = 1;
 	private static final byte PACKET_TYPE_ORIENTATION_SYNC    = 2;
@@ -83,6 +83,8 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 			manageBallTrackingReceivedData( rcvByteBuffer, rcvDataLength );
 		else if ( rcvDataLength == 5 || rcvDataLength == 9 )
 			manageMotionControllerReceivedData( rcvByteBuffer, rcvDataLength );
+		else if ( rcvDataLength == 13 )
+			manageGolfHoleTrackingReceivedData( rcvByteBuffer );
 	}
 	
 	private void manageBallTrackingReceivedData( final ByteBuffer rcvByteBuffer, final int rcvDataLength )
@@ -99,7 +101,7 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 			final float ballLeft = rcvByteBuffer.getFloat(),
 						ballTop  = rcvByteBuffer.getFloat();
 			
-			final SmartBallLocation ballLocation = ballStatus.getLocation();
+			final SmartObjectLocation ballLocation = ballStatus.getLocation();
 			ballLocation.setLeft(1.0f - ballLeft);
 			ballLocation.setTop(1.0f - ballTop);
 		}
@@ -158,6 +160,22 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 		
 	}
 	
+	private void manageGolfHoleTrackingReceivedData( final ByteBuffer rcvByteBuffer )
+	{
+		final int seqnumber = rcvByteBuffer.getInt();
+		if ( seqnumber <= MAX_SEQDATA_RESET_NUMBER )
+			balltrack_seqdata_number = 0;
+		else if ( seqnumber <= balltrack_seqdata_number )
+			return;
+		balltrack_seqdata_number = seqnumber;
+		
+		rcvByteBuffer.get();
+		final float golfHoleLeft = rcvByteBuffer.getFloat(),
+					golfHoleTop  = rcvByteBuffer.getFloat();
+		
+		onNewGolfHoleLocation(golfHoleLeft, golfHoleTop);
+	}
+	
 	private static boolean checkRecvDataBufferSize( final int dataBufferSize )
 	{
 		for ( final int size : BALL_STATUS_DATA_BUFFER_SIZES )
@@ -178,5 +196,10 @@ public class BallTrackingMotionCtrlCommProvider extends Thread
 		final PlayerStatus newPlayerStatus = new PlayerStatus(playerStatus);
 		//System.out.println(newPlayerStatus);
 		callback.onPlayerStatusChanged(newPlayerStatus);
+	}
+	
+	private void onNewGolfHoleLocation( final float left, final float top )
+	{
+		callback.onNewGolfHoleLocation(left, top);
 	}
 }
