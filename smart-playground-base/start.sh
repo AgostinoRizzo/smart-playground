@@ -1,4 +1,4 @@
 #!/bin/sh
 
-sudo python3 smart_table_base.py serial@/dev/ttyUSB0:115200
+sudo python3 playground_main.py serial@/dev/ttyUSB0:115200
 
