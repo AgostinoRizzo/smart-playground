@@ -30,7 +30,9 @@ For each of the created smart objects, as well as for the entire playground syst
 By instantiating the meta-model, a specific model is obtained for each of the realized smart objects:
 
 ![SmartPlayground Class Diagram](./Figures/smartplayground_class_diagram.png "SmartPlayground Class Diagram")
+---
 ![SmartBall Class Diagram](./Figures/smartball_class_diagram.png "Smartball Class Diagram")
+---
 ![SmartField Class Diagram](./Figures/smartfield_class_diagram.png "SmartField Class Diagram")
 
 The following *use case diagram* reports the main functions a player (main actor) can take:
@@ -46,8 +48,11 @@ A deployment diagram then shows how the individual structural units are distribu
 Finally, a low-level deployment diagram is provided to show all the individual hardware units and the used technologies.
 
 ![Box-and-Line Architecture](./Figures/boxline_architecture.png "BoxAndLine Architecture")
+---
 ![High-Level Deployment Architecture](./Figures/highlevel_deployment_architecture.png "High-Level Deployment Architecture")
+---
 ![Low-Level Deployment Architecture](./Figures/lowlevel_deployment_architecture.png "Low-Level Deployment Architecture")
+---
 ![Layer Architecture](./Figures/layer_architecture.png "Layer Architecture")
 
 
@@ -93,6 +98,7 @@ Below are some diagrams of the TinyOS/NesC components for the smart ball's and s
 Specifically, separate components have been developed for each of the offered services and the used external sensors.
 
 ![Smart Ball nesC Components](./Figures/smartball_nesC_components.png "Smart Ball nesC Components")
+---
 ![Smart Field nesC Components](./Figures/smartfield_nesC_components.png "Smart Field nesC Components")
 
 
