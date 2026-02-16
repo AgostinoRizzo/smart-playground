@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<VBox prefHeight="330.0" prefWidth="472.0" styleClass="playground-sidebox" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.view.form.GolfMatchFormController">
+   <children>
+      <Label fx:id="gameStatusLabel" text="Smart Golf">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label text="Match configuration">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <GridPane prefHeight="177.0" prefWidth="432.0" vgap="10.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="283.0" minWidth="10.0" prefWidth="263.0" />
+          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="211.0" minWidth="10.0" prefWidth="169.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="95.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="37.0" minHeight="0.0" prefHeight="6.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox prefHeight="71.0" prefWidth="263.0">
+               <children>
+                  <Label text="Hole Location:">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text="Use the minimap below to locate the target hole" wrapText="true" />
+               </children>
+            </VBox>
+            <Label fx:id="holeLocationStatusLabel" text="Not set" textFill="RED" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <AnchorPane GridPane.rowIndex="1">
+               <children>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                     <image>
+                        <Image url="@../../../../../../../res/drawable/tool_setting_change_buttons.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="70.0" fitWidth="70.0" layoutX="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../../../../res/drawable/club_tool.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="clubSettingLabel" layoutX="115.0" layoutY="9.0" text="Attempt">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="116.0" layoutY="-5.0" text="Setting">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <ProgressBar fx:id="clubSwingForceProgressBar" layoutX="116.0" layoutY="45.0" prefHeight="23.0" prefWidth="316.0" progress="0.0" />
+                  <Label fx:id="clubSwingDescriptionLabel" alignment="CENTER_RIGHT" layoutX="289.0" layoutY="16.0" prefHeight="21.0" prefWidth="143.0" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </GridPane>
+      <AnchorPane>
+         <children>
+            <Button fx:id="playMatchButton" defaultButton="true" mnemonicParsing="false" onAction="#playMatch" text="Play Match">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Button>
+            <Label fx:id="infoErrorMessageLabel" alignment="CENTER" prefHeight="27.0" prefWidth="432.0" visible="false">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>

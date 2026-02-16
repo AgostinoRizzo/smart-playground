@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<Pane prefHeight="137.0" prefWidth="283.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.playing.PlayerToolNotificationController">
+   <children>
+      <AnchorPane layoutX="19.0" layoutY="21.0" prefHeight="96.0" prefWidth="245.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, black, 20, 0, 0, 0);">
+         <children>
+            <ImageView fx:id="racketToolImageView" fitHeight="70.0" fitWidth="70.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../res/drawable/racket_tool.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="clubToolImageView" fitHeight="70.0" fitWidth="70.0" layoutX="60.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../../../../../../res/drawable/club_tool.png" />
+               </image>
+            </ImageView>
+            <Label layoutX="136.0" layoutY="27.0" text="Player Tool">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="toolNameLabel" layoutX="135.0" layoutY="41.0" text="Racket">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="20.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../../../res/drawable/tool_change_buttons.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>

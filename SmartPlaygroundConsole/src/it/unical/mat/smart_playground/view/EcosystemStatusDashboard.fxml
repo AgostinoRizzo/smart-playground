@@ -1,0 +1,1069 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<ScrollPane prefHeight="2293.0" prefWidth="1969.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unical.mat.smart_playground.controller.EcosystemStatusController">
+   <content>
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="2435.0" prefWidth="1945.0" style="-fx-background-color: #ffff;">
+         <center>
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" prefHeight="2335.0" prefWidth="1945.0" BorderPane.alignment="CENTER">
+               <children>
+                  <HBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="2291.0" prefWidth="1925.0">
+                     <children>
+                        <VBox prefHeight="2414.0" prefWidth="761.0">
+                           <children>
+                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="469.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="786.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="447.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                                       <children>
+                                          <HBox prefHeight="53.0" prefWidth="737.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/temp_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="54.0" prefWidth="619.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Temperature">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label fx:id="temperatureLabel" text="30°C">
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/radio_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="248.0" prefWidth="737.0">
+                                             <children>
+                                                <AreaChart fx:id="gatherSmartFieldTemperatureSensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" visible="false" fx:id="xAxisGatherGamePlatformTemperatureSensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="50.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                </AreaChart>
+                                                <AreaChart fx:id="gatherSmartBallTemperatureSensorsChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                  <xAxis>
+                                                    <CategoryAxis side="BOTTOM" visible="false" fx:id="xAxisGatherSmartBallTemperatureSensorsChart" />
+                                                  </xAxis>
+                                                  <yAxis>
+                                                    <NumberAxis side="LEFT" upperBound="50.0" />
+                                                  </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                </AreaChart>
+                                                <AreaChart fx:id="averageTemperatureSensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" visible="false" fx:id="xAxisGatherSmartPoleTemperatureSensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="50.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                </AreaChart>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="128.0" prefWidth="657.0" spacing="10.0">
+                                             <children>
+                                                <fx:include fx:id="mainWindDirectionTile" source="widget/wind_direction_tile.fxml" />
+                                                <fx:include fx:id="mainWindSpeedTile" source="widget/wind_speed_tile.fxml" />
+                                                <fx:include fx:id="lightsFansCrtlTile" source="widget/lights_fans_ctrl_tile.fxml" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="10.0" top="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <DropShadow color="#00000052" height="20.75" offsetX="1.0" offsetY="1.0" radius="9.9375" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="332.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="312.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                                       <children>
+                                          <HBox prefHeight="55.0" prefWidth="737.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/humi_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="441.0" prefWidth="1078.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Humidity">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label fx:id="humidityLabel" text="30%">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/radio_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="256.0" prefWidth="737.0">
+                                             <children>
+                                                <AreaChart fx:id="gatherSmartFieldHumiditySensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherGamePlatformHumiditySensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </AreaChart>
+                                                <AreaChart fx:id="gatherSmartBallHumiditySensorsChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherSmartBallHumiditySensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </AreaChart>
+                                                <AreaChart fx:id="averageHumiditySensorsChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherSmartPoleHumiditySensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </AreaChart>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="331.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="311.0" prefWidth="737.0" styleClass="gamePlatformItemStatusBox" stylesheets="@application.css">
+                                       <children>
+                                          <HBox prefHeight="54.0" prefWidth="499.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/bright_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="441.0" prefWidth="1078.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Brightness">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label fx:id="brightnessLabel" text="30lx">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/radio_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="258.0" prefWidth="737.0">
+                                             <children>
+                                                <AreaChart fx:id="gatherSmartFieldBrightnessSensorChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherGamePlatformBrightnessSensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="300.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </AreaChart>
+                                                <AreaChart fx:id="gatherSmartBallBrightnessSensorChart" prefHeight="187.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherSmartBallBrightnessSensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="300.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </AreaChart>
+                                                <AreaChart fx:id="averageBrightnessSensorChart" prefHeight="176.0" prefWidth="584.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisGatherSmartPoleBrightnessSensorsChart" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="300.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </AreaChart>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="1066.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="760.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="1045.0" prefWidth="563.0">
+                                       <children>
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="626.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/virtual_ball_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="61.0" prefWidth="611.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Playground Field">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label text="30°C, 30% Humi, 30Lux ">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" left="-10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox prefHeight="437.0" prefWidth="711.0">
+                                             <children>
+                                                <AnchorPane prefHeight="437.0" prefWidth="722.0">
+                                                   <children>
+                                                      <AnchorPane layoutY="61.0" prefHeight="314.0" prefWidth="736.0">
+                                                         <children>
+                                                            <ImageView fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/playground_field.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fx:id="windFlagImage3" fitHeight="150.0" fitWidth="200.0" layoutX="423.0" layoutY="-54.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/red_flag.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fx:id="windFlagImage2" fitHeight="150.0" fitWidth="200.0" layoutX="332.0" layoutY="-106.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/red_flag.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fx:id="windFlagImage1" fitHeight="150.0" fitWidth="200.0" layoutX="149.0" layoutY="-54.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/red_flag.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <ImageView fx:id="windFlagImage0" fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/red_flag.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                            <Canvas fx:id="playgroundFieldCanvas" height="326.0" width="500.0" />
+                                                            <ImageView fx:id="playgroundFieldBallImage" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                                               <image>
+                                                                  <Image url="@../../../../../../res/drawable/soccer_ball.png" />
+                                                               </image>
+                                                            </ImageView>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets top="50.0" />
+                                                         </padding>
+                                                      </AnchorPane>
+                                                      <VBox layoutX="549.0" layoutY="-50.0" prefHeight="456.0" prefWidth="167.0" spacing="10.0">
+                                                         <children>
+                                                            <fx:include fx:id="secondWindDirectionTile" source="widget/wind_direction_tile.fxml" />
+                                                            <fx:include fx:id="secondWindSpeedTile" source="widget/wind_speed_tile.fxml" />
+                                                            <fx:include fx:id="ballOrientationTile" source="widget/ball_orientation_tile.fxml" />
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets left="-15.0" />
+                                                   </HBox.margin>
+                                                </AnchorPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/bright_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <AreaChart fx:id="mainSmartFieldBrightnessSensorChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartPoleBrightnessSensorsChart1" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </AreaChart>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/humi_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <AreaChart fx:id="mainSmartFieldHumiditySensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartPoleHumiditySensorsChart1" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </AreaChart>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/temp_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <AreaChart fx:id="mainSmartFieldTemperatureSensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                   <effect>
+                                                      <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                   </effect>
+                                                   <xAxis>
+                                                      <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartPoleTemperatureSensorsChart1" />
+                                                   </xAxis>
+                                                   <yAxis>
+                                                      <NumberAxis side="LEFT" upperBound="50.0" />
+                                                   </yAxis>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                   </VBox.margin>
+                                                </AreaChart>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="-10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                       </children>
+                                       <padding>
+                                          <Insets left="15.0" />
+                                       </padding>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="700.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="679.0" prefWidth="491.0">
+                                       <children>
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="480.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/main_tennis_racket_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Smart Racket">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label text="Main Wiimote">
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/bluetooth_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT" prefHeight="150.0">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketXAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketXAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketYAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketYAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainRacketZAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainRacketZAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <HBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </HBox.margin>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <ScrollPane maxHeight="-Infinity" prefHeight="720.0" prefViewportHeight="354.0" prefViewportWidth="525.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="697.0" prefWidth="489.0">
+                                       <children>
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="480.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/ball_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="397.0" prefWidth="578.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Smart Ball">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label text="Standing">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/radio_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallTemperatureSensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallTemperatureSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" />
+                                                         </yAxis>
+                                                         <StackPane.margin>
+                                                            <Insets />
+                                                         </StackPane.margin>
+                                                         <padding>
+                                                            <Insets left="50.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/temp_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallHumiditySensorsChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallHumiditySensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" />
+                                                         </yAxis>
+                                                         <padding>
+                                                            <Insets left="50.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/humi_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <StackPane alignment="TOP_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainSmartBallBrightnessSensorChart" prefHeight="223.0" prefWidth="670.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisMainSmartBallBrightnessSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis side="LEFT" upperBound="300.0" />
+                                                         </yAxis>
+                                                         <padding>
+                                                            <Insets left="50.0" />
+                                                         </padding>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/bright_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets left="5.0" top="5.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                        <VBox>
+                           <children>
+                              <ScrollPane prefHeight="344.0" prefViewportHeight="334.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="320.0" prefWidth="492.0">
+                                       <children>
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="480.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/motion_icon.png" />
+                                                   </image>
+                                                   <HBox.margin>
+                                                      <Insets bottom="10.0" right="10.0" />
+                                                   </HBox.margin>
+                                                </ImageView>
+                                                <VBox prefHeight="67.0" prefWidth="291.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Motion Controller">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label text="Main Player">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/wifi_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox prefHeight="104.0" prefWidth="492.0" spacing="10.0">
+                                             <children>
+                                                <fx:include fx:id="playerStepsTile" source="widget/player_steps_tile.fxml" />
+                                                <fx:include fx:id="playerDistanceTile" source="widget/player_distance_tile.fxml" />
+                                                <fx:include fx:id="playerCaloriesTile" source="widget/player_calories_tile.fxml" />
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="139.0" prefWidth="492.0" spacing="10.0">
+                                             <children>
+                                                <fx:include fx:id="playerOrientationTile" source="widget/player_orientation_tile.fxml" />
+                                                <fx:include source="widget/player_body_info_tile.fxml" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <ScrollPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="774.0" prefViewportHeight="199.0" prefViewportWidth="365.0" prefWidth="512.0" styleClass="statusBox" stylesheets="@application.css">
+                                 <content>
+                                    <VBox prefHeight="754.0" prefWidth="491.0">
+                                       <children>
+                                          <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="61.0" prefWidth="480.0">
+                                             <children>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/golf_club_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                                <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                                   <children>
+                                                      <Label text="Smart Club">
+                                                         <font>
+                                                            <Font name="System Bold" size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <Label text="Main Wiimote">
+                                                         <font>
+                                                            <Font size="18.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets left="30.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                   </children>
+                                                </VBox>
+                                                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../../../../../../res/drawable/bluetooth_icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets bottom="10.0" />
+                                             </VBox.margin>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubXAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubXAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickLabelGap="8.0" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubYAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubYAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="257.0" prefWidth="491.0">
+                                             <children>
+                                                <StackPane alignment="BOTTOM_LEFT" prefHeight="150.0">
+                                                   <children>
+                                                      <AreaChart fx:id="mainClubZAccelerometerSensorsChart" animated="false" prefHeight="237.0" prefWidth="552.0" style="-fx-background-color: white;" styleClass="sensorChart" stylesheets="@application.css">
+                                                         <effect>
+                                                            <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                                         </effect>
+                                                         <xAxis>
+                                                            <CategoryAxis side="BOTTOM" fx:id="xAxisClubZAccelerometerSensorsChart" />
+                                                         </xAxis>
+                                                         <yAxis>
+                                                            <NumberAxis autoRanging="false" minorTickCount="100" side="LEFT" tickUnit="200.0" upperBound="1000.0" />
+                                                         </yAxis>
+                                                      </AreaChart>
+                                                      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                                         <image>
+                                                            <Image url="@../../../../../../res/drawable/axis_icon.png" />
+                                                         </image>
+                                                         <StackPane.margin>
+                                                            <Insets bottom="10.0" left="10.0" />
+                                                         </StackPane.margin>
+                                                      </ImageView>
+                                                   </children>
+                                                   <HBox.margin>
+                                                      <Insets top="10.0" />
+                                                   </HBox.margin>
+                                                </StackPane>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
+                                 </content>
+                                 <effect>
+                                    <DropShadow color="#00000052" offsetX="1.0" offsetY="1.0" />
+                                 </effect>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+         </center>
+      </BorderPane>
+   </content>
+</ScrollPane>
