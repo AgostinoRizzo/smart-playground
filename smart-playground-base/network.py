@@ -7,6 +7,9 @@ import sys
 import smart_objects
 from threading import Thread, RLock, Condition
 import collections
+import smart_objects
+import game
+import time
 
 LOCAL_HOST = '127.0.0.1'
 
@@ -28,6 +31,7 @@ class DiscoveryServer(threading.Thread):
             raise Exception('Cannot create multiple instances of a Singleton class')
 
         threading.Thread.__init__(self)
+        self.setDaemon(True)
 
         # create a UDP socket.
         try:
@@ -57,6 +61,34 @@ class DiscoveryServer(threading.Thread):
                 logging.error(e)
                 sys.exit(1)       
 
+
+class ConsoleCommandReader(Thread):
+    def __init__(self, inputStream, networkCommunicator):
+        Thread.__init__(self)
+        self.setDaemon(True)
+        self.inputStream = inputStream
+        self.networkCommunicator = networkCommunicator
+    
+    def run(self):
+        while True:
+            try:
+                jsonObjStr = self.inputStream.readline()
+                cmdJson = json.loads(jsonObjStr)
+
+                if cmdJson['type'] == 'lights_cmd':
+                    smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_lights(int(cmdJson['pattern']))
+                elif cmdJson['type'] == 'fans_cmd':
+                    smart_objects.SmartObjectsMediator.get_current_instance().smart_field.set_fans(int(cmdJson['pattern']))
+                elif cmdJson['type'] == 'game_init':
+                    if cmdJson['gameType'] == 'tennis': game.initializeGame(game.TENNIS_GAME_TYPE, cmdJson, self.networkCommunicator)
+                    elif cmdJson['gameType'] == 'golf': game.initializeGame(game.GOLF_GAME_TYPE, cmdJson, self.networkCommunicator)
+                elif cmdJson['type'] == 'game_reset':
+                    game.resetGame()
+            except Exception as e:
+                print("ConsoleCommandReader closed: " + str(e))
+                break
+
+
 class NetworkCommunicator(Thread):
     
     def __init__(self, serverPort, callback=None):
@@ -82,9 +114,12 @@ class NetworkCommunicator(Thread):
         
         while True:
             # wait for a connection.
-            connection, client_addr = self.server_socket.accept()
-            inputFile = connection.makefile()
-            outputFile = connection.makefile("w")
+            connection, _ = self.server_socket.accept()
+            inputFile = connection.makefile('r')
+            outputFile = connection.makefile('w')
+
+            self.consoleCommandReader = ConsoleCommandReader(inputFile, self)
+            self.consoleCommandReader.start()
             
             with self.lock:
                 
@@ -112,6 +147,7 @@ class NetworkCommunicator(Thread):
     def createSocket(self):
         try:
             self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server_socket.bind(('', self.serverPort))
             self.server_socket.listen(1)
             return True
@@ -124,12 +160,14 @@ class NetworkCommunicator(Thread):
 class EcosystemEventProvider:
     
     _instance = None
+    _lock = RLock()
 
     @staticmethod
     def get_instance():
-        if EcosystemEventProvider._instance is None:
-            EcosystemEventProvider._instance = EcosystemEventProvider()
-        return EcosystemEventProvider._instance
+        with EcosystemEventProvider._lock:
+            if EcosystemEventProvider._instance is None:
+                EcosystemEventProvider._instance = EcosystemEventProvider()
+            return EcosystemEventProvider._instance
 
     def __init__(self):
         if EcosystemEventProvider._instance is not None:
@@ -138,6 +176,8 @@ class EcosystemEventProvider:
         self.netcomm = NetworkCommunicator(services.NET_EVENT_PROVIDER_PORT)
         self.netcomm.start()
         logging.debug('Ecosystem Event Provider - Network Communicator created.')
+
+        self.lastRacketStatusSampleSendTime = time.time()
     
     def notify_user_ack(self):
         self.netcomm.sendData( { 'dataType': services.USER_ACK_CODE } )
@@ -147,6 +187,9 @@ class EcosystemEventProvider:
 
     def send_smartball_sensors_sample(self, sample):
         self.send_sensors_sample(services.SMARTBALL_SENSORS_SAMPLE_CODE, sample)
+    
+    def send_smartfield_sensors_sample(self, sample):
+        self.send_sensors_sample(services.SMARTFIELD_SENSORS_SAMPLE_CODE, sample)
 
     def send_smartpole_sensors_sample(self, sample):
         self.send_sensors_sample(services.SMARTPOLE_SENSORS_SAMPLE_CODE, sample)
@@ -161,6 +204,28 @@ class EcosystemEventProvider:
 
     def send_sensors_sample(self, source_code, sample):
         self.netcomm.sendData( { 'dataType': source_code, 'sample': sample } )
+    
+    def send_field_wind_status(self, dir):
+        if dir is None:
+            self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'off'} )
+        else:
+            self.netcomm.sendData( { 'dataType': 'WIND_STATUS', 'status': 'on', 'dir': dir } )
+    
+    def send_new_game_tool(self, newTool):
+        if newTool == smart_objects.GameToolsBag.RACKET: self.netcomm.sendData( { 'dataType': 'TOOL_CHANGED', 'new_tool': 'racket'} )
+        elif newTool == smart_objects.GameToolsBag.CLUB: self.netcomm.sendData( { 'dataType': 'TOOL_CHANGED', 'new_tool': 'club'} )
+    
+    def send_new_club_setting(self, isAnAttempt):
+        if isAnAttempt: self.netcomm.sendData( { 'dataType': 'TOOL_SETTING_CHANGED', 'tool': 'club', 'setting': 'attempt'} )
+        else: self.netcomm.sendData( { 'dataType': 'TOOL_SETTING_CHANGED', 'tool': 'club', 'setting': 'stroke'} )
+    
+    def send_golf_club_action(self, swingType):
+        if swingType == smart_objects.GolfClubSwingDetector.LIGHT_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'light_swing'} )
+        elif swingType == smart_objects.GolfClubSwingDetector.MEDIUM_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'medium_swing'} )
+        elif swingType == smart_objects.GolfClubSwingDetector.BIG_SWING_TYPE:
+            self.netcomm.sendData( { 'dataType': 'TOOL_ACTION', 'tool': 'club', 'action_type': 'big_swing'} )
 
     @staticmethod
     def handle_data_request(data):

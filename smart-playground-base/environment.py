@@ -1,17 +1,18 @@
-"""" sounds and light environment management """
+"""" 
+Environment sounds management 
+"""
+from network import EcosystemEventProvider
+import services
 
-#import pygame
-#import resources
+RACKET_SWING_SOUND = 'racket_swing'
+RACKET_HIT_SOUND = 'racket_hit'
+CLUB_ATTEMPT_SOUND = 'club_attempt'
+CLUB_SWING_SOUND = 'club_swing'
+CLUB_SWING_LIGHT_SOUND = 'club_swing_light'
+BALL_BOUNCE_SOUND = 'ball_bounce'
+BALL_IN_HOLE_SOUND = 'ball_in_hole'
 
-#pygame.mixer.pre_init(buffer=1024)
-#pygame.init()
+__netcomm = EcosystemEventProvider.get_instance().netcomm
 
-racket_hit_sound = None #pygame.mixer.Sound(res.RACKET_HIT_SOUND_FILENAME)
-ball_hit_sound = None #pygame.mixer.Sound(res.BALL_HIT_SOUND_FILENAME)
-
-
-def play_racket_hit_sound():
-    pass
-
-def play_ball_hit_sound():
-    pass
+def play_sound(sound):
+    __netcomm.sendData( {'dataType': services.ENVSOUND_CODE, 'sound': sound} )
