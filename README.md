@@ -18,6 +18,24 @@ games;
 
 The project was realized in the context of the *Programming Techniques for Embedded Systems and Sensor Networks* course during the bachelor's degree in Computer Science.
 
+<table>
+    <tr>
+        <td width="50%">
+            <table>
+            <tr><img alt="Smart Playground" title="Smart Playground" src="./Figures/playground.png"></tr>
+            <tr><img alt="Smart Field Tracking" title="Smart Field Tracking" src="./Figures/Pictures/smartfield_tracking.jpg"></tr>
+            </table>
+        </td>
+        <td width="49%">
+            <table>
+            <tr><img alt="Console Dashboard" title="Console Dashboard" src="./Figures/Screenshots/console_dashboard.png"></tr>
+            <tr><img alt="Console Play Tennis" title="Console Play Tennis" src="./Figures/Screenshots/console_tennis_window.png"></tr>
+            <tr><img alt="Console Play Golf" title="Console Play Golf" src="./Figures/Screenshots/console_golf_window.png"></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
 The following are various UML models and project architecture diagrams, with a detailed explanation of the various modules and their interaction.
 
 
